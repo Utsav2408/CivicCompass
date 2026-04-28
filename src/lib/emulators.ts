@@ -1,6 +1,7 @@
 import { connectAuthEmulator } from 'firebase/auth'
 import { connectFirestoreEmulator } from 'firebase/firestore'
 import { connectStorageEmulator } from 'firebase/storage'
+
 import { auth, db, storage } from './firebase'
 
 /**

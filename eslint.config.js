@@ -24,7 +24,7 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
-        project: ['./tsconfig.app.json'],
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -40,6 +40,15 @@ export default defineConfig([
       '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports' },
+      ],
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        {
+          allowNumber: true,
+          allowBoolean: true,
+          allowAny: false,
+          allowNullish: true,
+        },
       ],
 
       // React hooks rules
@@ -67,6 +76,18 @@ export default defineConfig([
       // General rules
       'no-console': 'error',
       'prefer-const': 'error',
+    },
+  },
+  {
+    files: ['src/scripts/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
+    files: ['e2e/**/*.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
 ])

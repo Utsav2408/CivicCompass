@@ -17,7 +17,7 @@ export const handlers = [
   // Gemini proxy Cloud Function
   http.post('*/gemini-proxy', async ({ request }) => {
     const body = await request.json() as { prompt: string }
-    const response = matchGeminiFixture(body.prompt ?? '')
+    const response = matchGeminiFixture(body.prompt)
     return HttpResponse.json({
       response,
       source: 'eci.gov.in',

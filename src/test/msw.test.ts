@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
-import { server } from '../mocks/server'
 import { http, HttpResponse } from 'msw'
+import { describe, it, expect } from 'vitest'
+
+import { server } from '../mocks/server'
 
 describe('MSW setup', () => {
   it('intercepts gemini-proxy requests', async () => {

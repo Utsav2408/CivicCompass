@@ -1,4 +1,5 @@
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions'
+
 import app from './firebase'
 
 const functions = getFunctions(app, 'us-east1')

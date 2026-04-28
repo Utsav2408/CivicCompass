@@ -10,6 +10,8 @@
  * Built with SVG <pattern> element — zero image assets, fully scalable.
  */
 
+import { useId } from 'react'
+
 interface MughalJaaliPatternProps {
   /** Opacity — 0.12 to 0.18 recommended over Indigo backgrounds */
   opacity?: number
@@ -34,9 +36,10 @@ export function MughalJaaliPattern({
 }: MughalJaaliPatternProps) {
   const half = tileSize / 2
   const quarter = tileSize / 4
+  const id = useId()
 
   // Unique ID to prevent pattern collision when multiple instances render
-  const patternId = `jaali-${tileSize}-${Math.random().toString(36).slice(2, 7)}`
+  const patternId = `jaali-${tileSize}-${id.replace(/:/g, '')}`
 
   return (
     <svg
