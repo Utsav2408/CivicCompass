@@ -124,5 +124,5 @@ export const candidateFetch = onRequest(
       });
       res.status(500).json({ error: "Candidate fetch failed" });
     }
-  }
+  },
 );

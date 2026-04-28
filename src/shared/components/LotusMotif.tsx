@@ -11,19 +11,19 @@
 
 interface LotusMotifProps {
   /** Size in pixels — diameter of the motif */
-  size?: number
+  size?: number;
   /** Primary petal colour */
-  color?: string
+  color?: string;
   /** Petal fill opacity */
-  petalOpacity?: number
+  petalOpacity?: number;
   /** Whether to show the centre circle */
-  showCentre?: boolean
-  className?: string
+  showCentre?: boolean;
+  className?: string;
 }
 
 export function LotusMotif({
   size = 64,
-  color = 'var(--lo)',
+  color = "var(--lo)",
   petalOpacity = 0.85,
   showCentre = true,
   className,
@@ -36,7 +36,7 @@ export function LotusMotif({
     rx: i % 2 === 0 ? 8 : 7,
     ry: i % 2 === 0 ? 18 : 16,
     cy: i % 2 === 0 ? -16 : -14,
-  }))
+  }));
 
   return (
     <svg
@@ -94,58 +94,62 @@ export function LotusMotif({
       {showCentre && (
         <>
           <circle cx={0} cy={0} r={10} fill="var(--gd)" opacity={0.95} />
-          <circle cx={0} cy={0} r={6}  fill="var(--gd-l)" opacity={0.8} />
-          <circle cx={0} cy={0} r={3}  fill="var(--gd)" opacity={1} />
+          <circle cx={0} cy={0} r={6} fill="var(--gd-l)" opacity={0.8} />
+          <circle cx={0} cy={0} r={3} fill="var(--gd)" opacity={1} />
         </>
       )}
     </svg>
-  )
+  );
 }
 
 /**
  * Empty state with Lotus — used when a list or section has no content.
  */
 interface LotusEmptyStateProps {
-  title: string
-  message: string
-  action?: React.ReactNode
+  title: string;
+  message: string;
+  action?: React.ReactNode;
 }
 
-export function LotusEmptyState({ title, message, action }: LotusEmptyStateProps) {
+export function LotusEmptyState({
+  title,
+  message,
+  action,
+}: LotusEmptyStateProps) {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'var(--space-2xl) var(--space-lg)',
-        gap: 'var(--space-md)',
-        textAlign: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "var(--space-2xl) var(--space-lg)",
+        gap: "var(--space-md)",
+        textAlign: "center",
       }}
       role="status"
     >
       <LotusMotif size={72} />
       <h3
         style={{
-          font: 'var(--text-h2)',
-          color: 'var(--color-text)',
+          font: "var(--text-h2)",
+          color: "var(--color-text)",
         }}
       >
         {title}
       </h3>
       <p
         style={{
-          font: 'var(--text-body)',
-          color: 'var(--color-text-muted)',
-          maxWidth: '280px',
+          font: "var(--text-body)",
+          color: "var(--color-text-muted)",
+          maxWidth: "280px",
         }}
       >
         {message}
       </p>
       {action}
     </div>
-  )
+  );
 }
 
 /**
@@ -155,13 +159,13 @@ export function LotusSuccess({ message }: { message: string }) {
   return (
     <div
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--space-sm)',
-        padding: 'var(--space-sm) var(--space-md)',
-        background: 'var(--bn-l)',
-        borderRadius: 'var(--radius-md)',
-        border: '1px solid var(--bn)',
+        display: "flex",
+        alignItems: "center",
+        gap: "var(--space-sm)",
+        padding: "var(--space-sm) var(--space-md)",
+        background: "var(--bn-l)",
+        borderRadius: "var(--radius-md)",
+        border: "1px solid var(--bn)",
       }}
       role="status"
       aria-live="polite"
@@ -169,13 +173,13 @@ export function LotusSuccess({ message }: { message: string }) {
       <LotusMotif size={28} color="var(--bn)" showCentre={false} />
       <span
         style={{
-          font: 'var(--text-body)',
-          color: 'var(--bn)',
+          font: "var(--text-body)",
+          color: "var(--bn)",
           fontWeight: 600,
         }}
       >
         {message}
       </span>
     </div>
-  )
+  );
 }

@@ -47,10 +47,9 @@ export const nightlyEciFetch = onSchedule(
       });
     } catch (error) {
       log.error("nightly_eci_fetch_error", {
-        errorMessage:
-          error instanceof Error ? error.message : "Unknown error",
+        errorMessage: error instanceof Error ? error.message : "Unknown error",
       });
       throw error;
     }
-  }
+  },
 );

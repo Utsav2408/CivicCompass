@@ -19,7 +19,7 @@ const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 export const mediaValidate = onObjectFinalized(
   {
     bucket: "civiccompass-494517.firebasestorage.app",
-    region: "us-east1"
+    region: "us-east1",
   },
   async (event) => {
     const object = event.data;
@@ -85,5 +85,5 @@ export const mediaValidate = onObjectFinalized(
       ticketId: ticketId ?? "unknown",
       sizeBytes: fileSize,
     });
-  }
+  },
 );

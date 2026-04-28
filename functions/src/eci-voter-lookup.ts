@@ -92,5 +92,5 @@ export const eciVoterLookup = onRequest(
       });
       res.status(500).json({ error: "ECI lookup failed" });
     }
-  }
+  },
 );

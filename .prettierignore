@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-ssr
+functions/lib
+.lighthouseci
+playwright-report
+test-results
+*.local
+e2e/fixtures/auth.json

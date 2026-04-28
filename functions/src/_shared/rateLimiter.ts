@@ -20,7 +20,7 @@ interface RateLimitResult {
  * Counter document auto-deletes via Firestore TTL on expiresAt field.
  */
 export async function checkRateLimit(
-  config: RateLimitConfig
+  config: RateLimitConfig,
 ): Promise<RateLimitResult> {
   const { uid, functionName, maxCalls, windowMs } = config;
 
@@ -30,7 +30,7 @@ export async function checkRateLimit(
   const counterRef = db.collection("rateLimits").doc(docId);
 
   const expiresAt = Timestamp.fromMillis(
-    windowStart.getTime() + windowMs + 60_000
+    windowStart.getTime() + windowMs + 60_000,
   );
 
   const counter = await counterRef.get();
@@ -49,7 +49,7 @@ export async function checkRateLimit(
 
   await counterRef.set(
     { count: FieldValue.increment(1), expiresAt },
-    { merge: true }
+    { merge: true },
   );
 
   return { allowed: true };

@@ -8,7 +8,7 @@ import { log } from "./logger";
  */
 export async function verifyAppCheckToken(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<boolean> {
   const appCheckToken = req.headers["x-firebase-appcheck"] as string;
 

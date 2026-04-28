@@ -10,36 +10,36 @@
  * Built with SVG <pattern> element — zero image assets, fully scalable.
  */
 
-import { useId } from 'react'
+import { useId } from "react";
 
 interface MughalJaaliPatternProps {
   /** Opacity — 0.12 to 0.18 recommended over Indigo backgrounds */
-  opacity?: number
+  opacity?: number;
   /** Fill colour of the pattern lines */
-  color?: string
+  color?: string;
   /** Pattern tile size in pixels */
-  tileSize?: number
+  tileSize?: number;
   /** Width of the pattern container */
-  width?: string | number
+  width?: string | number;
   /** Height of the pattern container */
-  height?: string | number
-  className?: string
+  height?: string | number;
+  className?: string;
 }
 
 export function MughalJaaliPattern({
   opacity = 0.15,
-  color = '#FFFFFF',
+  color = "#FFFFFF",
   tileSize = 40,
-  width = '100%',
-  height = '100%',
+  width = "100%",
+  height = "100%",
   className,
 }: MughalJaaliPatternProps) {
-  const half = tileSize / 2
-  const quarter = tileSize / 4
-  const id = useId()
+  const half = tileSize / 2;
+  const quarter = tileSize / 4;
+  const id = useId();
 
   // Unique ID to prevent pattern collision when multiple instances render
-  const patternId = `jaali-${tileSize}-${id.replace(/:/g, '')}`
+  const patternId = `jaali-${tileSize}-${id.replace(/:/g, "")}`;
 
   return (
     <svg
@@ -49,7 +49,7 @@ export function MughalJaaliPattern({
       aria-hidden="true"
       role="presentation"
       className={className}
-      style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+      style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
     >
       <defs>
         <pattern
@@ -88,35 +88,47 @@ export function MughalJaaliPattern({
 
           {/* 8-pointed star — cross lines through diamond */}
           <line
-            x1={half} y1={0}
-            x2={half} y2={tileSize}
-            stroke={color} strokeWidth="0.5"
+            x1={half}
+            y1={0}
+            x2={half}
+            y2={tileSize}
+            stroke={color}
+            strokeWidth="0.5"
           />
           <line
-            x1={0} y1={half}
-            x2={tileSize} y2={half}
-            stroke={color} strokeWidth="0.5"
+            x1={0}
+            y1={half}
+            x2={tileSize}
+            y2={half}
+            stroke={color}
+            strokeWidth="0.5"
           />
           <line
-            x1={0} y1={0}
-            x2={tileSize} y2={tileSize}
-            stroke={color} strokeWidth="0.4"
+            x1={0}
+            y1={0}
+            x2={tileSize}
+            y2={tileSize}
+            stroke={color}
+            strokeWidth="0.4"
           />
           <line
-            x1={tileSize} y1={0}
-            x2={0} y2={tileSize}
-            stroke={color} strokeWidth="0.4"
+            x1={tileSize}
+            y1={0}
+            x2={0}
+            y2={tileSize}
+            stroke={color}
+            strokeWidth="0.4"
           />
 
           {/* Corner dots — connecting nodes */}
-          <circle cx={0}        cy={0}        r="1.2" fill={color} />
-          <circle cx={tileSize} cy={0}        r="1.2" fill={color} />
-          <circle cx={0}        cy={tileSize} r="1.2" fill={color} />
+          <circle cx={0} cy={0} r="1.2" fill={color} />
+          <circle cx={tileSize} cy={0} r="1.2" fill={color} />
+          <circle cx={0} cy={tileSize} r="1.2" fill={color} />
           <circle cx={tileSize} cy={tileSize} r="1.2" fill={color} />
-          <circle cx={half}     cy={0}        r="1"   fill={color} />
-          <circle cx={0}        cy={half}     r="1"   fill={color} />
-          <circle cx={tileSize} cy={half}     r="1"   fill={color} />
-          <circle cx={half}     cy={tileSize} r="1"   fill={color} />
+          <circle cx={half} cy={0} r="1" fill={color} />
+          <circle cx={0} cy={half} r="1" fill={color} />
+          <circle cx={tileSize} cy={half} r="1" fill={color} />
+          <circle cx={half} cy={tileSize} r="1" fill={color} />
           {/* Centre node */}
           <circle cx={half} cy={half} r="1.5" fill={color} />
         </pattern>
@@ -129,7 +141,7 @@ export function MughalJaaliPattern({
         opacity={opacity}
       />
     </svg>
-  )
+  );
 }
 
 /**
@@ -145,7 +157,7 @@ export function JaaliHero() {
       width="100%"
       height="100%"
     />
-  )
+  );
 }
 
 /**
@@ -155,11 +167,11 @@ export function JaaliHero() {
 export function JaaliCard() {
   return (
     <MughalJaaliPattern
-      opacity={0.10}
+      opacity={0.1}
       color="#FFFFFF"
       tileSize={40}
       width="100%"
       height="100%"
     />
-  )
+  );
 }

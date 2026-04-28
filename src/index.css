@@ -1,5 +1,5 @@
 /* Import Rang Mahal design tokens first */
-@import './styles/tokens.css';
+@import "./styles/tokens.css";
 
 /* Tailwind base utilities */
 @import "tailwindcss";

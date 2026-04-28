@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test";
 
-test('app loads and shows login page', async ({ page }) => {
-  await page.goto('/')
-  await expect(page).toHaveTitle(/CivicCompass/)
-})
+test("app loads and shows login page", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle(/CivicCompass/);
+});

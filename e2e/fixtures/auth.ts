@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test'
+import { test as base } from "@playwright/test";
 
 // Extend base test with pre-authenticated state
 export const test = base.extend({
@@ -6,10 +6,10 @@ export const test = base.extend({
     // Set emulator environment
     await page.addInitScript(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-      (window as any).__FIREBASE_EMULATOR__ = true
-    })
-    await use(page)
+      (window as any).__FIREBASE_EMULATOR__ = true;
+    });
+    await use(page);
   },
-})
+});
 
-export { expect } from '@playwright/test'
+export { expect } from "@playwright/test";

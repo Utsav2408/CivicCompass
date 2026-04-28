@@ -4,7 +4,7 @@ function App() {
       <h1>CivicCompass</h1>
       <p>Firebase SDK wired up successfully.</p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
