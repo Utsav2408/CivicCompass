@@ -26,7 +26,11 @@
   "overrides": {
     "vite-plugin-pwa": {
       "vite": "^8.0.0"
-    }
+    },
+    "@tootallnate/once": "3.0.1",
+    "uuid": "14.0.0",
+    "serialize-javascript": "7.0.5",
+    "tmp": "0.2.5"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
