@@ -1,0 +1,7 @@
+/* Import Rang Mahal design tokens first */
+@import './styles/tokens.css';
+
+/* Tailwind base utilities */
+@import "tailwindcss";
+
+/* Global resets and base styles are defined in tokens.css */
