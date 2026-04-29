@@ -8,7 +8,7 @@ import importX from "eslint-plugin-import-x";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist", "node_modules", "functions"]),
+  globalIgnores(["dist", "node_modules", "functions", "coverage"]),
 
   {
     files: ["**/*.{ts,tsx}"],

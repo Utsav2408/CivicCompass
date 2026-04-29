@@ -16,8 +16,8 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { PageLoader } from "@shared/components/AshokaCakraLoader";
 import { ProtectedRoute } from "@/features/login/ProtectedRoute";
+import { PageLoader } from "@shared/components/AshokaCakraLoader";
 
 // Lazy-loaded route chunks — each screen is a separate JS bundle.
 // Only the LoginPage loads eagerly since it's the entry point.

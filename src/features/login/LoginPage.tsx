@@ -12,9 +12,9 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "@features/login/useAuth";
 import { AshokaCakraLoader } from "@shared/components/AshokaCakraLoader";
 import { JaaliHero } from "@shared/components/MughalJaaliPattern";
-import { useAuth } from "@features/login/useAuth";
 
 function GoogleIcon() {
   return (

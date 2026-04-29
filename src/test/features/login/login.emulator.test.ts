@@ -11,6 +11,7 @@
  * behaviour yet — so we assert against the emulator's actual code here.
  */
 
+import { initializeApp, deleteApp, type FirebaseApp } from "firebase/app";
 import {
   connectAuthEmulator,
   createUserWithEmailAndPassword,
@@ -18,7 +19,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { initializeApp, deleteApp, type FirebaseApp } from "firebase/app";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 let app: FirebaseApp;

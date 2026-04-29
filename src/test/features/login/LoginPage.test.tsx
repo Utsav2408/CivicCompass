@@ -8,6 +8,7 @@
  */
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { type User } from "firebase/auth";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
 // ── Mock state — must be declared BEFORE vi.mock calls ────────────────────────
@@ -86,7 +87,7 @@ describe("LoginPage", () => {
     mockSignIn.mockResolvedValue(undefined);
     render(<LoginPage />);
     fireEvent.click(screen.getByRole("button", { name: /login\.cta/i }));
-    await waitFor(() => expect(mockSignIn).toHaveBeenCalledOnce());
+    await waitFor(() => { expect(mockSignIn).toHaveBeenCalledOnce(); });
   });
 
   it("renders the wordmark and both taglines", () => {
@@ -118,7 +119,7 @@ describe("LoginPage", () => {
     render(<LoginPage />);
     fireEvent.click(screen.getByRole("button", { name: /lang\.toggle_aria/i }));
     await waitFor(() =>
-      expect(mockChangeLanguage).toHaveBeenCalledWith("hi"),
+      { expect(mockChangeLanguage).toHaveBeenCalledWith("hi"); },
     );
   });
 
@@ -127,7 +128,7 @@ describe("LoginPage", () => {
     render(<LoginPage />);
     fireEvent.click(screen.getByRole("button", { name: /lang\.toggle_aria/i }));
     await waitFor(() =>
-      expect(mockChangeLanguage).toHaveBeenCalledWith("en"),
+      { expect(mockChangeLanguage).toHaveBeenCalledWith("en"); },
     );
   });
 
@@ -187,8 +188,7 @@ describe("LoginPage", () => {
 
   it("redirects to /home immediately when user is already authenticated", () => {
     vi.mocked(useAuth).mockReturnValue({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      user: { uid: "test-uid", displayName: "Priya" } as any,
+      user: { uid: "test-uid", displayName: "Priya" } as User,
       isLoading: false,
       error: null,
       signIn: mockSignIn,
