@@ -71,16 +71,26 @@ export function AshokaCakraLoader({
       `}</style>
 
       <circle
-        cx={cx} cy={cy} r={rimR}
-        fill="none" stroke={color} strokeWidth="2.5" opacity="0.9"
+        cx={cx}
+        cy={cy}
+        r={rimR}
+        fill="none"
+        stroke={color}
+        strokeWidth="2.5"
+        opacity="0.9"
       />
 
       {spokes.map(({ x1, y1, x2, y2, opacity, key }) => (
         <line
           key={key}
-          x1={x1} y1={y1} x2={x2} y2={y2}
-          stroke={color} strokeWidth="2"
-          strokeLinecap="round" opacity={opacity}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          opacity={opacity}
         />
       ))}
 
@@ -107,7 +117,9 @@ export function PageLoader() {
       aria-label="Loading CivicCompass"
     >
       <AshokaCakraLoader size={56} label="Loading CivicCompass" />
-      <span style={{ font: "var(--text-small)", color: "var(--color-text-muted)" }}>
+      <span
+        style={{ font: "var(--text-small)", color: "var(--color-text-muted)" }}
+      >
         Loading CivicCompass…
       </span>
     </div>

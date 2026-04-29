@@ -13,7 +13,10 @@ interface ElectionStatusCardProps {
   isLoading?: boolean;
 }
 
-export function ElectionStatusCard({ schedule, isLoading }: ElectionStatusCardProps) {
+export function ElectionStatusCard({
+  schedule,
+  isLoading,
+}: ElectionStatusCardProps) {
   const { t } = useTranslation();
   const countdown = useCountdownTick(schedule?.pollingDate);
 

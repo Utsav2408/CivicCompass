@@ -261,6 +261,182 @@ const SUPPORT_TICKETS = [
   },
 ];
 
+const PROCESS_STEPS = [
+  // Pre-election (7)
+  {
+    title: "Voter Registration",
+    description:
+      "Ensuring all eligible citizens are enrolled in the electoral roll.",
+    extendedDescription:
+      "The process of continuous updation of electoral rolls where citizens can apply for inclusion (Form 6), deletion (Form 7), or correction (Form 8).",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 1,
+    source: "ECI Voter Guide",
+    sourceUrl: "https://voters.eci.gov.in/",
+  },
+  {
+    title: "Nomination Filing",
+    description:
+      "Candidates submit their nomination papers to the Returning Officer.",
+    extendedDescription:
+      "Candidates must file nominations before the deadline, along with an affidavit (Form 26) disclosing assets, liabilities, and criminal antecedents.",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 2,
+    source: "ECI Handbook for Candidates",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Scrutiny of Nominations",
+    description: "The RO examines nomination papers for technical correctness.",
+    extendedDescription:
+      "The Returning Officer scrutinizes all nomination papers in the presence of candidates and their agents to ensure they meet legal requirements.",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 3,
+    source: "ECI Legal Provisions",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Withdrawal of Candidature",
+    description: "Last date for candidates to withdraw from the contest.",
+    extendedDescription:
+      "Candidates who have filed valid nominations are given a window to withdraw their names if they choose not to contest.",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 4,
+    source: "ECI Election Schedule",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Election Campaigning",
+    description: "Period where parties and candidates reach out to voters.",
+    extendedDescription:
+      "The active period for public meetings, rallies, and door-to-door canvassing, which must end 48 hours before the conclusion of the poll.",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 5,
+    source: "Model Code of Conduct",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Deployment of Polling Personnel",
+    description: "Randomization and movement of officials to polling booths.",
+    extendedDescription:
+      "Multi-stage randomization of polling staff to ensure neutrality, followed by their dispatch to assigned booths with polling material.",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 6,
+    source: "ECI Training Manual",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Distribution of Voter Slips",
+    description: "Official information slips provided to voters.",
+    extendedDescription:
+      "Voter Information Slips (VIS) are distributed to registered voters, containing booth location and serial number in the roll.",
+    phase: "pre-election",
+    electionType: "lok_sabha",
+    stepOrder: 7,
+    source: "ECI Voter Outreach",
+    sourceUrl: "https://eci.gov.in/",
+  },
+
+  // Election-day (4)
+  {
+    title: "Mock Poll",
+    description:
+      "Verification of EVM/VVPAT functionality before actual voting.",
+    extendedDescription:
+      "Conducted at least 90 minutes before actual poll starts, with at least 50 votes cast in the presence of polling agents.",
+    phase: "election-day",
+    electionType: "lok_sabha",
+    stepOrder: 8,
+    source: "ECI Polling Manual",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Casting of Votes",
+    description: "Voters exercise their franchise using EVM/VVPAT.",
+    extendedDescription:
+      "Voters identify themselves, get their fingers inked, and cast their vote in a secret compartment.",
+    phase: "election-day",
+    electionType: "lok_sabha",
+    stepOrder: 9,
+    source: "ECI Voting Guide",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Sealing of EVMs",
+    description: "Formal closure of the poll and sealing of units.",
+    extendedDescription:
+      "EVMs and VVPATs are sealed in their carrying cases in the presence of polling agents, and Form 17C (account of votes) is prepared.",
+    phase: "election-day",
+    electionType: "lok_sabha",
+    stepOrder: 10,
+    source: "ECI Post-Poll Procedures",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Transport to Strong Rooms",
+    description: "Secured movement of polled EVMs to storage centers.",
+    extendedDescription:
+      "Polled EVMs are transported under heavy security and stored in double-locked Strong Rooms monitored by CCTV and guards.",
+    phase: "election-day",
+    electionType: "lok_sabha",
+    stepOrder: 11,
+    source: "ECI Security Protocols",
+    sourceUrl: "https://eci.gov.in/",
+  },
+
+  // Post-election (4)
+  {
+    title: "Counting of Votes",
+    description: "Tabulation of results from EVMs and postal ballots.",
+    extendedDescription:
+      "Counting is done at designated centers round-by-round. VVPAT slips from 5 randomly selected booths are also verified.",
+    phase: "post-election",
+    electionType: "lok_sabha",
+    stepOrder: 12,
+    source: "ECI Counting Handbook",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Declaration of Results",
+    description: "Formal announcement of the winning candidate.",
+    extendedDescription:
+      "The Returning Officer issues the Certificate of Election (Form 22) to the winning candidate after completion of counting.",
+    phase: "post-election",
+    electionType: "lok_sabha",
+    stepOrder: 13,
+    source: "ECI Legal Framework",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Constitution of the House",
+    description: "Formation of the new Lok Sabha/Vidhan Sabha.",
+    extendedDescription:
+      "The ECI issues a 'Due Constitution' notification, providing the list of names of elected members to the President/Governor.",
+    phase: "post-election",
+    electionType: "lok_sabha",
+    stepOrder: 14,
+    source: "Constitution of India",
+    sourceUrl: "https://eci.gov.in/",
+  },
+  {
+    title: "Election Petition Filing",
+    description: "Legal challenge window for election results.",
+    extendedDescription:
+      "Any voter or candidate can file an election petition in the High Court within 45 days of the result declaration.",
+    phase: "post-election",
+    electionType: "lok_sabha",
+    stepOrder: 15,
+    source: "Representation of the People Act",
+    sourceUrl: "https://eci.gov.in/",
+  },
+];
+
 // ─── Seed Functions ───────────────────────────────────────────────────────────
 
 async function seedUsers() {
@@ -348,6 +524,17 @@ async function seedTickets() {
   console.log(`  ✓ ${SUPPORT_TICKETS.length} support tickets`);
 }
 
+async function seedProcessSteps() {
+  console.log("Seeding process steps...");
+  const batch = db.batch();
+  for (const step of PROCESS_STEPS) {
+    const ref = db.collection("process-steps").doc();
+    batch.set(ref, step);
+  }
+  await batch.commit();
+  console.log(`  ✓ ${PROCESS_STEPS.length} process steps`);
+}
+
 async function clearAll() {
   console.log("Clearing all seeded data...");
 
@@ -379,6 +566,12 @@ async function clearAll() {
     await db.collection("pollingBooths").doc(booth.id).delete();
   }
 
+  // Delete process steps
+  const steps = await db.collection("process-steps").get();
+  const batch = db.batch();
+  steps.forEach((doc) => batch.delete(doc.ref));
+  await batch.commit();
+
   console.log("  ✓ All data cleared");
 }
 
@@ -397,6 +590,7 @@ async function main() {
   await seedPoliceStations();
   await seedPollingBooths();
   await seedTickets();
+  await seedProcessSteps();
 
   console.log("\n✅ Seed complete!");
   process.exit(0);

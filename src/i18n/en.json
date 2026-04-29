@@ -50,12 +50,14 @@
   "common": {
     "back": "Back",
     "next": "Next",
-    "offline_notice": "You are offline. Some features limited."
+    "offline_notice": "You are offline. Some features limited.",
+    "offline": "Offline"
   },
   "nav": {
     "home": "Home",
     "map": "Map",
     "ward": "My Ward",
+    "process": "Process",
     "support": "Support"
   },
   "home": {
@@ -95,5 +97,46 @@
     "voting_on": "Voting on",
     "quick_actions": "Quick Actions",
     "source_eci_aria": "Visit Election Commission of India website"
+  },
+  "process": {
+    "title": "Election Process",
+    "types": {
+      "label": "Election Type",
+      "lok_sabha": "Lok Sabha",
+      "vidhan_sabha": "Vidhan Sabha"
+    },
+    "phases": {
+      "label": "Election Phase",
+      "pre-election": "Pre-Election",
+      "election-day": "Election Day",
+      "post-election": "Post-Election"
+    },
+    "empty": {
+      "title": "No Steps Found",
+      "message": "We couldn't find any process steps for this phase. Please check back later."
+    },
+    "error": {
+      "title": "Oops! Something went wrong",
+      "message": "We had trouble loading the election process steps.",
+      "retry": "Retry"
+    },
+    "card": {
+      "source": "Source",
+      "learn_more": "Learn more"
+    },
+    "ai": {
+      "ask_ai": "Ask AI",
+      "title": "CivicCompass AI",
+      "open_button_label": "Open AI chat assistant",
+      "close_label": "Close AI chat",
+      "message_list_label": "AI chat messages",
+      "placeholder": "Type your question...",
+      "send": "Send",
+      "empty_title": "Ask me anything about the election process!",
+      "empty_message": "Grounding responses in official ECI data.",
+      "disclaimer": "AI responses are for guidance only. Refer to official ECI sources for final confirmation.",
+      "offline": "Internet required for AI responses. Process steps are available below.",
+      "thinking": "Thinking..."
+    }
   }
 }

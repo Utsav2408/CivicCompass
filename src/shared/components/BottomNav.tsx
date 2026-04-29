@@ -54,6 +54,7 @@ export function BottomNav() {
     { path: "/home", label: t("nav.home"), icon: "🏛️" },
     { path: "/map", label: t("nav.map"), icon: "🗺️" },
     { path: "/ward", label: t("nav.ward"), icon: "🏘️" },
+    { path: "/process", label: t("nav.process"), icon: "🗳️" },
     { path: "/support", label: t("nav.support"), icon: "✋" },
   ];
 

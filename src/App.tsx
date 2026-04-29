@@ -37,6 +37,12 @@ const PersonalizationPage = lazy(() =>
   })),
 );
 
+const ProcessPage = lazy(() =>
+  import("@features/process/ProcessPage").then((m) => ({
+    default: m.ProcessPage,
+  })),
+);
+
 export function App() {
   return (
     <AuthProvider>
@@ -53,7 +59,11 @@ export function App() {
             {/* Protected routes — auth checked once in ProtectedRoute */}
             <Route element={<ProtectedRoute />}>
               <Route path="/home" element={<HomePage />} />
-              <Route path="/personalization" element={<PersonalizationPage />} />
+              <Route
+                path="/personalization"
+                element={<PersonalizationPage />}
+              />
+              <Route path="/process" element={<ProcessPage />} />
               {/* Screens 3–6 added here as each sprint completes */}
             </Route>
 

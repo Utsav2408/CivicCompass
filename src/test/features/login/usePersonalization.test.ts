@@ -33,14 +33,20 @@ describe("usePersonalization hook", () => {
 
   it("should navigate between steps", () => {
     const { result } = renderHook(() => usePersonalization(mockUid));
-    
-    act(() => { result.current.goNext(); });
+
+    act(() => {
+      result.current.goNext();
+    });
     expect(result.current.step).toBe(PersonalizationStep.Preferences);
-    
-    act(() => { result.current.goNext(); });
+
+    act(() => {
+      result.current.goNext();
+    });
     expect(result.current.step).toBe(PersonalizationStep.Confirm);
-    
-    act(() => { result.current.goBack(); });
+
+    act(() => {
+      result.current.goBack();
+    });
     expect(result.current.step).toBe(PersonalizationStep.Preferences);
   });
 
@@ -58,18 +64,23 @@ describe("usePersonalization hook", () => {
     const { result } = renderHook(() => usePersonalization(mockUid));
     vi.mocked(createUserProfile).mockResolvedValue(undefined);
 
-    act(() => { result.current.updateFormData({ name: "John Doe" }); });
-    
+    act(() => {
+      result.current.updateFormData({ name: "John Doe" });
+    });
+
     let success = false;
     await act(async () => {
       success = await result.current.submit(true);
     });
 
     expect(success).toBe(true);
-    expect(createUserProfile).toHaveBeenCalledWith(mockUid, expect.objectContaining({
-      name: "John Doe",
-      isComplete: true
-    }));
+    expect(createUserProfile).toHaveBeenCalledWith(
+      mockUid,
+      expect.objectContaining({
+        name: "John Doe",
+        isComplete: true,
+      }),
+    );
   });
 
   it("should handle skip flow by calling createUserProfile with isComplete: false", async () => {
@@ -82,9 +93,12 @@ describe("usePersonalization hook", () => {
     });
 
     expect(success).toBe(true);
-    expect(createUserProfile).toHaveBeenCalledWith(mockUid, expect.objectContaining({
-      isComplete: false
-    }));
+    expect(createUserProfile).toHaveBeenCalledWith(
+      mockUid,
+      expect.objectContaining({
+        isComplete: false,
+      }),
+    );
   });
 
   it("should set setStep directly", () => {
@@ -97,9 +111,13 @@ describe("usePersonalization hook", () => {
 
   it("should handle errors from createUserProfile", async () => {
     const { result } = renderHook(() => usePersonalization(mockUid));
-    vi.mocked(createUserProfile).mockRejectedValue(new Error("Firestore error"));
+    vi.mocked(createUserProfile).mockRejectedValue(
+      new Error("Firestore error"),
+    );
 
-    act(() => { result.current.updateFormData({ name: "John Doe" }); });
+    act(() => {
+      result.current.updateFormData({ name: "John Doe" });
+    });
 
     let success = false;
     await act(async () => {

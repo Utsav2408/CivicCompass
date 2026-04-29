@@ -1,4 +1,7 @@
-import { initializeTestEnvironment, type RulesTestEnvironment } from "@firebase/rules-unit-testing";
+import {
+  initializeTestEnvironment,
+  type RulesTestEnvironment,
+} from "@firebase/rules-unit-testing";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -27,7 +30,7 @@ describe("Home Integration — Emulator", () => {
     const db = unauth.firestore();
 
     const electionRef = doc(db, "elections", "loksabha_2024");
-    
+
     // Seed the doc (as admin/privileged)
     await testEnv.withSecurityRulesDisabled(async (context) => {
       await setDoc(doc(context.firestore(), "elections", "loksabha_2024"), {
@@ -53,6 +56,8 @@ describe("Home Integration — Emulator", () => {
     const db = alice.firestore();
 
     const electionRef = doc(db, "elections", "loksabha_2024");
-    await expect(setDoc(electionRef, { hack: true }, { merge: true })).rejects.toThrow();
+    await expect(
+      setDoc(electionRef, { hack: true }, { merge: true }),
+    ).rejects.toThrow();
   });
 });

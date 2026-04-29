@@ -10,7 +10,13 @@ interface QuickActionProps {
   color: string;
 }
 
-function QuickActionCard({ title, subtitle, icon, path, color }: QuickActionProps) {
+function QuickActionCard({
+  title,
+  subtitle,
+  icon,
+  path,
+  color,
+}: QuickActionProps) {
   return (
     <Link
       to={path}

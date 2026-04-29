@@ -40,7 +40,9 @@ export function useProfile() {
         }
       } catch (err) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : "Failed to fetch profile");
+          setError(
+            err instanceof Error ? err.message : "Failed to fetch profile",
+          );
         }
       } finally {
         if (isMounted) {

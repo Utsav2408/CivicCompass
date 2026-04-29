@@ -10,7 +10,7 @@ const { mockDb, mockDoc, mockCollection } = vi.hoisted(() => ({
   },
   mockDb: {
     collection: vi.fn(),
-  }
+  },
 }));
 
 // Link them
@@ -21,7 +21,7 @@ mockDb.collection.mockReturnValue(mockCollection);
 vi.mock("firebase-admin/firestore", () => {
   return {
     getFirestore: vi.fn(() => mockDb),
-    Timestamp: { now: () => ({ seconds: 123, nanoseconds: 0 }) }
+    Timestamp: { now: () => ({ seconds: 123, nanoseconds: 0 }) },
   };
 });
 
@@ -46,10 +46,11 @@ vi.mock("../_shared/logger", () => ({
 vi.mock("../_shared/schemas", () => ({
   VoterIdSchema: {
     safeParse: (val: string) => {
-      if (val === "INVALID") return { success: false, error: { flatten: () => "Invalid ID" } };
+      if (val === "INVALID")
+        return { success: false, error: { flatten: () => "Invalid ID" } };
       return { success: true, data: val };
-    }
-  }
+    },
+  },
 }));
 
 import { getFirestore } from "firebase-admin/firestore";
@@ -61,7 +62,7 @@ describe("eciVoterLookup Cloud Function", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    
+
     // Re-link for safety
     mockCollection.doc.mockReturnValue(mockDoc);
     mockDb.collection.mockReturnValue(mockCollection);
@@ -94,11 +95,16 @@ describe("eciVoterLookup Cloud Function", () => {
 
   it("should return 429 if rate limit exceeded", async () => {
     const { checkRateLimit } = await import("../_shared/rateLimiter");
-    vi.mocked(checkRateLimit).mockResolvedValue({ allowed: false, retryAfter: 3600 });
-    
+    vi.mocked(checkRateLimit).mockResolvedValue({
+      allowed: false,
+      retryAfter: 3600,
+    });
+
     await eciVoterLookupHandler(mockReq as any, mockRes as any);
     expect(mockRes.status).toHaveBeenCalledWith(429);
-    expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({ error: "Rate limit exceeded" }));
+    expect(mockRes.json).toHaveBeenCalledWith(
+      expect.objectContaining({ error: "Rate limit exceeded" }),
+    );
   });
 
   it("should return 400 for invalid voter ID format", async () => {
@@ -110,10 +116,13 @@ describe("eciVoterLookup Cloud Function", () => {
   it("should return 200 and cached data if present in Firestore", async () => {
     const db = getFirestore();
     const docRef = db.collection("voterCache").doc("ABC1234567");
-    vi.mocked(docRef.get).mockResolvedValue({ exists: true, data: () => ({ constituency: "Cached" }) } as any);
+    vi.mocked(docRef.get).mockResolvedValue({
+      exists: true,
+      data: () => ({ constituency: "Cached" }),
+    } as any);
 
     await eciVoterLookupHandler(mockReq as any, mockRes as any);
-    
+
     expect(mockRes.status).toHaveBeenCalledWith(200);
     expect(mockRes.json).toHaveBeenCalledWith({ constituency: "Cached" });
   });
@@ -133,7 +142,9 @@ describe("eciVoterLookup Cloud Function", () => {
   it("should return 500 if Firestore fails", async () => {
     const db = getFirestore();
     // Override the mockDb.collection behavior just for this test
-    vi.mocked(db.collection).mockImplementation(() => { throw new Error("Firestore down"); });
+    vi.mocked(db.collection).mockImplementation(() => {
+      throw new Error("Firestore down");
+    });
 
     await eciVoterLookupHandler(mockReq as any, mockRes as any);
     expect(mockRes.status).toHaveBeenCalledWith(500);

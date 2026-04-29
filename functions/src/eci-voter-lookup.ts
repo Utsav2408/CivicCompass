@@ -12,10 +12,7 @@ const db = getFirestore();
  * Rate limited to 5 calls per user per day.
  * Result cached in Firestore permanently.
  */
-export const eciVoterLookupHandler = async (
-  req: any,
-  res: any
-) => {
+export const eciVoterLookupHandler = async (req: any, res: any) => {
   // App Check verified by Firebase automatically
 
   if (req.method !== "POST") {
@@ -91,7 +88,7 @@ export const eciVoterLookupHandler = async (
         wardCode: mockResult.wardCode,
         voterLookupAt: Timestamp.now(),
       },
-      { merge: true }
+      { merge: true },
     );
 
     log.info("voter_lookup_success", { uid });
@@ -107,5 +104,5 @@ export const eciVoterLookupHandler = async (
 
 export const eciVoterLookup = onRequest(
   { cors: true, region: "us-east1" },
-  eciVoterLookupHandler as any
+  eciVoterLookupHandler as any,
 );

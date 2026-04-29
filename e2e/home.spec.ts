@@ -11,7 +11,7 @@ test.describe("HomePage E2E", () => {
   test("renders key dashboard elements", async ({ page }) => {
     // Check TopBar
     await expect(page.locator("header")).toBeVisible();
-    
+
     // Check ElectionStatusCard (if schedule is seeded in emulator)
     // We expect the countdown to be visible eventually
     // For now, let's just assert the container is there if data loads
@@ -32,13 +32,18 @@ test.describe("HomePage E2E", () => {
   });
 
   test("quick actions navigation", async ({ page }) => {
-    const actions = ["Election Process", "My Ward", "Find Polling Booth", "Report an Issue"];
-    
+    const actions = [
+      "Election Process",
+      "My Ward",
+      "Find Polling Booth",
+      "Report an Issue",
+    ];
+
     for (const action of actions) {
       const card = page.getByText(action);
       await expect(card).toBeVisible();
     }
-    
+
     // Test one navigation
     await page.getByText("Find Polling Booth").click();
     await expect(page).toHaveURL(/\/map/);

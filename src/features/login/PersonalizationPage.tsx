@@ -23,7 +23,7 @@ interface EciLookupResponse {
 
 /**
  * PersonalizationPage — Screen 1.1
- * 
+ *
  * A 3-step onboarding flow to collect user details (Voter ID, Preferences).
  * Uses the Rang Mahal design system with a parchment background.
  */
@@ -41,14 +41,14 @@ export function PersonalizationPage() {
     goNext,
     goBack,
     submit,
-    isSubmitting
+    isSubmitting,
   } = usePersonalization(user?.uid ?? "");
 
   const {
     sendOtp,
     verifyOtp,
     isLoading: isOtpLoading,
-    isOtpSent
+    isOtpSent,
   } = usePhoneOtp();
 
   const [voterIdError, setVoterIdError] = useState<string | null>(null);
@@ -82,28 +82,31 @@ export function PersonalizationPage() {
 
   const handleVoterIdBlur = async (voterId: string) => {
     if (!voterId || voterId.length < 10) return;
-    
+
     setIsValidatingVoterId(true);
     setVoterIdError(null);
     try {
       // Call eciVoterLookup Cloud Function
       // For now, we simulate the fetch as per the mock in the function
-      const response = await fetch("https://us-east1-civic-compass.cloudfunctions.net/eciVoterLookup", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "x-uid": user.uid 
+      const response = await fetch(
+        "https://us-east1-civic-compass.cloudfunctions.net/eciVoterLookup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-uid": user.uid,
+          },
+          body: JSON.stringify({ voterId }),
         },
-        body: JSON.stringify({ voterId })
-      });
-      
+      );
+
       if (!response.ok) throw new Error("Lookup failed");
-      
+
       const data = (await response.json()) as EciLookupResponse;
       updateFormData({
         voterIdNumber: voterId,
         constituency: data.constituency,
-        pollingBooth: data.pollingBooth
+        pollingBooth: data.pollingBooth,
       });
     } catch {
       setVoterIdError(t("personalization.identity.voter_id_error"));
@@ -127,8 +130,8 @@ export function PersonalizationPage() {
       <JaaliHero />
 
       {/* Progress Indicator */}
-      <div 
-        role="progressbar" 
+      <div
+        role="progressbar"
         aria-valuenow={((currentStepIndex + 1) / steps.length) * 100}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -138,18 +141,18 @@ export function PersonalizationPage() {
           padding: "var(--space-md) var(--space-xl)",
           display: "flex",
           justifyContent: "center",
-          gap: "var(--space-sm)"
+          gap: "var(--space-sm)",
         }}
       >
         {steps.map((s, i) => (
-          <div 
+          <div
             key={s}
             style={{
               height: "4px",
               width: "60px",
               borderRadius: "var(--radius-full)",
               background: i <= currentStepIndex ? "var(--sf)" : "var(--border)",
-              transition: "var(--transition-base)"
+              transition: "var(--transition-base)",
             }}
           />
         ))}
@@ -176,70 +179,144 @@ export function PersonalizationPage() {
             boxShadow: "var(--shadow-lg)",
             display: "flex",
             flexDirection: "column",
-            gap: "var(--space-lg)"
+            gap: "var(--space-lg)",
           }}
         >
           {step === PersonalizationStep.Identity && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--space-md)",
+              }}
+            >
               <h2 style={{ font: "var(--text-h1)", color: "var(--in)" }}>
                 {t("personalization.step_identity")}
               </h2>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
-                <label style={{ font: "var(--text-h2)" }}>{t("personalization.identity.name_label")}</label>
-                <input 
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-xs)",
+                }}
+              >
+                <label style={{ font: "var(--text-h2)" }}>
+                  {t("personalization.identity.name_label")}
+                </label>
+                <input
                   type="text"
                   placeholder={t("personalization.identity.name_placeholder")}
                   value={formData.name ?? ""}
-                  onChange={(e) => { updateFormData({ name: e.target.value }); }}
+                  onChange={(e) => {
+                    updateFormData({ name: e.target.value });
+                  }}
                   style={inputStyle}
                 />
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
-                <label style={{ font: "var(--text-h2)" }}>{t("personalization.identity.voter_id_label")}</label>
-                <input 
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-xs)",
+                }}
+              >
+                <label style={{ font: "var(--text-h2)" }}>
+                  {t("personalization.identity.voter_id_label")}
+                </label>
+                <input
                   type="text"
                   placeholder={t("personalization.identity.voter_id_hint")}
-                  onBlur={(e) => { void handleVoterIdBlur(e.target.value); }}
+                  onBlur={(e) => {
+                    void handleVoterIdBlur(e.target.value);
+                  }}
                   style={inputStyle}
                 />
-                {isValidatingVoterId && <p style={{ fontSize: "12px", color: "var(--in)" }}>{t("personalization.identity.validating")}</p>}
-                {voterIdError && <p role="alert" style={{ fontSize: "12px", color: "var(--lo-text)" }}>{voterIdError}</p>}
+                {isValidatingVoterId && (
+                  <p style={{ fontSize: "12px", color: "var(--in)" }}>
+                    {t("personalization.identity.validating")}
+                  </p>
+                )}
+                {voterIdError && (
+                  <p
+                    role="alert"
+                    style={{ fontSize: "12px", color: "var(--lo-text)" }}
+                  >
+                    {voterIdError}
+                  </p>
+                )}
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
-                <label style={{ font: "var(--text-h2)" }}>{t("personalization.identity.phone_label")}</label>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-xs)",
+                }}
+              >
+                <label style={{ font: "var(--text-h2)" }}>
+                  {t("personalization.identity.phone_label")}
+                </label>
                 <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-                  <input 
+                  <input
                     type="tel"
-                    placeholder={t("personalization.identity.phone_placeholder")}
+                    placeholder={t(
+                      "personalization.identity.phone_placeholder",
+                    )}
                     style={{ ...inputStyle, flex: 1 }}
                     id="phone-input"
                   />
-                  <button 
+                  <button
                     id="recaptcha-container"
-                    onClick={() => { void sendOtp((document.getElementById("phone-input") as HTMLInputElement).value, "recaptcha-container"); }}
+                    onClick={() => {
+                      void sendOtp(
+                        (
+                          document.getElementById(
+                            "phone-input",
+                          ) as HTMLInputElement
+                        ).value,
+                        "recaptcha-container",
+                      );
+                    }}
                     style={buttonSecondaryStyle}
                     disabled={isOtpLoading}
                   >
-                    {isOtpLoading ? <AshokaCakraLoader size={16} /> : t("personalization.identity.send_otp")}
+                    {isOtpLoading ? (
+                      <AshokaCakraLoader size={16} />
+                    ) : (
+                      t("personalization.identity.send_otp")
+                    )}
                   </button>
                 </div>
               </div>
 
               {isOtpSent && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
-                  <label style={{ font: "var(--text-h2)" }}>{t("personalization.identity.otp_label")}</label>
-                  <input 
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "var(--space-xs)",
+                  }}
+                >
+                  <label style={{ font: "var(--text-h2)" }}>
+                    {t("personalization.identity.otp_label")}
+                  </label>
+                  <input
                     type="text"
                     maxLength={6}
                     value={otpValue}
-                    onChange={(e) => { setOtpValue(e.target.value); }}
+                    onChange={(e) => {
+                      setOtpValue(e.target.value);
+                    }}
                     style={inputStyle}
                   />
-                  <button 
-                    onClick={() => { void verifyOtp(otpValue).then(() => { goNext(); }); }}
+                  <button
+                    onClick={() => {
+                      void verifyOtp(otpValue).then(() => {
+                        goNext();
+                      });
+                    }}
                     style={buttonPrimaryStyle}
                     disabled={isOtpLoading || otpValue.length < 6}
                   >
@@ -248,9 +325,18 @@ export function PersonalizationPage() {
                 </div>
               )}
 
-              <button 
-                onClick={() => { void handleSkip(); }}
-                style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", textDecoration: "underline", fontSize: "13px" }}
+              <button
+                onClick={() => {
+                  void handleSkip();
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--text-muted)",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  fontSize: "13px",
+                }}
               >
                 {t("personalization.skip")}
               </button>
@@ -258,105 +344,220 @@ export function PersonalizationPage() {
           )}
 
           {step === PersonalizationStep.Preferences && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--space-md)",
+              }}
+            >
               <h2 style={{ font: "var(--text-h1)", color: "var(--in)" }}>
                 {t("personalization.step_preferences")}
               </h2>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
-                <label style={{ font: "var(--text-h2)" }}>{t("personalization.preferences.language_label")}</label>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-sm)",
+                }}
+              >
+                <label style={{ font: "var(--text-h2)" }}>
+                  {t("personalization.preferences.language_label")}
+                </label>
                 <div style={{ display: "flex", gap: "var(--space-md)" }}>
-                   <button 
-                    onClick={() => { void i18n.changeLanguage("en"); }}
-                    style={i18n.language === "en" ? buttonPrimaryStyle : buttonSecondaryStyle}
-                   >EN</button>
-                   <button 
-                    onClick={() => { void i18n.changeLanguage("hi"); }}
-                    style={i18n.language === "hi" ? buttonPrimaryStyle : buttonSecondaryStyle}
-                   >हि</button>
+                  <button
+                    onClick={() => {
+                      void i18n.changeLanguage("en");
+                    }}
+                    style={
+                      i18n.language === "en"
+                        ? buttonPrimaryStyle
+                        : buttonSecondaryStyle
+                    }
+                  >
+                    EN
+                  </button>
+                  <button
+                    onClick={() => {
+                      void i18n.changeLanguage("hi");
+                    }}
+                    style={
+                      i18n.language === "hi"
+                        ? buttonPrimaryStyle
+                        : buttonSecondaryStyle
+                    }
+                  >
+                    हि
+                  </button>
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
-                <label style={{ font: "var(--text-h2)" }}>{t("personalization.preferences.election_type_label")}</label>
-                {["lok_sabha", "vidhan_sabha", "both"].map(type => (
-                  <label key={type} style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", cursor: "pointer" }}>
-                    <input 
-                      type="checkbox" 
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-sm)",
+                }}
+              >
+                <label style={{ font: "var(--text-h2)" }}>
+                  {t("personalization.preferences.election_type_label")}
+                </label>
+                {["lok_sabha", "vidhan_sabha", "both"].map((type) => (
+                  <label
+                    key={type}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--space-sm)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
                       checked={formData.electionInterest?.includes(type)}
                       onChange={(e) => {
                         const current = formData.electionInterest ?? [];
-                        const next = e.target.checked ? [...current, type] : current.filter(t => t !== type);
+                        const next = e.target.checked
+                          ? [...current, type]
+                          : current.filter((t) => t !== type);
                         updateFormData({ electionInterest: next });
                       }}
                     />
-                    <span style={{ font: "var(--text-body)" }}>{t(`personalization.preferences.${type}`)}</span>
+                    <span style={{ font: "var(--text-body)" }}>
+                      {t(`personalization.preferences.${type}`)}
+                    </span>
                   </label>
                 ))}
               </div>
 
-              <div style={{ display: "flex", gap: "var(--space-md)", marginTop: "var(--space-md)" }}>
-                <button onClick={goBack} style={buttonSecondaryStyle}>{t("common.back")}</button>
-                <button onClick={goNext} style={buttonPrimaryStyle}>{t("common.next")}</button>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "var(--space-md)",
+                  marginTop: "var(--space-md)",
+                }}
+              >
+                <button onClick={goBack} style={buttonSecondaryStyle}>
+                  {t("common.back")}
+                </button>
+                <button onClick={goNext} style={buttonPrimaryStyle}>
+                  {t("common.next")}
+                </button>
               </div>
             </div>
           )}
 
           {step === PersonalizationStep.Confirm && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--space-md)",
+              }}
+            >
               <h2 style={{ font: "var(--text-h1)", color: "var(--in)" }}>
                 {t("personalization.step_confirm")}
               </h2>
 
-              <div style={{ 
-                background: "var(--sf-l)", 
-                padding: "var(--space-md)", 
-                borderRadius: "var(--radius-md)",
-                border: "1px solid var(--sf-tint)"
-              }}>
-                <h3 style={{ font: "var(--text-h2)", color: "var(--sf)" }}>{t("personalization.confirm.summary_title")}</h3>
-                <p style={{ font: "var(--text-body)", marginTop: "var(--space-xs)" }}>
-                  <strong>{t("personalization.identity.name_label")}:</strong> {formData.name}
+              <div
+                style={{
+                  background: "var(--sf-l)",
+                  padding: "var(--space-md)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--sf-tint)",
+                }}
+              >
+                <h3 style={{ font: "var(--text-h2)", color: "var(--sf)" }}>
+                  {t("personalization.confirm.summary_title")}
+                </h3>
+                <p
+                  style={{
+                    font: "var(--text-body)",
+                    marginTop: "var(--space-xs)",
+                  }}
+                >
+                  <strong>{t("personalization.identity.name_label")}:</strong>{" "}
+                  {formData.name}
                 </p>
                 <p style={{ font: "var(--text-body)" }}>
-                  <strong>{t("personalization.identity.voter_id_label")}:</strong> {formData.voterIdNumber}
+                  <strong>
+                    {t("personalization.identity.voter_id_label")}:
+                  </strong>{" "}
+                  {formData.voterIdNumber}
                 </p>
                 {formData.constituency && (
-                  <p style={{ font: "var(--text-body)", marginTop: "var(--space-sm)" }}>
+                  <p
+                    style={{
+                      font: "var(--text-body)",
+                      marginTop: "var(--space-sm)",
+                    }}
+                  >
                     <strong>Constituency:</strong> {formData.constituency}
                   </p>
                 )}
                 {formData.pollingBooth && (
                   <div style={{ marginTop: "var(--space-xs)" }}>
-                    <p style={{ font: "var(--text-body)" }}><strong>Booth:</strong> {formData.pollingBooth.name}</p>
-                    <p style={{ font: "var(--text-small)", color: "var(--text-muted)" }}>{formData.pollingBooth.address}</p>
+                    <p style={{ font: "var(--text-body)" }}>
+                      <strong>Booth:</strong> {formData.pollingBooth.name}
+                    </p>
+                    <p
+                      style={{
+                        font: "var(--text-small)",
+                        color: "var(--text-muted)",
+                      }}
+                    >
+                      {formData.pollingBooth.address}
+                    </p>
                   </div>
                 )}
               </div>
 
-              <button 
-                onClick={() => { setStep(PersonalizationStep.Identity); }}
-                style={{ color: "var(--in)", textDecoration: "underline", background: "none", border: "none", cursor: "pointer", fontSize: "13px", textAlign: "left" }}
+              <button
+                onClick={() => {
+                  setStep(PersonalizationStep.Identity);
+                }}
+                style={{
+                  color: "var(--in)",
+                  textDecoration: "underline",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                  textAlign: "left",
+                }}
               >
                 {t("personalization.confirm.looks_wrong")}
               </button>
 
-              <div style={{ display: "flex", gap: "var(--space-md)", marginTop: "var(--space-md)" }}>
-                <button onClick={goBack} style={buttonSecondaryStyle}>{t("common.back")}</button>
-                <button 
-                  onClick={() => { 
-                    void submit().then((success) => { 
+              <div
+                style={{
+                  display: "flex",
+                  gap: "var(--space-md)",
+                  marginTop: "var(--space-md)",
+                }}
+              >
+                <button onClick={goBack} style={buttonSecondaryStyle}>
+                  {t("common.back")}
+                </button>
+                <button
+                  onClick={() => {
+                    void submit().then((success) => {
                       if (success) {
                         // Tell ProtectedRoute to re-check profile before allowing /home.
                         refreshProfile();
-                        void navigate("/home", { replace: true }); 
+                        void navigate("/home", { replace: true });
                       }
-                    }); 
-                  }} 
+                    });
+                  }}
                   style={buttonPrimaryStyle}
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? <AshokaCakraLoader size={20} /> : t("personalization.confirm.finish")}
+                  {isSubmitting ? (
+                    <AshokaCakraLoader size={20} />
+                  ) : (
+                    t("personalization.confirm.finish")
+                  )}
                 </button>
               </div>
             </div>
@@ -373,7 +574,7 @@ const inputStyle = {
   border: "1.5px solid var(--border)",
   font: "var(--text-body)",
   outline: "none",
-  background: "var(--pg)"
+  background: "var(--pg)",
 };
 
 const buttonPrimaryStyle = {
@@ -388,7 +589,7 @@ const buttonPrimaryStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: "var(--space-sm)"
+  gap: "var(--space-sm)",
 };
 
 const buttonSecondaryStyle = {
@@ -402,5 +603,5 @@ const buttonSecondaryStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: "var(--space-sm)"
+  gap: "var(--space-sm)",
 };

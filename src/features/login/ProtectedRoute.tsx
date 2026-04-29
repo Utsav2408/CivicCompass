@@ -1,10 +1,5 @@
 import { doc, getDoc } from "firebase/firestore";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { db } from "@/lib/firebase";
@@ -38,8 +33,6 @@ export function ProtectedRoute() {
     setSessionSkipUid(user.uid);
   }, [user]);
 
-
-
   useEffect(() => {
     if (isAuthLoading) return;
 
@@ -51,7 +44,7 @@ export function ProtectedRoute() {
     const key = `${user.uid}:${String(checkGeneration)}`;
     if (inflightRef.current === key) return; // deduplicate concurrent renders
     inflightRef.current = key;
-    
+
     setProfileStatus("loading");
 
     void (async () => {
@@ -63,7 +56,9 @@ export function ProtectedRoute() {
         }
 
         const data = docSnap.data() as { isComplete?: boolean } | undefined;
-        setProfileStatus(data?.isComplete === true ? "ready" : "needs_personalization");
+        setProfileStatus(
+          data?.isComplete === true ? "ready" : "needs_personalization",
+        );
       } catch {
         // On error, fall through to onboarding — safer than a blank screen.
         setProfileStatus("needs_personalization");
@@ -99,7 +94,9 @@ export function ProtectedRoute() {
   }
 
   return (
-    <ProfileRouteContext.Provider value={{ refreshProfile, allowIncompleteForSession }}>
+    <ProfileRouteContext.Provider
+      value={{ refreshProfile, allowIncompleteForSession }}
+    >
       <Outlet />
     </ProfileRouteContext.Provider>
   );

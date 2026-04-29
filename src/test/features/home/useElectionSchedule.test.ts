@@ -5,7 +5,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { ElectionSchedule } from "@/features/home/home.types";
 import { useElectionSchedule } from "@/features/home/useElectionSchedule";
 
-
 // Mock Firebase
 vi.mock("firebase/firestore", () => ({
   onSnapshot: vi.fn(),
@@ -38,7 +37,9 @@ describe("useElectionSchedule", () => {
 
     let snapshotCallback!: (snapshot: firestore.DocumentSnapshot) => void;
     vi.mocked(firestore.onSnapshot).mockImplementation((_query, cb) => {
-      snapshotCallback = cb as unknown as (snapshot: firestore.DocumentSnapshot) => void;
+      snapshotCallback = cb as unknown as (
+        snapshot: firestore.DocumentSnapshot,
+      ) => void;
       return vi.fn();
     });
 
@@ -47,7 +48,9 @@ describe("useElectionSchedule", () => {
     // Simulate snapshot event
     snapshotCallback(mockSnapshot);
 
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.schedule).toEqual(mockData);
   });
 
@@ -63,7 +66,9 @@ describe("useElectionSchedule", () => {
     // Simulate error
     errorCallback(new Error("Permission denied"));
 
-    await waitFor(() => { expect(result.current.error).toBe("Permission denied"); });
+    await waitFor(() => {
+      expect(result.current.error).toBe("Permission denied");
+    });
     expect(result.current.isLoading).toBe(false);
   });
 });

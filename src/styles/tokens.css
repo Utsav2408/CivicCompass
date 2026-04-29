@@ -7,7 +7,7 @@
   /* ── Brand Colours ──────────────────────────────────────────────────────── */
 
   --sf: #b84200;
-  --sf-mid: #a83900;    /* darkened from #d4500f — white text now 6.46:1 AA ✅ */
+  --sf-mid: #a83900; /* darkened from #d4500f — white text now 6.46:1 AA ✅ */
   --sf-l: #fff3ec;
   --sf-tint: rgba(184, 66, 0, 0.12);
 
@@ -21,11 +21,11 @@
   --gd-l: #fff8e0;
   --gd-tint: rgba(192, 120, 0, 0.12);
 
-  --lo: #bf3d65;        /* kept — white text on --lo passes 4.8:1 AA ✅ */
+  --lo: #bf3d65; /* kept — white text on --lo passes 4.8:1 AA ✅ */
   --lo-mid: #d44e78;
   --lo-l: #fbeaf0;
   --lo-tint: rgba(191, 61, 101, 0.1);
-  --lo-text: #ae2f59;   /* NEW — for error text ON lo-light bg: 5.41:1 AA ✅ */
+  --lo-text: #ae2f59; /* NEW — for error text ON lo-light bg: 5.41:1 AA ✅ */
 
   --bn: #236642;
   --bn-mid: #2d8054;
@@ -43,7 +43,7 @@
   --border: #eae0d4;
   --ch: #150f06;
   --text-warm: #503e2a;
-  --text-muted: #856a59;  /* darkened from #8a7060 — on paper now 4.88:1 AA ✅ */
+  --text-muted: #856a59; /* darkened from #8a7060 — on paper now 4.88:1 AA ✅ */
 
   /* ── Semantic Colour Map ────────────────────────────────────────────────── */
 
@@ -58,7 +58,9 @@
   --color-warning-dark: var(--gd-dark);
   --color-warning-light: var(--gd-l);
 
-  --color-error: var(--lo-text);  /* uses --lo-text for text, --lo for icon/border */
+  --color-error: var(
+    --lo-text
+  ); /* uses --lo-text for text, --lo for icon/border */
   --color-error-light: var(--lo-l);
 
   --color-success: var(--bn);
@@ -105,10 +107,12 @@
 
   /* ── Shadows ────────────────────────────────────────────────────────────── */
 
-  --shadow-sm: 0 1px 3px rgba(21,15,6,0.08), 0 1px 2px rgba(21,15,6,0.04);
-  --shadow-md: 0 4px 12px rgba(21,15,6,0.1), 0 2px 4px rgba(21,15,6,0.06);
-  --shadow-lg: 0 8px 24px rgba(21,15,6,0.12), 0 4px 8px rgba(21,15,6,0.06);
-  --shadow-xl: 0 16px 48px rgba(21,15,6,0.14), 0 8px 16px rgba(21,15,6,0.08);
+  --shadow-sm: 0 1px 3px rgba(21, 15, 6, 0.08), 0 1px 2px rgba(21, 15, 6, 0.04);
+  --shadow-md: 0 4px 12px rgba(21, 15, 6, 0.1), 0 2px 4px rgba(21, 15, 6, 0.06);
+  --shadow-lg:
+    0 8px 24px rgba(21, 15, 6, 0.12), 0 4px 8px rgba(21, 15, 6, 0.06);
+  --shadow-xl:
+    0 16px 48px rgba(21, 15, 6, 0.14), 0 8px 16px rgba(21, 15, 6, 0.08);
 
   /* ── Focus Ring — 2px Saffron outline (WCAG 2.4.7) ─────────────────────── */
 
@@ -140,7 +144,9 @@
 
 /* ── Base Styles ──────────────────────────────────────────────────────────── */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -171,21 +177,40 @@ body {
 /* ── Keyframes ────────────────────────────────────────────────────────────── */
 
 @keyframes chakra-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse-saffron {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

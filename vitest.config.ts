@@ -12,11 +12,7 @@ export default defineConfig({
     // Emulator tests are excluded here and run separately via test:emulator.
     // Playwright e2e tests are excluded entirely — run via test:e2e.
     include: ["src/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
-    exclude: [
-      "**/node_modules/**",
-      "**/*.emulator.test.ts",
-      "e2e/**",
-    ],
+    exclude: ["**/node_modules/**", "**/*.emulator.test.ts", "e2e/**"],
 
     coverage: {
       provider: "v8",

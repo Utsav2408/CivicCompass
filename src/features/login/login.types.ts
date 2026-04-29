@@ -9,7 +9,8 @@ export const PersonalizationStep = {
   Confirm: "confirm",
 } as const;
 
-export type PersonalizationStep = (typeof PersonalizationStep)[keyof typeof PersonalizationStep];
+export type PersonalizationStep =
+  (typeof PersonalizationStep)[keyof typeof PersonalizationStep];
 
 /**
  * Partial profile used during the multi-step personalization form

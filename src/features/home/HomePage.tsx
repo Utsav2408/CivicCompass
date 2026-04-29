@@ -40,7 +40,8 @@ export function HomePage() {
             left: 0,
             right: 0,
             height: "220px",
-            background: "linear-gradient(180deg, var(--in-l) 0%, var(--color-bg) 100%)",
+            background:
+              "linear-gradient(180deg, var(--in-l) 0%, var(--color-bg) 100%)",
             zIndex: 0,
           }}
         >
@@ -67,9 +68,18 @@ export function HomePage() {
                 textAlign: "center",
               }}
             >
-              <p style={{ color: "var(--lo-text)", marginBottom: "var(--space-md)" }}>{error}</p>
+              <p
+                style={{
+                  color: "var(--lo-text)",
+                  marginBottom: "var(--space-md)",
+                }}
+              >
+                {error}
+              </p>
               <button
-                onClick={() => { window.location.reload(); }}
+                onClick={() => {
+                  window.location.reload();
+                }}
                 style={{
                   padding: "8px 16px",
                   background: "var(--sf)",
@@ -102,8 +112,7 @@ export function HomePage() {
             }}
           >
             Stay informed. Stay empowered. Your vote is your power.
-            <br />
-            © 2024 CivicCompass
+            <br />© 2024 CivicCompass
           </p>
         </div>
 

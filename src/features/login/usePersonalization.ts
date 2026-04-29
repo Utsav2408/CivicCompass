@@ -9,7 +9,9 @@ import { PersonalizationStep, type PartialProfile } from "./login.types";
  * Handles state transitions, form data, and final submission to Firestore.
  */
 export function usePersonalization(uid: string) {
-  const [step, setStep] = useState<PersonalizationStep>(PersonalizationStep.Identity);
+  const [step, setStep] = useState<PersonalizationStep>(
+    PersonalizationStep.Identity,
+  );
   const [formData, setFormData] = useState<PartialProfile>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,7 +49,8 @@ export function usePersonalization(uid: string) {
       await createUserProfile(uid, { ...formData, isComplete });
       return true;
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to save profile.";
+      const message =
+        err instanceof Error ? err.message : "Failed to save profile.";
       setErrors({ submit: message });
       return false;
     } finally {

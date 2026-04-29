@@ -132,7 +132,13 @@ export function TopBar() {
             gap: "var(--space-md)",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <h2 style={{ font: "var(--text-h2)", color: "var(--in)" }}>
               {t("home.topbar.change")}
             </h2>
@@ -162,7 +168,13 @@ export function TopBar() {
               fontSize: "16px",
             }}
           />
-          <p style={{ fontSize: "12px", color: "var(--text-muted)", textAlign: "center" }}>
+          <p
+            style={{
+              fontSize: "12px",
+              color: "var(--text-muted)",
+              textAlign: "center",
+            }}
+          >
             (Search results would appear here)
           </p>
         </div>

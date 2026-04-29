@@ -1,4 +1,7 @@
-import type { ElectionPhase, ElectionSchedule } from "@/features/home/home.types";
+import type {
+  ElectionPhase,
+  ElectionSchedule,
+} from "@/features/home/home.types";
 
 /**
  * getCurrentPhase — finds the active or most relevant phase based on current date.

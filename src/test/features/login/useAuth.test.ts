@@ -93,7 +93,9 @@ describe("useAuth", () => {
     const { fire } = setupAuthListener();
     const { result } = renderHook(() => useAuth());
 
-    act(() => { fire(null); });
+    act(() => {
+      fire(null);
+    });
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -112,7 +114,9 @@ describe("useAuth", () => {
     const { result } = renderHook(() => useAuth());
 
     // Auth resolves as unauthenticated initially
-    act(() => { fire(null); });
+    act(() => {
+      fire(null);
+    });
 
     // Trigger sign-in
     await act(async () => {
@@ -120,7 +124,9 @@ describe("useAuth", () => {
     });
 
     // Simulate Firebase firing the observer with the signed-in user
-    act(() => { fire(fakeUser); });
+    act(() => {
+      fire(fakeUser);
+    });
 
     await waitFor(() => {
       expect(result.current.user).toEqual(fakeUser);
@@ -136,15 +142,18 @@ describe("useAuth", () => {
     let resolveSignIn!: () => void;
     mockSignInWithPopup.mockReturnValue(
       new Promise<Awaited<ReturnType<typeof signInWithPopup>>>((resolve) => {
-        resolveSignIn = () =>
-          { resolve({
+        resolveSignIn = () => {
+          resolve({
             user: fakeUser,
-          } as Awaited<ReturnType<typeof signInWithPopup>>); };
+          } as Awaited<ReturnType<typeof signInWithPopup>>);
+        };
       }),
     );
 
     const { result } = renderHook(() => useAuth());
-    act(() => { fire(null); });
+    act(() => {
+      fire(null);
+    });
 
     // Start sign-in — don't await
     act(() => {
@@ -159,7 +168,9 @@ describe("useAuth", () => {
       resolveSignIn();
     });
 
-    act(() => { fire(fakeUser); });
+    act(() => {
+      fire(fakeUser);
+    });
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -175,7 +186,9 @@ describe("useAuth", () => {
     );
 
     const { result } = renderHook(() => useAuth());
-    act(() => { fire(null); });
+    act(() => {
+      fire(null);
+    });
 
     await act(async () => {
       await result.current.signIn();
@@ -193,7 +206,9 @@ describe("useAuth", () => {
     mockSignInWithPopup.mockRejectedValue("unexpected string error");
 
     const { result } = renderHook(() => useAuth());
-    act(() => { fire(null); });
+    act(() => {
+      fire(null);
+    });
 
     await act(async () => {
       await result.current.signIn();
@@ -211,15 +226,21 @@ describe("useAuth", () => {
     mockSignOut.mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useAuth());
-    act(() => { fire(fakeUser); }); // start authenticated
+    act(() => {
+      fire(fakeUser);
+    }); // start authenticated
 
-    await waitFor(() => { expect(result.current.user).toEqual(fakeUser); });
+    await waitFor(() => {
+      expect(result.current.user).toEqual(fakeUser);
+    });
 
     await act(async () => {
       await result.current.signOut();
     });
 
-    act(() => { fire(null); }); // Firebase fires observer with null after sign-out
+    act(() => {
+      fire(null);
+    }); // Firebase fires observer with null after sign-out
 
     await waitFor(() => {
       expect(result.current.user).toBeNull();

@@ -49,7 +49,9 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
 
   const today = new Date().toISOString().slice(0, 10);
 
-  const getStatus = (date: string | undefined): "past" | "current" | "upcoming" => {
+  const getStatus = (
+    date: string | undefined,
+  ): "past" | "current" | "upcoming" => {
     if (!date) return "upcoming";
     return date < today ? "past" : date === today ? "current" : "upcoming";
   };
@@ -141,7 +143,8 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
               gap: "var(--space-xs)",
               cursor: "pointer",
               padding: "var(--space-sm)",
-              background: event.status === "current" ? "var(--sf-l)" : "var(--paper)",
+              background:
+                event.status === "current" ? "var(--sf-l)" : "var(--paper)",
               borderRadius: "var(--radius-md)",
               border:
                 event.status === "current"
@@ -149,7 +152,8 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
                   : event.status === "upcoming"
                     ? "1px solid var(--in-tint)"
                     : "1px solid var(--border)",
-              boxShadow: event.status === "current" ? "var(--shadow-sm)" : "none",
+              boxShadow:
+                event.status === "current" ? "var(--shadow-sm)" : "none",
               transition: "var(--transition-base)",
               opacity: event.status === "past" ? 0.7 : 1,
             }}
@@ -160,8 +164,10 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
                 width: "24px",
                 height: "24px",
                 borderRadius: "var(--radius-full)",
-                background: event.status === "current" ? "var(--sf)" : "transparent",
-                border: event.status === "upcoming" ? "2px solid var(--in)" : "none",
+                background:
+                  event.status === "current" ? "var(--sf)" : "transparent",
+                border:
+                  event.status === "upcoming" ? "2px solid var(--in)" : "none",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -169,7 +175,9 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
                 fontSize: "12px",
               }}
             >
-              {event.status === "past" && <span style={{ color: "var(--bn)" }}>✓</span>}
+              {event.status === "past" && (
+                <span style={{ color: "var(--bn)" }}>✓</span>
+              )}
               {event.status === "current" && (
                 <span
                   style={{
@@ -187,7 +195,8 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
                 fontFamily: "var(--font-body)",
                 fontSize: "13px",
                 fontWeight: 700,
-                color: event.status === "past" ? "var(--text-muted)" : "var(--ch)",
+                color:
+                  event.status === "past" ? "var(--text-muted)" : "var(--ch)",
               }}
             >
               {event.label}

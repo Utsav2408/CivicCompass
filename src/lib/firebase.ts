@@ -39,9 +39,11 @@ interface FirebaseGlobal extends Window {
 
 if (debugToken) {
   if (typeof self !== "undefined") {
-    (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+    (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN =
+      debugToken;
   } else if (typeof global !== "undefined") {
-    (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+    (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN =
+      debugToken;
   }
 }
 

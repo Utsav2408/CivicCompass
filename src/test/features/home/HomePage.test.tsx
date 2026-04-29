@@ -6,7 +6,6 @@ import { HomePage } from "@/features/home/HomePage";
 import type { ElectionSchedule } from "@/features/home/home.types";
 import { useElectionSchedule } from "@/features/home/useElectionSchedule";
 
-
 // Mocks
 vi.mock("@features/home/useElectionSchedule");
 vi.mock("@features/login/useAuth", () => ({
@@ -48,7 +47,9 @@ describe("HomePage", () => {
       pollingDate: "2024-05-20",
       announcementDate: "2024-03-01",
       sourceUrl: "https://eci.gov.in",
-      phases: [{ id: "p1", label: "Phase 1", date: "2024-05-10", status: "upcoming" }],
+      phases: [
+        { id: "p1", label: "Phase 1", date: "2024-05-10", status: "upcoming" },
+      ],
     } as unknown as ElectionSchedule;
 
     vi.mocked(useElectionSchedule).mockReturnValue({

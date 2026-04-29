@@ -32,6 +32,15 @@
         { "fieldPath": "type", "order": "ASCENDING" },
         { "fieldPath": "pollingDate", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "process-steps",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "electionType", "order": "ASCENDING" },
+        { "fieldPath": "phase", "order": "ASCENDING" },
+        { "fieldPath": "stepOrder", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

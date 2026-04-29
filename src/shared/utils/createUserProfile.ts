@@ -9,7 +9,7 @@ import type { UserProfile } from "@/shared/types/user";
  */
 export async function createUserProfile(
   uid: string,
-  profileData: Partial<Omit<UserProfile, "uid" | "createdAt" | "updatedAt">>
+  profileData: Partial<Omit<UserProfile, "uid" | "createdAt" | "updatedAt">>,
 ): Promise<void> {
   const userRef = doc(db, "users", uid);
 
@@ -30,6 +30,6 @@ export async function createUserProfile(
       ...profileData,
       updatedAt: serverTimestamp(), // Always update the timestamp
     },
-    { merge: true }
+    { merge: true },
   );
 }

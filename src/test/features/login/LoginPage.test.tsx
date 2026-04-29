@@ -71,14 +71,13 @@ function defaultAuthState() {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mockLanguage = "en";   // reset language to EN before every test
-  defaultAuthState();    // reset auth state before every test
+  mockLanguage = "en"; // reset language to EN before every test
+  defaultAuthState(); // reset auth state before every test
 });
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe("LoginPage", () => {
-
   // ── 1. Renders sign-in button ───────────────────────────────────────────────
 
   it("renders the Sign in with Google button", () => {
@@ -92,7 +91,9 @@ describe("LoginPage", () => {
     mockSignIn.mockResolvedValue(undefined);
     render(<LoginPage />);
     fireEvent.click(screen.getByRole("button", { name: /login\.cta/i }));
-    await waitFor(() => { expect(mockSignIn).toHaveBeenCalledOnce(); });
+    await waitFor(() => {
+      expect(mockSignIn).toHaveBeenCalledOnce();
+    });
   });
 
   it("renders the wordmark and both taglines", () => {
@@ -123,18 +124,18 @@ describe("LoginPage", () => {
     mockLanguage = "en"; // explicit — language is EN
     render(<LoginPage />);
     fireEvent.click(screen.getByRole("button", { name: /lang\.toggle_aria/i }));
-    await waitFor(() =>
-      { expect(mockChangeLanguage).toHaveBeenCalledWith("hi"); },
-    );
+    await waitFor(() => {
+      expect(mockChangeLanguage).toHaveBeenCalledWith("hi");
+    });
   });
 
   it("calls changeLanguage with 'en' when toggled from HI", async () => {
     mockLanguage = "hi"; // set to HI before render — no nested vi.mock needed
     render(<LoginPage />);
     fireEvent.click(screen.getByRole("button", { name: /lang\.toggle_aria/i }));
-    await waitFor(() =>
-      { expect(mockChangeLanguage).toHaveBeenCalledWith("en"); },
-    );
+    await waitFor(() => {
+      expect(mockChangeLanguage).toHaveBeenCalledWith("en");
+    });
   });
 
   // ── 3. Error state ──────────────────────────────────────────────────────────

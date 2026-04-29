@@ -27,7 +27,11 @@ vi.mock("react-router-dom", async () => {
     ...actual,
     useNavigate: () => mockNavigate,
     Navigate: ({ to, replace }: { to: string; replace?: boolean }) => (
-      <div data-testid="redirect" data-to={to} data-replace={String(Boolean(replace))} />
+      <div
+        data-testid="redirect"
+        data-to={to}
+        data-replace={String(Boolean(replace))}
+      />
     ),
   };
 });
@@ -43,7 +47,13 @@ describe("PersonalizationPage component", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useAuth).mockReturnValue({ user: mockUser, isLoading: false, signIn: vi.fn(), signOut: vi.fn(), error: null });
+    vi.mocked(useAuth).mockReturnValue({
+      user: mockUser,
+      isLoading: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+      error: null,
+    });
     vi.mocked(usePersonalization).mockReturnValue({
       step: PersonalizationStep.Identity,
       setStep: vi.fn(),
@@ -53,7 +63,7 @@ describe("PersonalizationPage component", () => {
       goBack: mockGoBack,
       submit: mockSubmit,
       isSubmitting: false,
-      errors: {}
+      errors: {},
     });
     vi.mocked(usePhoneOtp).mockReturnValue({
       sendOtp: mockSendOtp,
@@ -61,7 +71,7 @@ describe("PersonalizationPage component", () => {
       isLoading: false,
       error: null,
       isOtpSent: false,
-      setupRecaptcha: vi.fn()
+      setupRecaptcha: vi.fn(),
     });
   });
 
@@ -69,19 +79,23 @@ describe("PersonalizationPage component", () => {
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText("personalization.step_identity")).toBeDefined();
-    expect(screen.getByPlaceholderText("personalization.identity.name_placeholder")).toBeDefined();
+    expect(
+      screen.getByPlaceholderText("personalization.identity.name_placeholder"),
+    ).toBeDefined();
   });
 
   it("calls updateFormData when name changes", () => {
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    const input = screen.getByPlaceholderText("personalization.identity.name_placeholder");
+    const input = screen.getByPlaceholderText(
+      "personalization.identity.name_placeholder",
+    );
     fireEvent.change(input, { target: { value: "John Doe" } });
     expect(mockUpdateFormData).toHaveBeenCalledWith({ name: "John Doe" });
   });
@@ -89,22 +103,30 @@ describe("PersonalizationPage component", () => {
   it("triggers voter ID lookup on blur", async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ constituency: "Test Constituency", pollingBooth: { name: "Booth 1" } })
+      json: () =>
+        Promise.resolve({
+          constituency: "Test Constituency",
+          pollingBooth: { name: "Booth 1" },
+        }),
     });
 
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    const input = screen.getByPlaceholderText("personalization.identity.voter_id_hint");
+    const input = screen.getByPlaceholderText(
+      "personalization.identity.voter_id_hint",
+    );
     fireEvent.blur(input, { target: { value: "ABC1234567" } });
-    
+
     await waitFor(() => {
-      expect(mockUpdateFormData).toHaveBeenCalledWith(expect.objectContaining({
-        voterIdNumber: "ABC1234567",
-        constituency: "Test Constituency"
-      }));
+      expect(mockUpdateFormData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          voterIdNumber: "ABC1234567",
+          constituency: "Test Constituency",
+        }),
+      );
     });
   });
 
@@ -114,13 +136,17 @@ describe("PersonalizationPage component", () => {
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    const input = screen.getByPlaceholderText("personalization.identity.voter_id_hint");
+    const input = screen.getByPlaceholderText(
+      "personalization.identity.voter_id_hint",
+    );
     fireEvent.blur(input, { target: { value: "ABC1234567" } });
 
     await waitFor(() => {
-      expect(screen.getByText("personalization.identity.voter_id_error")).toBeDefined();
+      expect(
+        screen.getByText("personalization.identity.voter_id_error"),
+      ).toBeDefined();
     });
   });
 
@@ -128,17 +154,22 @@ describe("PersonalizationPage component", () => {
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    const phoneInput = screen.getByPlaceholderText("personalization.identity.phone_placeholder");
+    const phoneInput = screen.getByPlaceholderText(
+      "personalization.identity.phone_placeholder",
+    );
     fireEvent.change(phoneInput, { target: { value: "+911234567890" } });
-    
+
     // We have to mock getElementById for the phone input retrieval in the onClick handler
     document.getElementById = vi.fn().mockReturnValue(phoneInput);
 
     const sendBtn = screen.getByText("personalization.identity.send_otp");
     fireEvent.click(sendBtn);
-    expect(mockSendOtp).toHaveBeenCalledWith("+911234567890", "recaptcha-container");
+    expect(mockSendOtp).toHaveBeenCalledWith(
+      "+911234567890",
+      "recaptcha-container",
+    );
   });
 
   it("renders OTP input when isOtpSent is true", () => {
@@ -148,16 +179,20 @@ describe("PersonalizationPage component", () => {
       isLoading: false,
       error: null,
       isOtpSent: true,
-      setupRecaptcha: vi.fn()
+      setupRecaptcha: vi.fn(),
     });
 
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByText("personalization.identity.otp_label")).toBeDefined();
-    expect(screen.getByText("personalization.identity.verify_otp")).toBeDefined();
+    expect(
+      screen.getByText("personalization.identity.otp_label"),
+    ).toBeDefined();
+    expect(
+      screen.getByText("personalization.identity.verify_otp"),
+    ).toBeDefined();
   });
 
   it("renders Preferences step correctly", () => {
@@ -170,40 +205,46 @@ describe("PersonalizationPage component", () => {
       goBack: mockGoBack,
       submit: mockSubmit,
       isSubmitting: false,
-      errors: {}
+      errors: {},
     });
 
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText("personalization.step_preferences")).toBeDefined();
-    expect(screen.getByLabelText("personalization.preferences.lok_sabha")).toBeChecked();
+    expect(
+      screen.getByLabelText("personalization.preferences.lok_sabha"),
+    ).toBeChecked();
   });
 
   it("renders Confirm summary correctly", () => {
     vi.mocked(usePersonalization).mockReturnValue({
       step: PersonalizationStep.Confirm,
       setStep: vi.fn(),
-      formData: { 
-        name: "John Doe", 
+      formData: {
+        name: "John Doe",
         voterIdNumber: "ABC1234567",
         constituency: "Mumbai North",
-        pollingBooth: { name: "School Hall", address: "Main St", coordinates: { lat: 0, lng: 0 } }
+        pollingBooth: {
+          name: "School Hall",
+          address: "Main St",
+          coordinates: { lat: 0, lng: 0 },
+        },
       },
       updateFormData: mockUpdateFormData,
       goNext: mockGoNext,
       goBack: mockGoBack,
       submit: mockSubmit,
       isSubmitting: false,
-      errors: {}
+      errors: {},
     });
 
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText("Mumbai North")).toBeDefined();
     expect(screen.getByText("School Hall")).toBeDefined();
@@ -215,11 +256,11 @@ describe("PersonalizationPage component", () => {
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const skipBtn = screen.getByText("personalization.skip");
     fireEvent.click(skipBtn);
-    
+
     await waitFor(() => {
       expect(mockSubmit).toHaveBeenCalledWith(false);
       expect(mockNavigate).toHaveBeenCalledWith("/home", { replace: true });
@@ -237,13 +278,13 @@ describe("PersonalizationPage component", () => {
       goBack: mockGoBack,
       submit: mockSubmit,
       isSubmitting: false,
-      errors: {}
+      errors: {},
     });
 
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const finishBtn = screen.getByText("personalization.confirm.finish");
     fireEvent.click(finishBtn);
@@ -266,7 +307,7 @@ describe("PersonalizationPage component", () => {
     const { container } = render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(container).toBeEmptyDOMElement();
@@ -285,10 +326,13 @@ describe("PersonalizationPage component", () => {
     render(
       <MemoryRouter>
         <PersonalizationPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("redirect")).toHaveAttribute("data-to", "/login");
-    expect(screen.getByTestId("redirect")).toHaveAttribute("data-replace", "true");
+    expect(screen.getByTestId("redirect")).toHaveAttribute(
+      "data-replace",
+      "true",
+    );
   });
 });

@@ -23,7 +23,10 @@ describe("ElectionTimeline", () => {
     resultsDate: "2024-06-04",
     phases: [],
     sourceUrl: "https://eci.gov.in",
-    lastUpdated: { seconds: 0, nanoseconds: 0 } as unknown as ElectionSchedule["lastUpdated"],
+    lastUpdated: {
+      seconds: 0,
+      nanoseconds: 0,
+    } as unknown as ElectionSchedule["lastUpdated"],
   };
 
   it("renders LotusMotif when schedule is null", () => {
@@ -33,7 +36,7 @@ describe("ElectionTimeline", () => {
 
   it("renders all 6 phases when schedule is provided", () => {
     render(<ElectionTimeline schedule={mockSchedule} />);
-    
+
     expect(screen.getByText("home.timeline.announcement")).toBeInTheDocument();
     expect(screen.getByText("home.timeline.nomination")).toBeInTheDocument();
     expect(screen.getByText("home.timeline.scrutiny")).toBeInTheDocument();
@@ -48,7 +51,9 @@ describe("ElectionTimeline", () => {
     vi.setSystemTime(new Date("2024-03-01T12:00:00Z"));
 
     render(<ElectionTimeline schedule={mockSchedule} />);
-    const currentPhase = screen.getByText("home.timeline.announcement").closest("div");
+    const currentPhase = screen
+      .getByText("home.timeline.announcement")
+      .closest("div");
     // Check if background contains the color var (JSDOM handles vars differently)
     expect(currentPhase?.style.background).toBeDefined();
 

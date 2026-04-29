@@ -14,7 +14,10 @@ describe("getCurrentPhase", () => {
       { id: "p2", label: "Phase 2", date: "2024-05-20", status: "upcoming" },
     ],
     sourceUrl: "https://example.com",
-    lastUpdated: { seconds: 0, nanoseconds: 0 } as unknown as ElectionSchedule["lastUpdated"],
+    lastUpdated: {
+      seconds: 0,
+      nanoseconds: 0,
+    } as unknown as ElectionSchedule["lastUpdated"],
   };
 
   it("returns null if phases array is empty", () => {

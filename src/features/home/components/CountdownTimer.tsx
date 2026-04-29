@@ -8,7 +8,15 @@ interface CountdownTimerProps {
   sourceUrl?: string;
 }
 
-function TimeUnit({ value, label, isUrgent }: { value: number; label: string; isUrgent: boolean }) {
+function TimeUnit({
+  value,
+  label,
+  isUrgent,
+}: {
+  value: number;
+  label: string;
+  isUrgent: boolean;
+}) {
   return (
     <div
       style={{
@@ -83,9 +91,21 @@ export function CountdownTimer({
         }}
         aria-label={`${days} days, ${hours} hours, and ${minutes} minutes remaining`}
       >
-        <TimeUnit value={days} label={t("home.countdown.days")} isUrgent={isUrgent} />
-        <TimeUnit value={hours} label={t("home.countdown.hours")} isUrgent={isUrgent} />
-        <TimeUnit value={minutes} label={t("home.countdown.minutes")} isUrgent={isUrgent} />
+        <TimeUnit
+          value={days}
+          label={t("home.countdown.days")}
+          isUrgent={isUrgent}
+        />
+        <TimeUnit
+          value={hours}
+          label={t("home.countdown.hours")}
+          isUrgent={isUrgent}
+        />
+        <TimeUnit
+          value={minutes}
+          label={t("home.countdown.minutes")}
+          isUrgent={isUrgent}
+        />
       </div>
 
       {sourceUrl && (

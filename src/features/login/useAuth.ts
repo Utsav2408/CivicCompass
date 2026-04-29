@@ -63,8 +63,7 @@ function useAuthController(): UseAuthReturn {
       await signInWithPopup(auth, provider);
       // onAuthStateChanged above will update user — no setState needed here
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Sign-in failed";
+      const message = error instanceof Error ? error.message : "Sign-in failed";
       setState((prev) => ({ ...prev, isLoading: false, error: message }));
     }
   }, []);

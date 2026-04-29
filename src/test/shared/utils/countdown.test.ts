@@ -6,7 +6,7 @@ describe("getDaysHoursMinutes", () => {
   it("calculates correct d/h/m for a future date", () => {
     const now = new Date("2024-01-01T12:00:00Z");
     const target = new Date("2024-01-03T14:30:00Z");
-    
+
     vi.useFakeTimers();
     vi.setSystemTime(now);
 
@@ -25,7 +25,7 @@ describe("getDaysHoursMinutes", () => {
     // Let's check the utility first.
     const now = new Date("2024-01-01T12:00:00Z");
     const target = new Date("2024-01-02T11:00:00Z"); // 23 hours later
-    
+
     vi.useFakeTimers();
     vi.setSystemTime(now);
 
@@ -38,7 +38,7 @@ describe("getDaysHoursMinutes", () => {
   it("returns zero-state for past dates", () => {
     const now = new Date("2024-01-05T12:00:00Z");
     const target = new Date("2024-01-03T12:00:00Z");
-    
+
     vi.useFakeTimers();
     vi.setSystemTime(now);
 

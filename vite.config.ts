@@ -93,7 +93,8 @@ export default defineConfig({
 
           // Election Schedule (Static) — Cache First
           {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/elections\/.*/i,
+            urlPattern:
+              /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/elections\/.*/i,
             handler: "CacheFirst",
             options: {
               cacheName: "elections-static-cache",
@@ -106,7 +107,8 @@ export default defineConfig({
 
           // Party Performance Data — Stale While Revalidate
           {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/parties\/.*/i,
+            urlPattern:
+              /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/parties\/.*/i,
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "parties-cache",
@@ -119,7 +121,8 @@ export default defineConfig({
 
           // Live Election Timeline — Network First with fallback
           {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/live_updates\/.*/i,
+            urlPattern:
+              /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/live_updates\/.*/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "live-timeline-cache",
@@ -128,6 +131,21 @@ export default defineConfig({
                 maxAgeSeconds: 60 * 5, // 5 minutes
               },
               networkTimeoutSeconds: 3,
+            },
+          },
+
+          // Process Steps (Election Process Screen) — Cache First, 7-day TTL
+          // Enables the full /process screen to work offline after first visit.
+          {
+            urlPattern:
+              /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/process-steps.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "process-steps-cache",
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+              },
             },
           },
 

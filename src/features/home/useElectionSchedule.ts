@@ -39,7 +39,11 @@ export function useElectionSchedule(id: string) {
         }
       } catch (err) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : "Failed to fetch election schedule");
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Failed to fetch election schedule",
+          );
         }
       } finally {
         if (isMounted) {

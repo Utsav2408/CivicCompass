@@ -38,11 +38,14 @@ describe("ProtectedRoute", () => {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<div>Home Page</div>} />
-            <Route path="/personalization" element={<div>Personalization Page</div>} />
+            <Route
+              path="/personalization"
+              element={<div>Personalization Page</div>}
+            />
           </Route>
           <Route path="/login" element={<div>Login Page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   }
 

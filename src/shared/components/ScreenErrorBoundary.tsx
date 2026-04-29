@@ -43,11 +43,19 @@ export class ScreenErrorBoundary extends Component<Props, State> {
             <h2 style={{ color: "var(--lo)", marginBottom: "var(--space-sm)" }}>
               Something went wrong
             </h2>
-            <p style={{ fontSize: "14px", color: "var(--lo-text)", marginBottom: "var(--space-md)" }}>
+            <p
+              style={{
+                fontSize: "14px",
+                color: "var(--lo-text)",
+                marginBottom: "var(--space-md)",
+              }}
+            >
               {this.state.error?.message}
             </p>
             <button
-              onClick={() => { window.location.reload(); }}
+              onClick={() => {
+                window.location.reload();
+              }}
               style={{
                 padding: "8px 16px",
                 background: "var(--sf)",
