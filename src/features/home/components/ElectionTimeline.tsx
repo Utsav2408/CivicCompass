@@ -33,7 +33,7 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
           border: "1px dashed var(--border)",
         }}
       >
-        <LotusMotif size={48} opacity={0.5} />
+        <LotusMotif size={48} petalOpacity={0.5} />
         <p
           style={{
             fontFamily: "var(--font-body)",
@@ -47,7 +47,7 @@ export function ElectionTimeline({ schedule }: ElectionTimelineProps) {
     );
   }
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().slice(0, 10);
 
   const getStatus = (date: string | undefined): "past" | "current" | "upcoming" => {
     if (!date) return "upcoming";
