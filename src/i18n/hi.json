@@ -1,0 +1,18 @@
+{
+  "login": {
+    "wordmark": "सिविकCompass",
+    "tagline": "आपका व्यक्तिगत चुनाव साथी",
+    "tagline_hi_script": "Your Personalized Election Companion",
+    "cta": "Google से साइन इन करें",
+    "cta_loading": "साइन इन हो रहा है…",
+    "error_generic": "साइन-इन विफल। कृपया पुनः प्रयास करें।",
+    "footer_tagline": "आपका वोट। आपकी आवाज़।",
+    "footer_powered": "ECI डेटा द्वारा संचालित",
+    "footer_eci_label": "भारत निर्वाचन आयोग"
+  },
+  "lang": {
+    "toggle_en": "EN",
+    "toggle_hi": "हि",
+    "toggle_aria": "भाषा बदलें"
+  }
+}

@@ -5,31 +5,34 @@
  * Replaces generic loading spinners throughout CivicCompass.
  * Spokes generated via JavaScript — zero SVG file assets.
  *
- * Respects prefers-reduced-motion: animation paused when set.
+ * Accessibility:
+ *   - Functional use (loaders): role="img" + aria-label, visible to screen readers
+ *   - Decorative use (card motif): pass decorative={true} → aria-hidden="true"
+ *   - prefers-reduced-motion: uses data-chakra attribute (not aria-label selector)
+ *     to avoid fragile CSS template-literal selectors
  */
 
 interface AshokaCakraLoaderProps {
-  /** Size in pixels — diameter of the chakra */
   size?: number;
-  /** Stroke colour — defaults to Saffron (--sf) */
   color?: string;
-  /** Accessible label */
   label?: string;
+  /** When true, renders as aria-hidden decorative SVG — no screen reader announcement */
+  decorative?: boolean;
 }
 
 export function AshokaCakraLoader({
   size = 48,
   color = "var(--sf)",
   label = "Loading…",
+  decorative = false,
 }: AshokaCakraLoaderProps) {
   const cx = 50;
   const cy = 50;
-  const outerR = 38; // spoke tip
-  const innerR = 18; // spoke base (hub edge)
-  const hubR = 8; // centre hub radius
-  const rimR = 40; // outer rim circle
+  const outerR = 38;
+  const innerR = 18;
+  const hubR = 8;
+  const rimR = 40;
 
-  // 24 spokes at 15-degree intervals
   const spokes = Array.from({ length: 24 }, (_, i) => {
     const angleDeg = i * 15;
     const angleRad = (angleDeg * Math.PI) / 180;
@@ -37,12 +40,15 @@ export function AshokaCakraLoader({
     const y1 = cy - innerR * Math.cos(angleRad);
     const x2 = cx + outerR * Math.sin(angleRad);
     const y2 = cy - outerR * Math.cos(angleRad);
-
-    // Opacity fades from 0.35 to 1.0 across the 24 spokes
     const opacity = 0.35 + (i / 23) * 0.65;
-
     return { x1, y1, x2, y2, opacity, key: i };
   });
+
+  // Decorative: aria-hidden, no role, no label — screen readers skip entirely
+  // Functional: role="img" + aria-label — announced as a landmark image
+  const ariaProps = decorative
+    ? { "aria-hidden": true as const }
+    : { role: "img" as const, "aria-label": label };
 
   return (
     <svg
@@ -50,56 +56,40 @@ export function AshokaCakraLoader({
       height={size}
       viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label={label}
-      style={{
-        animation: "chakra-spin 12s linear infinite",
-      }}
+      data-chakra="spinner"
+      style={{ animation: "chakra-spin 12s linear infinite" }}
+      {...ariaProps}
     >
+      {/*
+        prefers-reduced-motion via data attribute selector — avoids the fragile
+        svg[aria-label="..."] pattern which breaks if label text changes.
+      */}
       <style>{`
         @media (prefers-reduced-motion: reduce) {
-          svg[aria-label="${label}"] {
-            animation-play-state: paused;
-          }
+          svg[data-chakra="spinner"] { animation-play-state: paused; }
         }
       `}</style>
 
-      {/* Outer rim */}
       <circle
-        cx={cx}
-        cy={cy}
-        r={rimR}
-        fill="none"
-        stroke={color}
-        strokeWidth="2.5"
-        opacity="0.9"
+        cx={cx} cy={cy} r={rimR}
+        fill="none" stroke={color} strokeWidth="2.5" opacity="0.9"
       />
 
-      {/* 24 spokes */}
       {spokes.map(({ x1, y1, x2, y2, opacity, key }) => (
         <line
           key={key}
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          stroke={color}
-          strokeWidth="2"
-          strokeLinecap="round"
-          opacity={opacity}
+          x1={x1} y1={y1} x2={x2} y2={y2}
+          stroke={color} strokeWidth="2"
+          strokeLinecap="round" opacity={opacity}
         />
       ))}
 
-      {/* Centre hub */}
       <circle cx={cx} cy={cy} r={hubR} fill={color} opacity="0.9" />
     </svg>
   );
 }
 
-/**
- * Full-page loading screen using AshokaCakraLoader.
- * Used as the Suspense fallback between route chunks.
- */
+/** Full-page Suspense fallback */
 export function PageLoader() {
   return (
     <div
@@ -114,23 +104,17 @@ export function PageLoader() {
       }}
       role="status"
       aria-live="polite"
+      aria-label="Loading CivicCompass"
     >
-      <AshokaCakraLoader size={56} />
-      <span
-        style={{
-          font: "var(--text-small)",
-          color: "var(--color-text-muted)",
-        }}
-      >
+      <AshokaCakraLoader size={56} label="Loading CivicCompass" />
+      <span style={{ font: "var(--text-small)", color: "var(--color-text-muted)" }}>
         Loading CivicCompass…
       </span>
     </div>
   );
 }
 
-/**
- * Inline section loader — used inside cards and containers.
- */
+/** Inline section loader — used inside cards and containers */
 export function SectionLoader({ label = "Loading…" }: { label?: string }) {
   return (
     <div
@@ -142,6 +126,7 @@ export function SectionLoader({ label = "Loading…" }: { label?: string }) {
       }}
       role="status"
       aria-live="polite"
+      aria-label={label}
     >
       <AshokaCakraLoader size={36} label={label} />
     </div>

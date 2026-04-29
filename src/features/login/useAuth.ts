@@ -1,0 +1,75 @@
+import {
+  type User,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useState, useEffect, useCallback } from "react";
+
+import { auth } from "@/lib/firebase";
+
+interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface UseAuthReturn extends AuthState {
+  signIn: () => Promise<void>;
+  signOut: () => Promise<void>;
+}
+
+const provider = new GoogleAuthProvider();
+
+export function useAuth(): UseAuthReturn {
+  const [state, setState] = useState<AuthState>({
+    user: null,
+    isLoading: true, // true on mount — auth state not yet resolved
+    error: null,
+  });
+
+  // Listen to Firebase auth state changes.
+  // onAuthStateChanged fires once immediately with the current user (or null),
+  // then on every subsequent sign-in / sign-out. The returned unsubscribe
+  // function is called on unmount — no listener leak.
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        setState({ user, isLoading: false, error: null });
+      },
+      (error) => {
+        setState({ user: null, isLoading: false, error: error.message });
+      },
+    );
+
+    return unsubscribe; // cleanup on unmount
+  }, []);
+
+  const signIn = useCallback(async () => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    try {
+      await signInWithPopup(auth, provider);
+      // onAuthStateChanged above will update user — no setState needed here
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Sign-in failed";
+      setState((prev) => ({ ...prev, isLoading: false, error: message }));
+    }
+  }, []);
+
+  const signOut = useCallback(async () => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    try {
+      await firebaseSignOut(auth);
+      // onAuthStateChanged fires with null — state updates automatically
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Sign-out failed";
+      setState((prev) => ({ ...prev, isLoading: false, error: message }));
+    }
+  }, []);
+
+  return { ...state, signIn, signOut };
+}

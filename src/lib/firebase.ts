@@ -1,12 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { getAuth } from "firebase/auth";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
 import {
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
+  connectFirestoreEmulator,
 } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env["VITE_FIREBASE_API_KEY"] as string,
@@ -19,10 +20,29 @@ const firebaseConfig = {
   appId: import.meta.env["VITE_FIREBASE_APP_ID"] as string,
 };
 
+const isEmulator = import.meta.env["VITE_USE_EMULATORS"] === "true";
+
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// Initialize App Check FIRST — before any other Firebase service
+// Inject the App Check debug token BEFORE initializeAppCheck.
+// When this global is set, the ReCaptchaV3Provider automatically uses it
+// instead of running the real reCAPTCHA challenge — no CustomProvider needed.
+// The token is only present in .env.local and is never committed or shipped.
+const debugToken = import.meta.env["VITE_APPCHECK_DEBUG_TOKEN"] as
+  | string
+  | undefined;
+
+if (debugToken) {
+  (
+    self as unknown as {
+      FIREBASE_APPCHECK_DEBUG_TOKEN: string;
+    }
+  ).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+}
+
+// Single App Check initialisation path for both dev and prod.
+// Debug token injection above handles the localhost case transparently.
 initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider(
     import.meta.env["VITE_APPCHECK_SITE_KEY"] as string,
@@ -30,11 +50,9 @@ initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true,
 });
 
-// Initialize Firebase services
+// Initialize Firebase services in the required order
 export const auth = getAuth(app);
 
-// Firestore with persistent cache — replaces deprecated enableIndexedDbPersistence
-// persistentMultipleTabManager allows offline persistence across multiple tabs
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentMultipleTabManager(),
@@ -42,5 +60,12 @@ export const db = initializeFirestore(app, {
 });
 
 export const storage = getStorage(app);
+
+// Connect to local Firebase Emulators when VITE_USE_EMULATORS=true
+if (isEmulator) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+  connectStorageEmulator(storage, "127.0.0.1", 9199);
+}
 
 export default app;

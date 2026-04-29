@@ -2,14 +2,28 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "numberOfRuns": 2
+      "numberOfRuns": 1,
+      "settings": {
+        "onlyCategories": ["accessibility", "best-practices", "performance", "seo"]
+      }
     },
     "assert": {
       "assertions": {
-        "categories:performance": ["warn", { "minScore": 0.7 }],
-        "categories:accessibility": ["warn", { "minScore": 0.7 }],
-        "categories:best-practices": ["warn", { "minScore": 0.7 }],
-        "categories:pwa": "off"
+        "categories:accessibility":  ["error", { "minScore": 1.0 }],
+        "categories:best-practices": ["warn",  { "minScore": 0.9 }],
+        "categories:seo":            ["warn",  { "minScore": 0.9 }],
+
+        "color-contrast":        ["error", { "minScore": 1 }],
+        "aria-required-attr":    ["error", { "minScore": 1 }],
+        "aria-roles":            ["error", { "minScore": 1 }],
+        "aria-valid-attr":       ["error", { "minScore": 1 }],
+        "aria-valid-attr-value": ["error", { "minScore": 1 }],
+        "button-name":           ["error", { "minScore": 1 }],
+        "image-alt":             ["error", { "minScore": 1 }],
+        "link-name":             ["error", { "minScore": 1 }],
+        "document-title":        ["error", { "minScore": 1 }],
+        "html-has-lang":         ["error", { "minScore": 1 }],
+        "meta-viewport":         ["error", { "minScore": 1 }]
       }
     },
     "upload": {

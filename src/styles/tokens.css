@@ -1,61 +1,49 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    Rang Mahal Design System — CSS Custom Properties
    CivicCompass · Google Prompt War Challenge
-   Rooted in Indian History & Culture
    ───────────────────────────────────────────────────────────────────────────── */
 
 :root {
   /* ── Brand Colours ──────────────────────────────────────────────────────── */
 
-  /* Saffron — Temple ghee lamps, monks' robes, Holi
-     Usage: Primary CTA buttons, active states, countdown timer */
   --sf: #b84200;
-  --sf-mid: #d4500f;
+  --sf-mid: #a83900;    /* darkened from #d4500f — white text now 6.46:1 AA ✅ */
   --sf-l: #fff3ec;
   --sf-tint: rgba(184, 66, 0, 0.12);
 
-  /* Sacred Indigo — Historical royal dye, Indo-Gangetic blue cloth
-     Usage: App header, navigation, trust-bearing surfaces */
   --in: #2e2b85;
   --in-mid: #3d3a9e;
   --in-l: #eceaf8;
   --in-tint: rgba(46, 43, 133, 0.1);
 
-  /* Turmeric Gold — Haldi ceremony, Navratri, auspicious rituals
-     Usage: Warning alerts, countdown urgency, source badges */
   --gd: #c07800;
   --gd-dark: #7a5000;
   --gd-l: #fff8e0;
   --gd-tint: rgba(192, 120, 0, 0.12);
 
-  /* Lotus Pink — National flower, purity, new beginnings
-     Usage: Error states, SOS emergency, civic action prompts */
-  --lo: #bf3d65;
+  --lo: #bf3d65;        /* kept — white text on --lo passes 4.8:1 AA ✅ */
   --lo-mid: #d44e78;
   --lo-l: #fbeaf0;
   --lo-tint: rgba(191, 61, 101, 0.1);
+  --lo-text: #ae2f59;   /* NEW — for error text ON lo-light bg: 5.41:1 AA ✅ */
 
-  /* Banyan Green — National tree, strength, democratic roots
-     Usage: Success states, ticket resolved, confirmation */
   --bn: #236642;
   --bn-mid: #2d8054;
   --bn-l: #e1f5ee;
   --bn-tint: rgba(35, 102, 66, 0.1);
 
-  /* Terracotta — Harappan pottery, ancient Indian earth tones
-     Usage: Neutral accents, source attribution badges */
   --tc: #8b4a2e;
   --tc-l: #faf0eb;
   --tc-tint: rgba(139, 74, 46, 0.1);
 
   /* ── Neutrals ───────────────────────────────────────────────────────────── */
 
-  --pg: #fdf8f0; /* Parchment — page background */
-  --paper: #fffcf7; /* Paper — card background */
-  --border: #eae0d4; /* Border — dividers, outlines */
-  --ch: #150f06; /* Charcoal — primary text */
-  --text-warm: #503e2a; /* Warm text — secondary text */
-  --text-muted: #8a7060; /* Muted text — captions, metadata */
+  --pg: #fdf8f0;
+  --paper: #fffcf7;
+  --border: #eae0d4;
+  --ch: #150f06;
+  --text-warm: #503e2a;
+  --text-muted: #856a59;  /* darkened from #8a7060 — on paper now 4.88:1 AA ✅ */
 
   /* ── Semantic Colour Map ────────────────────────────────────────────────── */
 
@@ -70,7 +58,7 @@
   --color-warning-dark: var(--gd-dark);
   --color-warning-light: var(--gd-l);
 
-  --color-error: var(--lo);
+  --color-error: var(--lo-text);  /* uses --lo-text for text, --lo for icon/border */
   --color-error-light: var(--lo-l);
 
   --color-success: var(--bn);
@@ -91,13 +79,12 @@
   --font-display: "Crimson Pro", Georgia, serif;
   --font-body: "Hind", "Noto Sans Devanagari", system-ui, sans-serif;
 
-  /* Type Scale */
-  --text-display: 700 42px/1.1 var(--font-display); /* Countdown, hero headlines */
-  --text-h1: 600 26px/1.2 var(--font-display); /* Screen titles */
-  --text-h2: 600 17px/1.35 var(--font-body); /* Card titles */
-  --text-body: 400 14px/1.6 var(--font-body); /* Body copy */
-  --text-small: 400 11px/1.5 var(--font-body); /* Captions, timestamps */
-  --text-label: 700 8px/1.2 var(--font-body); /* Status badges */
+  --text-display: 700 42px/1.1 var(--font-display);
+  --text-h1: 600 26px/1.2 var(--font-display);
+  --text-h2: 600 17px/1.35 var(--font-body);
+  --text-body: 400 14px/1.6 var(--font-body);
+  --text-small: 400 11px/1.5 var(--font-body);
+  --text-label: 700 8px/1.2 var(--font-body);
 
   /* ── Spacing — 8pt Grid ─────────────────────────────────────────────────── */
 
@@ -118,20 +105,18 @@
 
   /* ── Shadows ────────────────────────────────────────────────────────────── */
 
-  --shadow-sm: 0 1px 3px rgba(21, 15, 6, 0.08), 0 1px 2px rgba(21, 15, 6, 0.04);
-  --shadow-md: 0 4px 12px rgba(21, 15, 6, 0.1), 0 2px 4px rgba(21, 15, 6, 0.06);
-  --shadow-lg:
-    0 8px 24px rgba(21, 15, 6, 0.12), 0 4px 8px rgba(21, 15, 6, 0.06);
-  --shadow-xl:
-    0 16px 48px rgba(21, 15, 6, 0.14), 0 8px 16px rgba(21, 15, 6, 0.08);
+  --shadow-sm: 0 1px 3px rgba(21,15,6,0.08), 0 1px 2px rgba(21,15,6,0.04);
+  --shadow-md: 0 4px 12px rgba(21,15,6,0.1), 0 2px 4px rgba(21,15,6,0.06);
+  --shadow-lg: 0 8px 24px rgba(21,15,6,0.12), 0 4px 8px rgba(21,15,6,0.06);
+  --shadow-xl: 0 16px 48px rgba(21,15,6,0.14), 0 8px 16px rgba(21,15,6,0.08);
 
-  /* ── Focus Ring ─────────────────────────────────────────────────────────── */
+  /* ── Focus Ring — 2px Saffron outline (WCAG 2.4.7) ─────────────────────── */
 
   --focus-ring: 0 0 0 2px var(--sf);
 
-  /* ── Touch Targets ──────────────────────────────────────────────────────── */
+  /* ── Touch Targets — WCAG 2.5.5 minimum ────────────────────────────────── */
 
-  --touch-target: 44px; /* WCAG 2.5.5 minimum touch target */
+  --touch-target: 44px;
 
   /* ── Z-Index Scale ──────────────────────────────────────────────────────── */
 
@@ -139,7 +124,7 @@
   --z-raised: 10;
   --z-overlay: 100;
   --z-modal: 200;
-  --z-sos: 9999; /* SOS emergency button — always on top */
+  --z-sos: 9999;
 
   /* ── Animation ──────────────────────────────────────────────────────────── */
 
@@ -149,17 +134,13 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── Transitions ────────────────────────────────────────────────────────── */
-
   --transition-base: all var(--duration-normal) var(--ease-out);
   --transition-fast: all var(--duration-fast) var(--ease-out);
 }
 
 /* ── Base Styles ──────────────────────────────────────────────────────────── */
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -179,7 +160,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Focus Styles — Accessibility ────────────────────────────────────────── */
+/* ── Focus Styles — WCAG 2.4.7 ──────────────────────────────────────────── */
 
 :focus-visible {
   outline: none;
@@ -187,43 +168,24 @@ body {
   border-radius: var(--radius-sm);
 }
 
-/* ── Ashoka Chakra Spin Animation ─────────────────────────────────────────── */
+/* ── Keyframes ────────────────────────────────────────────────────────────── */
 
 @keyframes chakra-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 @keyframes pulse-saffron {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
 }
 
 @keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
