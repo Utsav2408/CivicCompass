@@ -68,7 +68,16 @@ const ELECTION_DOC = {
   scrutinyDate: "2024-03-30",
   withdrawalDeadline: "2024-04-01",
   resultsDate: "2024-06-04",
-  source: "https://eci.gov.in/files/file/14761-schedule",
+  sourceUrl: "https://eci.gov.in/files/file/14761-schedule",
+  phases: [
+    { id: "p1", label: "Phase 1", date: "2024-04-19", status: "past" },
+    { id: "p2", label: "Phase 2", date: "2024-04-26", status: "past" },
+    { id: "p3", label: "Phase 3", date: "2024-05-07", status: "upcoming" },
+    { id: "p4", label: "Phase 4", date: "2024-05-13", status: "upcoming" },
+    { id: "p5", label: "Phase 5", date: "2024-05-20", status: "upcoming" },
+    { id: "p6", label: "Phase 6", date: "2024-05-25", status: "upcoming" },
+    { id: "p7", label: "Phase 7", date: "2024-06-01", status: "upcoming" },
+  ],
   lastUpdated: Timestamp.now(),
 };
 

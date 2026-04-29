@@ -49,6 +49,51 @@
   },
   "common": {
     "back": "Back",
-    "next": "Next"
+    "next": "Next",
+    "offline_notice": "You are offline. Some features limited."
+  },
+  "nav": {
+    "home": "Home",
+    "map": "Map",
+    "ward": "My Ward",
+    "support": "Support"
+  },
+  "home": {
+    "countdown": {
+      "days": "days",
+      "hours": "hours",
+      "minutes": "mins",
+      "urgent": "Urgent: Election approaching!"
+    },
+    "timeline": {
+      "title": "Election Schedule",
+      "empty": "Election schedule not announced yet",
+      "source": "Source: eci.gov.in",
+      "announcement": "Announcement",
+      "nomination": "Nomination",
+      "scrutiny": "Scrutiny",
+      "withdrawal": "Withdrawal",
+      "polling": "Polling Day",
+      "results": "Results"
+    },
+    "actions": {
+      "process": "Election Process",
+      "process_sub": "Step-by-step guide to voting",
+      "ward": "My Ward",
+      "ward_sub": "Know your local representatives",
+      "booth": "Find Polling Booth",
+      "booth_sub": "Navigate to your assigned booth",
+      "report": "Report an Issue",
+      "report_sub": "Get help with voting problems"
+    },
+    "topbar": {
+      "constituency": "Select Constituency",
+      "change": "Change Constituency",
+      "search_placeholder": "Search by name or PIN..."
+    },
+    "days_to_go": "Days to go",
+    "voting_on": "Voting on",
+    "quick_actions": "Quick Actions",
+    "source_eci_aria": "Visit Election Commission of India website"
   }
 }

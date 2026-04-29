@@ -91,18 +91,57 @@ export default defineConfig({
             },
           },
 
-          // Firestore + Firebase APIs — Network First with fallback
-          // Covers live election timeline data
+          // Election Schedule (Static) — Cache First
           {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
+            urlPattern: /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/elections\/.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "elections-static-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24, // 24 hours
+              },
+            },
+          },
+
+          // Party Performance Data — Stale While Revalidate
+          {
+            urlPattern: /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/parties\/.*/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "parties-cache",
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 12, // 12 hours
+              },
+            },
+          },
+
+          // Live Election Timeline — Network First with fallback
+          {
+            urlPattern: /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/live_updates\/.*/i,
             handler: "NetworkFirst",
             options: {
-              cacheName: "firestore-cache",
+              cacheName: "live-timeline-cache",
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 5, // 5 minutes
               },
               networkTimeoutSeconds: 3,
+            },
+          },
+
+          // Firestore General APIs — Network First
+          {
+            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "firestore-general-cache",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60, // 1 hour
+              },
+              networkTimeoutSeconds: 5,
             },
           },
 

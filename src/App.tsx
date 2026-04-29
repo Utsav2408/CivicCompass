@@ -19,6 +19,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "@/features/login/ProtectedRoute";
 import { AuthProvider } from "@/features/login/useAuth";
 import { PageLoader } from "@shared/components/AshokaCakraLoader";
+import { OfflineBanner } from "@shared/components/OfflineBanner";
 
 // Lazy-loaded route chunks — each screen is a separate JS bundle.
 // Only the LoginPage loads eagerly since it's the entry point.
@@ -41,6 +42,7 @@ export function App() {
     <AuthProvider>
       <BrowserRouter>
         <Suspense fallback={<PageLoader />}>
+          <OfflineBanner />
           <Routes>
             {/* Root — redirect to login */}
             <Route path="/" element={<Navigate to="/login" replace />} />
