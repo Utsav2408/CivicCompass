@@ -27,10 +27,11 @@ export function useElectionSchedule(id: string) {
 
         if (isMounted) {
           if (docSnap.exists()) {
-            const data = docSnap.data();
+            const rawData: unknown = docSnap.data();
+            const data = (rawData ?? {}) as Partial<ElectionSchedule>;
             setSchedule({
               ...data,
-              phases: data.phases || [],
+              phases: data.phases ?? [],
             } as ElectionSchedule);
           } else {
             setError(`Election with ID "${id}" not found.`);

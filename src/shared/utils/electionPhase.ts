@@ -10,10 +10,10 @@ export function getCurrentPhase(
   schedule: ElectionSchedule,
   now: Date = new Date(),
 ): ElectionPhase | null {
-  if (!schedule.phases || schedule.phases.length === 0) return null;
+  if (schedule.phases.length === 0) return null;
 
   // Format now as YYYY-MM-DD for comparison
-  const todayStr = now.toISOString().split("T")[0] ?? "";
+  const todayStr = now.toISOString().slice(0, 10);
 
   // 1. Try to find an exact match for today
   const todayPhase = schedule.phases.find((p) => p.date === todayStr);
