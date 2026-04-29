@@ -14,5 +14,41 @@
     "toggle_en": "EN",
     "toggle_hi": "हि",
     "toggle_aria": "भाषा बदलें"
+  },
+  "personalization": {
+    "title": "अपने अनुभव को वैयक्तिकृत करें",
+    "step_identity": "पहचान",
+    "step_preferences": "वरीयताएं",
+    "step_confirm": "पुष्टि करें",
+    "skip": "अभी के लिए छोड़ें",
+    "identity": {
+      "name_label": "पूरा नाम",
+      "name_placeholder": "वोटर आईडी के अनुसार",
+      "voter_id_label": "वोटर आईडी नंबर",
+      "voter_id_hint": "उदाहरण: ABC1234567",
+      "voter_id_error": "अमान्य वोटर आईडी या खोज विफल रही।",
+      "validating": "रिकॉर्ड खोज रहे हैं...",
+      "phone_label": "फोन नंबर",
+      "phone_placeholder": "+91 00000 00000",
+      "send_otp": "ओटीपी भेजें",
+      "otp_label": "6-अंकीय ओटीपी दर्ज करें",
+      "verify_otp": "ओटीपी सत्यापित करें"
+    },
+    "preferences": {
+      "language_label": "पसंदीदा भाषा",
+      "election_type_label": "इसमें रुचि है",
+      "lok_sabha": "लोकसभा चुनाव",
+      "vidhan_sabha": "विधानसभा चुनाव",
+      "both": "दोनों"
+    },
+    "confirm": {
+      "summary_title": "क्या यह सही है?",
+      "looks_wrong": "गलत लग रहा है? विवरण संपादित करें",
+      "finish": "समाप्त करें और जारी रखें"
+    }
+  },
+  "common": {
+    "back": "पीछे",
+    "next": "आगे"
   }
 }

@@ -7,7 +7,8 @@
  *   - react-router-dom → navigate spy, no real routing needed
  */
 
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/dom";
+import { render } from "@testing-library/react";
 import { type User } from "firebase/auth";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
@@ -29,6 +30,10 @@ vi.mock("@features/login/useAuth", () => ({
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
+  Navigate: ({ to, replace }: { to: string; replace?: boolean }) => {
+    mockNavigate(to, { replace: Boolean(replace) });
+    return null;
+  },
 }));
 
 // Single top-level mock — language read from closure variable, not hardcoded.

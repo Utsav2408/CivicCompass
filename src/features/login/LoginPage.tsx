@@ -10,7 +10,7 @@
  */
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { useAuth } from "@features/login/useAuth";
 import { AshokaCakraLoader } from "@shared/components/AshokaCakraLoader";
@@ -98,11 +98,11 @@ function LanguageToggle() {
 export function LoginPage() {
   const { t } = useTranslation();
   const { signIn, isLoading, error, user } = useAuth();
-  const navigate = useNavigate();
 
+  // Declarative redirect — Navigate renders a redirect component rather than
+  // calling navigate() imperatively during render, which can fire multiple times.
   if (user) {
-    void navigate("/home", { replace: true });
-    return null;
+    return <Navigate to="/home" replace />;
   }
 
   async function handleSignIn() {

@@ -5,7 +5,15 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useState, useEffect, useCallback } from "react";
+import {
+  createElement,
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  type ReactNode,
+} from "react";
 
 import { auth } from "@/lib/firebase";
 
@@ -22,7 +30,9 @@ interface UseAuthReturn extends AuthState {
 
 const provider = new GoogleAuthProvider();
 
-export function useAuth(): UseAuthReturn {
+const AuthContext = createContext<UseAuthReturn | null>(null);
+
+function useAuthController(): UseAuthReturn {
   const [state, setState] = useState<AuthState>({
     user: null,
     isLoading: true, // true on mount — auth state not yet resolved
@@ -72,4 +82,17 @@ export function useAuth(): UseAuthReturn {
   }, []);
 
   return { ...state, signIn, signOut };
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const authState = useAuthController();
+  return createElement(AuthContext.Provider, { value: authState }, children);
+}
+
+export function useAuth(): UseAuthReturn {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }

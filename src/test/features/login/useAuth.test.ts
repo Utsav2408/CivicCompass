@@ -9,7 +9,8 @@
  *   4. listener cleanup on unmount
  */
 
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
+import { renderHook, act } from "@testing-library/react";
 import {
   type User,
   type NextOrObserver,

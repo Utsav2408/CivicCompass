@@ -14,5 +14,41 @@
     "toggle_en": "EN",
     "toggle_hi": "हि",
     "toggle_aria": "Switch language"
+  },
+  "personalization": {
+    "title": "Personalize Your Experience",
+    "step_identity": "Identity",
+    "step_preferences": "Preferences",
+    "step_confirm": "Confirm",
+    "skip": "Skip for now",
+    "identity": {
+      "name_label": "Full Name",
+      "name_placeholder": "As per Voter ID",
+      "voter_id_label": "Voter ID Number",
+      "voter_id_hint": "Example: ABC1234567",
+      "voter_id_error": "Invalid Voter ID or lookup failed.",
+      "validating": "Searching records...",
+      "phone_label": "Phone Number",
+      "phone_placeholder": "+91 00000 00000",
+      "send_otp": "Send OTP",
+      "otp_label": "Enter 6-digit OTP",
+      "verify_otp": "Verify OTP"
+    },
+    "preferences": {
+      "language_label": "Preferred Language",
+      "election_type_label": "Interested in",
+      "lok_sabha": "Lok Sabha Elections",
+      "vidhan_sabha": "Vidhan Sabha Elections",
+      "both": "Both"
+    },
+    "confirm": {
+      "summary_title": "Is this correct?",
+      "looks_wrong": "Looks wrong? Edit details",
+      "finish": "Finish & Continue"
+    }
+  },
+  "common": {
+    "back": "Back",
+    "next": "Next"
   }
 }

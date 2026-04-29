@@ -33,22 +33,28 @@ const debugToken = import.meta.env["VITE_APPCHECK_DEBUG_TOKEN"] as
   | string
   | undefined;
 
+interface FirebaseGlobal extends Window {
+  FIREBASE_APPCHECK_DEBUG_TOKEN?: string;
+}
+
 if (debugToken) {
-  (
-    self as unknown as {
-      FIREBASE_APPCHECK_DEBUG_TOKEN: string;
-    }
-  ).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+  if (typeof self !== "undefined") {
+    (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+  } else if (typeof global !== "undefined") {
+    (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+  }
 }
 
 // Single App Check initialisation path for both dev and prod.
 // Debug token injection above handles the localhost case transparently.
-initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(
-    import.meta.env["VITE_APPCHECK_SITE_KEY"] as string,
-  ),
-  isTokenAutoRefreshEnabled: true,
-});
+if (typeof document !== "undefined" && !isEmulator) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(
+      import.meta.env["VITE_APPCHECK_SITE_KEY"] as string,
+    ),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
 
 // Initialize Firebase services in the required order
 export const auth = getAuth(app);

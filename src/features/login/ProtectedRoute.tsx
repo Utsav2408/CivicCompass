@@ -1,30 +1,106 @@
-/**
- * ProtectedRoute
- *
- * Wraps any route that requires authentication.
- * Three states handled:
- *   1. isLoading — auth state not yet resolved → show PageLoader (never flash login)
- *   2. no user   — unauthenticated → redirect to /login
- *   3. user      — authenticated → render children
- */
+import { doc, getDoc } from "firebase/firestore";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { Navigate, Outlet } from "react-router-dom";
-
+import { db } from "@/lib/firebase";
 import { useAuth } from "@features/login/useAuth";
 import { PageLoader } from "@shared/components/AshokaCakraLoader";
 
+import { ProfileRouteContext } from "./ProfileRouteContext";
+
+// "needs_personalization" = missing doc or isComplete !== true
+// "ready" = doc exists and isComplete === true
+type ProfileStatus = "loading" | "needs_personalization" | "ready";
+
 export function ProtectedRoute() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const [profileStatus, setProfileStatus] = useState<ProfileStatus>("loading");
+  const [checkGeneration, setCheckGeneration] = useState(0);
+  const [sessionSkipUid, setSessionSkipUid] = useState<string | null>(null);
+  const location = useLocation();
+  const inflightRef = useRef<string | null>(null);
 
-  // Auth state is still resolving — Firebase needs one round-trip on first load.
-  // Show the Ashoka Chakra page loader to prevent a flash of the login page
-  // for users who are already authenticated.
-  if (isLoading) return <PageLoader />;
+  const refreshProfile = useCallback(() => {
+    // Set loading immediately (synchronous state update) so the redirect
+    // condition cannot fire during the window between navigate() and the
+    // new getDoc resolving. Then increment generation to trigger the effect.
+    setProfileStatus("loading");
+    setCheckGeneration((g) => g + 1);
+  }, []);
 
-  // No authenticated user — redirect to login, preserving the intended path
-  // in `state` so we can redirect back after successful sign-in.
-  if (!user) return <Navigate to="/login" replace />;
+  const allowIncompleteForSession = useCallback(() => {
+    if (!user) return;
+    setSessionSkipUid(user.uid);
+  }, [user]);
 
-  // Authenticated — render the child route
-  return <Outlet />;
+
+
+  useEffect(() => {
+    if (isAuthLoading) return;
+
+    if (!user) {
+      inflightRef.current = null;
+      return;
+    }
+
+    const key = `${user.uid}:${String(checkGeneration)}`;
+    if (inflightRef.current === key) return; // deduplicate concurrent renders
+    inflightRef.current = key;
+    
+    setProfileStatus("loading");
+
+    void (async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "users", user.uid));
+        if (!docSnap.exists()) {
+          setProfileStatus("needs_personalization");
+          return;
+        }
+
+        const data = docSnap.data() as { isComplete?: boolean } | undefined;
+        setProfileStatus(data?.isComplete === true ? "ready" : "needs_personalization");
+      } catch {
+        // On error, fall through to onboarding — safer than a blank screen.
+        setProfileStatus("needs_personalization");
+      }
+    })();
+  }, [user, isAuthLoading, checkGeneration]);
+
+  // ── Rendering ───────────────────────────────────────────────────────────────
+
+  // Auth state resolving
+  if (isAuthLoading) {
+    return <PageLoader />;
+  }
+
+  // No Firebase user — send to login.
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Profile check still in flight
+  if (profileStatus === "loading") {
+    return <PageLoader />;
+  }
+
+  // Setup incomplete and not already on onboarding page.
+  const canBypassForThisSession = sessionSkipUid === user.uid;
+  if (
+    profileStatus === "needs_personalization" &&
+    !canBypassForThisSession &&
+    location.pathname !== "/personalization"
+  ) {
+    return <Navigate to="/personalization" replace />;
+  }
+
+  return (
+    <ProfileRouteContext.Provider value={{ refreshProfile, allowIncompleteForSession }}>
+      <Outlet />
+    </ProfileRouteContext.Provider>
+  );
 }
