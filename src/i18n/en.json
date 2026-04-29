@@ -138,5 +138,45 @@
       "offline": "Internet required for AI responses. Process steps are available below.",
       "thinking": "Thinking..."
     }
+  },
+  "ward": {
+    "title": "My Ward",
+    "no_constituency": "Constituency Not Found",
+    "section": {
+      "performance": "Party Performance",
+      "history": "Historical Winners",
+      "candidates": "Candidates"
+    },
+    "types": {
+      "label": "Select Election Type",
+      "lok_sabha": "Lok Sabha",
+      "vidhan_sabha": "Vidhan Sabha"
+    },
+    "chart": {
+      "title": "Party Performance",
+      "toggle_label": "Toggle Chart View",
+      "vote_share": "Vote Share %",
+      "seats": "Seats Won"
+    },
+    "candidate": {
+      "assets": "Total Assets",
+      "criminal_cases": "Criminal Cases",
+      "education": "Education"
+    },
+    "candidates": {
+      "no_nominations": "No candidates have filed nominations yet.",
+      "deadline": "Nomination Deadline:"
+    },
+    "history": {
+      "title": "Historical Winners",
+      "year": "Year",
+      "candidate": "Candidate",
+      "party": "Party",
+      "margin": "Margin"
+    },
+    "empty": "No data available for this constituency",
+    "error": {
+      "retry": "Retry"
+    }
   }
 }

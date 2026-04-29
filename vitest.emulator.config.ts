@@ -5,9 +5,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     globals: true,
-    environment: "node", // emulator tests are pure Node — no DOM needed
+    environment: "jsdom", // emulator tests need DOM for React integration
     setupFiles: [], // no MSW server needed for emulator tests
-    include: ["**/*.emulator.test.ts"],
+    include: ["**/*.emulator.test.ts", "**/*.emulator.test.tsx"],
     testTimeout: 15000, // emulator calls are slower than mocked tests
   },
 

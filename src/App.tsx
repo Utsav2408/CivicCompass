@@ -43,6 +43,12 @@ const ProcessPage = lazy(() =>
   })),
 );
 
+const WardPage = lazy(() =>
+  import("@features/ward/WardPage").then((m) => ({
+    default: m.WardPage,
+  })),
+);
+
 export function App() {
   return (
     <AuthProvider>
@@ -64,7 +70,8 @@ export function App() {
                 element={<PersonalizationPage />}
               />
               <Route path="/process" element={<ProcessPage />} />
-              {/* Screens 3–6 added here as each sprint completes */}
+              <Route path="/ward" element={<WardPage />} />
+              {/* Screens 5–6 added here as each sprint completes */}
             </Route>
 
             {/* Catch-all — redirect unknown paths to login */}

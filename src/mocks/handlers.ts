@@ -47,10 +47,12 @@ export const handlers = [
   }),
 
   // Candidate fetch Cloud Function
-  http.get("*/candidate-fetch", ({ request }) => {
+  http.get("*/candidateFetch", ({ request }) => {
     const url = new URL(request.url);
     const constituency = url.searchParams.get("constituency");
-    if (constituency === "New Delhi PC-01") {
+    const electionType = url.searchParams.get("electionType");
+
+    if (constituency === "New Delhi PC-01" && electionType === "lok_sabha") {
       return HttpResponse.json({
         candidates: [
           { name: "Pravesh Verma", party: "BJP", assetsTotal: "2.4 Cr" },

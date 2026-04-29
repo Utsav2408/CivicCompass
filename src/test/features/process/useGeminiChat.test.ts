@@ -1,9 +1,6 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import {
-  afterAll,
-  afterEach,
-  beforeAll,
   beforeEach,
   describe,
   expect,
@@ -11,6 +8,7 @@ import {
   vi,
 } from "vitest";
 
+import * as authMock from "@/features/login/useAuth";
 import { useGeminiChat } from "@/features/process/hooks/useGeminiChat";
 import { server } from "@/mocks/server";
 
@@ -27,18 +25,10 @@ vi.mock("firebase/app-check", () => ({
 vi.mock("@/lib/firebase", () => ({ default: {} }));
 
 vi.mock("@/features/login/useAuth", () => ({
-  useAuth: () => ({ user: { uid: "test-uid" } }),
+  useAuth: vi.fn(() => ({ user: { uid: "test-uid" } })),
 }));
 
-beforeAll(() => {
-  server.listen({ onUnhandledRequest: "error" });
-});
-afterEach(() => {
-  server.resetHandlers();
-});
-afterAll(() => {
-  server.close();
-});
+
 
 describe("useGeminiChat", () => {
   beforeEach(() => {
@@ -145,9 +135,8 @@ describe("useGeminiChat", () => {
   });
 
   it("returns early without fetch when user is not authenticated", async () => {
-    vi.doMock("@/features/login/useAuth", () => ({
-      useAuth: () => ({ user: null }),
-    }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+    vi.mocked(authMock.useAuth).mockReturnValue({ user: null } as any);
 
     const fetchSpy = vi.spyOn(global, "fetch");
 
@@ -163,6 +152,5 @@ describe("useGeminiChat", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
 
     fetchSpy.mockRestore();
-    vi.doUnmock("@/features/login/useAuth");
   });
 });

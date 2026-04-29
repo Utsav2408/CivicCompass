@@ -89,10 +89,8 @@ const PARTY_RESULTS = [
     fullName: "Bharatiya Janata Party",
     voteShare2019: 56.6,
     voteShare2024: 54.3,
-    result2019: "Won",
-    winner2019: "Meenakshi Lekhi",
-    result2024: "Won",
-    winner2024: "Pravesh Verma",
+    seats2019: 303,
+    seats2024: 240,
     color: "#FF9933",
   },
   {
@@ -100,10 +98,8 @@ const PARTY_RESULTS = [
     fullName: "Indian National Congress",
     voteShare2019: 22.5,
     voteShare2024: 19.4,
-    result2019: "Lost",
-    winner2019: null,
-    result2024: "Lost",
-    winner2024: null,
+    seats2019: 52,
+    seats2024: 99,
     color: "#19AAED",
   },
   {
@@ -111,10 +107,8 @@ const PARTY_RESULTS = [
     fullName: "Aam Aadmi Party",
     voteShare2019: 18.3,
     voteShare2024: 18.9,
-    result2019: "Lost",
-    winner2019: null,
-    result2024: "Lost",
-    winner2024: null,
+    seats2019: 1,
+    seats2024: 3,
     color: "#0066CC",
   },
   {
@@ -122,10 +116,8 @@ const PARTY_RESULTS = [
     fullName: "Bahujan Samaj Party",
     voteShare2019: 1.2,
     voteShare2024: 1.1,
-    result2019: "Lost",
-    winner2019: null,
-    result2024: "Lost",
-    winner2024: null,
+    seats2019: 10,
+    seats2024: 0,
     color: "#1565C0",
   },
   {
@@ -133,11 +125,28 @@ const PARTY_RESULTS = [
     fullName: "Other Parties",
     voteShare2019: 1.4,
     voteShare2024: 6.3,
-    result2019: "—",
-    winner2019: null,
-    result2024: "—",
-    winner2024: null,
+    seats2019: 177,
+    seats2024: 201,
     color: "#9E9E9E",
+  },
+];
+
+// ─── Historical Winners ───────────────────────────────────────────────────────
+
+const WINNERS = [
+  {
+    id: "2019",
+    year: 2019,
+    winnerName: "Meenakshi Lekhi",
+    party: "BJP",
+    voteMargin: 256504,
+  },
+  {
+    id: "2024",
+    year: 2024,
+    winnerName: "Pravesh Verma",
+    party: "BJP",
+    voteMargin: 184562,
   },
 ];
 
@@ -491,6 +500,21 @@ async function seedPartyResults() {
   console.log(`  ✓ ${PARTY_RESULTS.length} party results`);
 }
 
+async function seedWinners() {
+  console.log("Seeding historical winners...");
+  const batch = db.batch();
+  for (const winner of WINNERS) {
+    const ref = db
+      .collection("elections")
+      .doc("loksabha_2024")
+      .collection("winners")
+      .doc(winner.id);
+    batch.set(ref, winner);
+  }
+  await batch.commit();
+  console.log(`  ✓ ${WINNERS.length} historical winners`);
+}
+
 async function seedPoliceStations() {
   console.log("Seeding police stations...");
   const batch = db.batch();
@@ -587,6 +611,7 @@ async function main() {
   await seedUsers();
   await seedElection();
   await seedPartyResults();
+  await seedWinners();
   await seedPoliceStations();
   await seedPollingBooths();
   await seedTickets();

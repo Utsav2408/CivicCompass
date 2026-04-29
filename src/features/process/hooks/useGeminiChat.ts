@@ -31,11 +31,11 @@ export function useGeminiChat() {
         // Actually, if we just use an empty token for now in emulator, it's fine.
         let appCheckToken = "";
         try {
-          // Assume appCheck is initialized globally or we get it via an internal mechanism. 
+          // Assume appCheck is initialized globally or we get it via an internal mechanism.
           // For the sake of this mock/proxy call, we'll bypass AppCheck enforcement locally or use a dummy token.
           appCheckToken = "emulator-token";
-        } catch (e) {
-          console.warn("AppCheck token fetch failed", e);
+        } catch {
+          // Ignore app check error in development
         }
 
         const response = await fetch(

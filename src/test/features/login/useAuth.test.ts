@@ -20,7 +20,7 @@ import {
 } from "firebase/auth";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useAuth } from "@features/login/useAuth";
+import { useAuth, AuthProvider } from "@features/login/useAuth";
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -82,7 +82,7 @@ describe("useAuth", () => {
     // onAuthStateChanged registered but observer not fired yet
     mockOnAuthStateChanged.mockReturnValue(vi.fn());
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
 
     expect(result.current.isLoading).toBe(true);
     expect(result.current.user).toBeNull();
@@ -91,7 +91,7 @@ describe("useAuth", () => {
 
   it("sets isLoading: false once onAuthStateChanged fires with null", async () => {
     const { fire } = setupAuthListener();
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
 
     act(() => {
       fire(null);
@@ -111,7 +111,7 @@ describe("useAuth", () => {
       user: fakeUser,
     } as Awaited<ReturnType<typeof signInWithPopup>>);
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
 
     // Auth resolves as unauthenticated initially
     act(() => {
@@ -150,7 +150,7 @@ describe("useAuth", () => {
       }),
     );
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
     act(() => {
       fire(null);
     });
@@ -185,7 +185,7 @@ describe("useAuth", () => {
       new Error("auth/popup-closed-by-user"),
     );
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
     act(() => {
       fire(null);
     });
@@ -205,7 +205,7 @@ describe("useAuth", () => {
     const { fire } = setupAuthListener();
     mockSignInWithPopup.mockRejectedValue("unexpected string error");
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
     act(() => {
       fire(null);
     });
@@ -225,7 +225,7 @@ describe("useAuth", () => {
     const { fire } = setupAuthListener();
     mockSignOut.mockResolvedValue(undefined);
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
     act(() => {
       fire(fakeUser);
     }); // start authenticated
@@ -253,7 +253,7 @@ describe("useAuth", () => {
   it("calls unsubscribe on unmount — no listener leak", () => {
     const { unsubscribe } = setupAuthListener();
 
-    const { unmount } = renderHook(() => useAuth());
+    const { unmount } = renderHook(() => useAuth(), { wrapper: AuthProvider });
     unmount();
 
     expect(unsubscribe).toHaveBeenCalledOnce();

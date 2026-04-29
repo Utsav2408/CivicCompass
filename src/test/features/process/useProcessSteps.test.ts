@@ -91,8 +91,8 @@ describe("useProcessSteps", () => {
         source: "ECI",
         sourceUrl: "https://eci.gov.in",
         electionType: "vidhan_sabha",
-        phase: "election-day"
-      }
+        phase: "election-day",
+      },
     ];
 
     vi.mocked(firestore.getDocs).mockResolvedValue(makeMockSnapshot(vsSteps));
