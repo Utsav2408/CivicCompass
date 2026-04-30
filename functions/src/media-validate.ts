@@ -1,7 +1,8 @@
 import { onObjectFinalized } from "firebase-functions/v2/storage";
 import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import { log } from "./_shared/logger";
+import { log } from "./_shared/logger.js";
+import { checkRateLimit } from "./_shared/rateLimiter.js";
 
 const ALLOWED_MIME_TYPES = [
   "image/jpeg",
@@ -41,6 +42,35 @@ export const mediaValidate = onObjectFinalized(
       contentType,
       sizeBytes: fileSize,
     });
+
+    if (!ticketId) return;
+
+    const ticketDoc = await getFirestore().collection("tickets").doc(ticketId).get();
+    const userId = ticketDoc.data()?.userId;
+
+    if (!userId) {
+      log.error("media_validation_no_user", { ticketId });
+      await getStorage().bucket().file(filePath).delete();
+      return;
+    }
+
+    // Rate limit — 10 uploads per user per day
+    const rateLimit = await checkRateLimit({
+      uid: userId,
+      functionName: "ticket-media-upload",
+      maxCalls: 10,
+      windowMs: 24 * 60 * 60 * 1000,
+    });
+
+    if (!rateLimit.allowed) {
+      await getStorage().bucket().file(filePath).delete();
+      await getFirestore().collection("tickets").doc(ticketId).update({
+        mediaError: "Upload limit reached. Maximum 10 uploads per day.",
+        mediaErrorAt: Timestamp.now(),
+      });
+      log.warn("media_upload_rate_limit_exceeded", { userId, ticketId });
+      return;
+    }
 
     const isValidType = ALLOWED_MIME_TYPES.includes(contentType);
     const isValidSize = fileSize <= MAX_SIZE_BYTES;

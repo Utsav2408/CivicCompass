@@ -1,9 +1,9 @@
 import { onRequest } from "firebase-functions/https";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import { VoterIdSchema } from "./_shared/schemas";
-import { checkRateLimit } from "./_shared/rateLimiter";
-import { log } from "./_shared/logger";
-import { verifyAppCheckToken } from "./_shared/appCheck";
+import { VoterIdSchema } from "./_shared/schemas.js";
+import { checkRateLimit } from "./_shared/rateLimiter.js";
+import { log } from "./_shared/logger.js";
+import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
 

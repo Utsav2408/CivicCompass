@@ -1,6 +1,6 @@
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import { log } from "./_shared/logger";
+import { log } from "./_shared/logger.js";
 
 const db = getFirestore();
 

@@ -6,8 +6,9 @@ initializeApp();
 // Remove region from global options
 setGlobalOptions({ maxInstances: 10 });
 
-export { eciVoterLookup } from "./eci-voter-lookup";
-export { geminiProxy } from "./gemini-proxy";
-export { candidateFetch } from "./candidate-fetch";
-export { mediaValidate } from "./media-validate";
-export { nightlyEciFetch } from "./nightly-eci-fetch";
+export { eciVoterLookup } from "./eci-voter-lookup.js";
+export { geminiProxy } from "./gemini-proxy.js";
+export { candidateFetch } from "./candidate-fetch.js";
+export { mediaValidate } from "./media-validate.js";
+export { nightlyEciFetch } from "./nightly-eci-fetch.js";
+export { supportAgent } from "./support-agent.js";

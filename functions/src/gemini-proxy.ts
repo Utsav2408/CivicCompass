@@ -3,11 +3,11 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { createHash } from "crypto";
 import { genkit } from "genkit";
 import { googleAI } from "@genkit-ai/google-genai";
-import { GeminiRequestSchema } from "./_shared/schemas";
-import { checkRateLimit } from "./_shared/rateLimiter";
-import { getSecret } from "./_shared/secrets";
-import { log } from "./_shared/logger";
-import { verifyAppCheckToken } from "./_shared/appCheck";
+import { GeminiRequestSchema } from "./_shared/schemas.js";
+import { checkRateLimit } from "./_shared/rateLimiter.js";
+import { getSecret } from "./_shared/secrets.js";
+import { log } from "./_shared/logger.js";
+import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
 

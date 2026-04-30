@@ -22,7 +22,7 @@ describe("OfflineBanner", () => {
   it("shows when offline", () => {
     vi.mocked(useOfflineStatus).mockReturnValue(true);
     render(<OfflineBanner />);
-    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toBeInTheDocument();
     expect(screen.getByText("common.offline_notice")).toBeInTheDocument();
   });
 });

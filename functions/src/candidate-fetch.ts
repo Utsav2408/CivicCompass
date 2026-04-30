@@ -1,9 +1,9 @@
 import { onRequest } from "firebase-functions/https";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import { CandidateFetchSchema } from "./_shared/schemas";
-import { checkRateLimit } from "./_shared/rateLimiter";
-import { log } from "./_shared/logger";
-import { verifyAppCheckToken } from "./_shared/appCheck";
+import { CandidateFetchSchema } from "./_shared/schemas.js";
+import { checkRateLimit } from "./_shared/rateLimiter.js";
+import { log } from "./_shared/logger.js";
+import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours

@@ -1,5 +1,5 @@
 import { createHmac } from "crypto";
-import { getSecret } from "./secrets";
+import { getSecret } from "./secrets.js";
 
 /**
  * Hashes a phone number with HMAC-SHA256 using the Secret Manager key.

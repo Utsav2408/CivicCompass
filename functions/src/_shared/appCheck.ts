@@ -1,6 +1,6 @@
 import { getAppCheck } from "firebase-admin/app-check";
 import type { Request, Response } from "express";
-import { log } from "./logger";
+import { log } from "./logger.js";
 
 /**
  * Verifies the App Check token on incoming HTTP function requests.

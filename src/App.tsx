@@ -55,6 +55,12 @@ const MapPage = lazy(() =>
   })),
 );
 
+const SupportPage = lazy(() =>
+  import("@features/support/SupportPage").then((m) => ({
+    default: m.SupportPage,
+  })),
+);
+
 export function App() {
   return (
     <AuthProvider>
@@ -78,6 +84,7 @@ export function App() {
               <Route path="/process" element={<ProcessPage />} />
               <Route path="/ward" element={<WardPage />} />
               <Route path="/map" element={<MapPage />} />
+              <Route path="/support" element={<SupportPage />} />
               {/* Screen 6 added here as each sprint completes */}
             </Route>
 

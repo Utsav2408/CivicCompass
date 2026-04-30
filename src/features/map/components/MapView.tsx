@@ -1,11 +1,9 @@
-import { useMap, APIProvider, Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
+import { useMap, Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 import { memo, useEffect } from "react";
 
 import { PoliceStationMarker } from "@/features/map/components/PoliceStationMarker";
 import type { PollingBooth, PoliceStation } from "@/shared/types/map";
 
-
-const MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY as string;
 
 interface MapViewProps {
   center: { lat: number; lng: number };
@@ -21,40 +19,38 @@ export const MapView = memo(function MapView({
   stations,
 }: MapViewProps) {
   return (
-    <APIProvider apiKey={MAPS_API_KEY}>
-      <div style={{ width: "100%", height: "100%" }}>
-        <Map
-          mapId="bf50a8734d974f66" // Example Map ID for Advanced Markers
-          center={center}
-          zoom={14}
-          gestureHandling="greedy"
-          disableDefaultUI={true}
-        >
-          <MapCleanup />
-          
-          {/* User Location */}
-          {userCoords && (
-            <AdvancedMarker position={userCoords}>
-              <Pin background={"#4285F4"} glyphColor={"#FFFFFF"} borderColor={"#FFFFFF"} />
-            </AdvancedMarker>
-          )}
+    <div style={{ width: "100%", height: "100%" }}>
+      <Map
+        mapId="bf50a8734d974f66" // Example Map ID for Advanced Markers
+        center={center}
+        zoom={14}
+        gestureHandling="greedy"
+        disableDefaultUI={true}
+      >
+        <MapCleanup />
+        
+        {/* User Location */}
+        {userCoords && (
+          <AdvancedMarker position={userCoords}>
+            <Pin background={"#4285F4"} glyphColor={"#FFFFFF"} borderColor={"#FFFFFF"} />
+          </AdvancedMarker>
+        )}
 
-          {/* Polling Booth (Saffron Ballot Box) */}
-          {booth && (
-            <AdvancedMarker position={booth.coordinates}>
-              <div style={{ transform: "translateY(-50%)" }}>
-                <BoothPin />
-              </div>
-            </AdvancedMarker>
-          )}
+        {/* Polling Booth (Saffron Ballot Box) */}
+        {booth && (
+          <AdvancedMarker position={booth.coordinates}>
+            <div style={{ transform: "translateY(-50%)" }}>
+              <BoothPin />
+            </div>
+          </AdvancedMarker>
+        )}
 
-          {/* Police Stations */}
-          {stations.map((station) => (
-            <PoliceStationMarker key={station.id} station={station} />
-          ))}
-        </Map>
-      </div>
-    </APIProvider>
+        {/* Police Stations */}
+        {stations.map((station) => (
+          <PoliceStationMarker key={station.id} station={station} />
+        ))}
+      </Map>
+    </div>
   );
 });
 

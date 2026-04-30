@@ -8,11 +8,11 @@ service cloud.firestore {
                          && request.auth.uid == userId;
     }
 
-    // Tickets — owner read/create only
-    // No client update or delete — Admin SDK only
     match /tickets/{ticketId} {
-      allow read, create: if request.auth != null
+      allow create: if request.auth != null
         && request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null
+        && resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
 

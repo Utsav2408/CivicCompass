@@ -32,18 +32,18 @@ vi.mock("firebase-admin", () => ({
 }));
 
 // Mock shared utils
-vi.mock("../_shared/appCheck", () => ({
+vi.mock("../_shared/appCheck.js", () => ({
   verifyAppCheckToken: vi.fn().mockResolvedValue(true),
 }));
-vi.mock("../_shared/rateLimiter", () => ({
+vi.mock("../_shared/rateLimiter.js", () => ({
   checkRateLimit: vi.fn().mockResolvedValue({ allowed: true }),
 }));
-vi.mock("../_shared/logger", () => ({
+vi.mock("../_shared/logger.js", () => ({
   log: { info: vi.fn(), error: vi.fn() },
 }));
 
 // Mock the voter schema
-vi.mock("../_shared/schemas", () => ({
+vi.mock("../_shared/schemas.js", () => ({
   VoterIdSchema: {
     safeParse: (val: string) => {
       if (val === "INVALID")
@@ -54,7 +54,7 @@ vi.mock("../_shared/schemas", () => ({
 }));
 
 import { getFirestore } from "firebase-admin/firestore";
-import { eciVoterLookupHandler } from "../eci-voter-lookup";
+import { eciVoterLookupHandler } from "../eci-voter-lookup.js";
 
 describe("eciVoterLookup Cloud Function", () => {
   let mockRes: any;
@@ -67,7 +67,7 @@ describe("eciVoterLookup Cloud Function", () => {
     mockCollection.doc.mockReturnValue(mockDoc);
     mockDb.collection.mockReturnValue(mockCollection);
 
-    const { checkRateLimit } = await import("../_shared/rateLimiter");
+    const { checkRateLimit } = await import("../_shared/rateLimiter.js");
     vi.mocked(checkRateLimit).mockResolvedValue({ allowed: true });
 
     mockRes = {
@@ -94,10 +94,10 @@ describe("eciVoterLookup Cloud Function", () => {
   });
 
   it("should return 429 if rate limit exceeded", async () => {
-    const { checkRateLimit } = await import("../_shared/rateLimiter");
+    const { checkRateLimit } = await import("../_shared/rateLimiter.js");
     vi.mocked(checkRateLimit).mockResolvedValue({
       allowed: false,
-      retryAfter: 3600,
+      retryAfter: "3600",
     });
 
     await eciVoterLookupHandler(mockReq as any, mockRes as any);
@@ -152,7 +152,7 @@ describe("eciVoterLookup Cloud Function", () => {
   });
 
   it("should fail if App Check is invalid", async () => {
-    const { verifyAppCheckToken } = await import("../_shared/appCheck");
+    const { verifyAppCheckToken } = await import("../_shared/appCheck.js");
     vi.mocked(verifyAppCheckToken).mockResolvedValue(false);
 
     await eciVoterLookupHandler(mockReq as any, mockRes as any);

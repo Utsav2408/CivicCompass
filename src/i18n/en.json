@@ -178,5 +178,59 @@
     "error": {
       "retry": "Retry"
     }
+  },
+  "support": {
+    "tabs": {
+      "chat": "Help Chat",
+      "tickets": "My Tickets"
+    },
+    "sos": {
+      "button_label": "SOS Emergency",
+      "alerting": "Alerting Authorities...",
+      "alerted": "Police Alerted",
+      "connecting": "Connecting to the nearest control room...",
+      "eta_msg": "Assistance arriving in ~{{eta}} minutes.",
+      "disclaimer": "IMPORTANT: For life-threatening emergencies, please call 100 directly.",
+      "aria": {
+        "cancel": "Cancel emergency alert",
+        "map": "Map showing route from nearest police station"
+      }
+    },
+    "chat": {
+      "conversations": "Conversations",
+      "agent_name": "Support Agent",
+      "welcome": "Hello! I am your CivicCompass Assistant. How can I help you today?",
+      "ai_label": "CivicCompass AI",
+      "ai_disclaimer": "AI-generated response. Verify critical info.",
+      "voice_input": "Voice Input",
+      "placeholder": "Type your issue here...",
+      "offline": "Internet required for AI assistant. Core info available below.",
+      "thinking": "Agent is typing..."
+    },
+    "tickets": {
+      "title": "Track Issues",
+      "new": "New Ticket",
+      "empty": "No tickets found.",
+      "filters": {
+        "all": "All",
+        "open": "Open",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      }
+    },
+    "create": {
+      "title": "Report an Issue",
+      "description_label": "What's the issue?",
+      "placeholder": "Describe the problem in detail...",
+      "media_label": "Add Photo/Video (Optional)",
+      "confirm_label": "Confirm Details",
+      "submit": "Raise Ticket",
+      "media": {
+        "too_large": "File size must be less than 10MB",
+        "invalid_type": "Only images and videos are allowed",
+        "upload_failed": "Failed to upload media",
+        "click_to_upload": "Click to upload image or video"
+      }
+    }
   }
 }

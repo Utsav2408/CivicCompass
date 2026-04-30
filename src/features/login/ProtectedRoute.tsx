@@ -1,12 +1,17 @@
+import { APIProvider } from "@vis.gl/react-google-maps";
 import { doc, getDoc } from "firebase/firestore";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
+import { EmergencyButton } from "@/features/support/components/EmergencyButton";
+import { EmergencyOverlay } from "@/features/support/components/EmergencyOverlay";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@features/login/useAuth";
 import { PageLoader } from "@shared/components/AshokaCakraLoader";
 
 import { ProfileRouteContext } from "./ProfileRouteContext";
+
+const MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY as string;
 
 // "needs_personalization" = missing doc or isComplete !== true
 // "ready" = doc exists and isComplete === true
@@ -94,10 +99,14 @@ export function ProtectedRoute() {
   }
 
   return (
-    <ProfileRouteContext.Provider
-      value={{ refreshProfile, allowIncompleteForSession }}
-    >
-      <Outlet />
-    </ProfileRouteContext.Provider>
+    <APIProvider apiKey={MAPS_API_KEY}>
+      <ProfileRouteContext.Provider
+        value={{ refreshProfile, allowIncompleteForSession }}
+      >
+        <Outlet />
+        <EmergencyButton />
+        <EmergencyOverlay />
+      </ProfileRouteContext.Provider>
+    </APIProvider>
   );
 }

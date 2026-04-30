@@ -1,5 +1,5 @@
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
-import { log } from "./logger";
+import { log } from "./logger.js";
 
 const db = getFirestore();
 
