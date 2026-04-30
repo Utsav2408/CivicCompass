@@ -280,25 +280,34 @@ export function AIChatDrawer({ isOpen, onClose }: AIChatDrawerProps) {
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: "2px",
+                    gap: "4px",
                     marginLeft: "4px",
+                    marginTop: "4px",
                   }}
                 >
-                  {msg.source && (
-                    <span
-                      style={{
-                        background: "var(--gd-l)",
-                        color: "var(--gd-dark)",
-                        padding: "2px 8px",
-                        borderRadius: "var(--radius-full)",
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        alignSelf: "flex-start",
-                      }}
-                    >
-                      {t("process.card.source")}: {msg.source}
+                  {/* Source Badge — Rule 2 Compliance (No exceptions) */}
+                  <div
+                    style={{
+                      background: "var(--gd-l)",
+                      color: "var(--gd-dark)",
+                      padding: "2px 8px",
+                      borderRadius: "var(--radius-full)",
+                      fontSize: "10px",
+                      fontWeight: 700,
+                      alignSelf: "flex-start",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      border: "1px solid var(--gd-tint)",
+                    }}
+                  >
+                    <span style={{ fontSize: "12px" }}>📍</span>
+                    <span>
+                      {t("process.card.source", "Source")}:{" "}
+                      {msg.source ?? "Gemini 2.5 Flash"}
                     </span>
-                  )}
+                  </div>
+
                   <span
                     style={{
                       fontSize: "9px",

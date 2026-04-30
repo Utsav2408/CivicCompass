@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { ChatPanel } from "@/features/support/components/ChatPanel";
 import { MyTicketsPanel } from "@/features/support/components/MyTicketsPanel";
+import { ScreenErrorBoundary } from "@/shared/components/ScreenErrorBoundary";
 import { useOfflineStatus } from "@/shared/hooks/useOfflineStatus";
 
 export const SupportPage = memo(function SupportPage() {
@@ -11,7 +12,8 @@ export const SupportPage = memo(function SupportPage() {
   const [activeTab, setActiveTab] = useState<"chat" | "tickets">("chat");
 
   return (
-    <div style={{ 
+    <ScreenErrorBoundary>
+      <div style={{ 
       height: "100dvh", 
       display: "flex", 
       flexDirection: "column",
@@ -56,8 +58,9 @@ export const SupportPage = memo(function SupportPage() {
         <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
           {activeTab === "chat" ? <ChatPanel /> : <MyTicketsPanel />}
         </div>
+        </div>
       </div>
-    </div>
+    </ScreenErrorBoundary>
   );
 });
 

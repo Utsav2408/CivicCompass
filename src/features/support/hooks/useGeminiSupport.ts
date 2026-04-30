@@ -7,6 +7,7 @@ import { useTickets } from "./useTickets";
 export interface Message {
   role: "user" | "model";
   text: string;
+  source?: string;
 }
 
 export function useGeminiSupport() {
@@ -55,6 +56,7 @@ export function useGeminiSupport() {
         const aiMessage: Message = {
           role: "model",
           text: data.response,
+          source: "Gemini 2.5 Flash",
         };
 
         setMessages((prev) => [...prev, aiMessage]);

@@ -129,7 +129,7 @@ export const supportAgentHandler = async (req: any, res: any) => {
       );
 
       const { text } = await ai.generate({
-        model: googleAI.model("gemini-2.0-flash"),
+        model: googleAI.model("gemini-2.5-flash"),
         system: SUPPORT_SYSTEM_PROMPT,
         prompt,
         tools: [createTicket, getTicketStatus],

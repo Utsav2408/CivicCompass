@@ -295,7 +295,7 @@ describe("PersonalizationPage component", () => {
     });
   });
 
-  it("does not redirect to login while auth is still loading", () => {
+  it("renders loader while auth is still loading", () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
       isLoading: true,
@@ -304,13 +304,14 @@ describe("PersonalizationPage component", () => {
       error: null,
     });
 
-    const { container } = render(
+    render(
       <MemoryRouter>
         <PersonalizationPage />
       </MemoryRouter>,
     );
 
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.getByRole("status")).toBeDefined();
+    expect(screen.getByText("Loading CivicCompass…")).toBeDefined();
     expect(screen.queryByTestId("redirect")).not.toBeInTheDocument();
   });
 

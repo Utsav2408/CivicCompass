@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router-dom";
 
-import { AshokaCakraLoader } from "@/shared/components/AshokaCakraLoader";
+import { AshokaCakraLoader, PageLoader } from "@/shared/components/AshokaCakraLoader";
 import { JaaliHero } from "@/shared/components/MughalJaaliPattern";
+import { ScreenErrorBoundary } from "@/shared/components/ScreenErrorBoundary";
 import type { PollingBooth } from "@/shared/types/map";
 
 import { useProfileRoute } from "./ProfileRouteContext";
@@ -39,6 +40,7 @@ export function PersonalizationPage() {
     goBack,
     submit,
     isSubmitting,
+    errors,
   } = usePersonalization(user?.uid ?? "");
 
   const {
@@ -53,7 +55,7 @@ export function PersonalizationPage() {
   const [otpValue, setOtpValue] = useState("");
 
   if (isAuthLoading) {
-    return null;
+    return <PageLoader />;
   }
 
   if (!user) {
@@ -113,7 +115,8 @@ export function PersonalizationPage() {
   };
 
   return (
-    <main
+    <ScreenErrorBoundary>
+      <main
       style={{
         position: "relative",
         minHeight: "100dvh",
@@ -179,6 +182,23 @@ export function PersonalizationPage() {
             gap: "var(--space-lg)",
           }}
         >
+          {errors.submit && (
+            <div
+              role="alert"
+              style={{
+                padding: "var(--space-md)",
+                background: "var(--lo-l)",
+                color: "var(--lo-text)",
+                borderRadius: "var(--radius-md)",
+                border: "1px solid var(--lo-tint)",
+                fontSize: "13px",
+                textAlign: "center",
+              }}
+            >
+              {errors.submit}
+            </div>
+          )}
+
           {step === PersonalizationStep.Identity && (
             <div
               style={{
@@ -562,6 +582,7 @@ export function PersonalizationPage() {
         </div>
       </section>
     </main>
+    </ScreenErrorBoundary>
   );
 }
 

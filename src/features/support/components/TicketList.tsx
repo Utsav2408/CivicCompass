@@ -1,6 +1,7 @@
 import { memo, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 
+import { LotusEmptyState } from "@/shared/components/LotusMotif";
 import type { Ticket, TicketStatus } from "@/shared/types/support";
 
 import { TicketCard } from "./TicketCard";
@@ -62,7 +63,15 @@ export const TicketList = memo(function TicketList({
 
       {/* Grid or Virtualized List */}
       <div style={{ flex: 1, minHeight: 0 }}>
-        {filteredTickets.length > 20 ? (
+        {filteredTickets.length === 0 ? (
+          <LotusEmptyState
+            title={t("support.tickets.empty_title", "No Tickets Found")}
+            message={t(
+              "support.tickets.empty_message",
+              "Try changing the filter or create a new ticket if you have an issue.",
+            )}
+          />
+        ) : filteredTickets.length > 20 ? (
           <List
             height={600} // This should ideally be dynamic
             itemCount={filteredTickets.length}
@@ -72,18 +81,22 @@ export const TicketList = memo(function TicketList({
             {Row}
           </List>
         ) : (
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", 
-            gap: "var(--space-md)",
-            paddingBottom: "var(--space-xl)"
-          }}>
-            {filteredTickets.map(ticket => (
-              <div 
-                key={ticket.id} 
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "var(--space-md)",
+              paddingBottom: "var(--space-xl)",
+            }}
+          >
+            {filteredTickets.map((ticket) => (
+              <div
+                key={ticket.id}
                 role="button"
                 tabIndex={0}
-                onClick={() => { onTicketClick(ticket); }}
+                onClick={() => {
+                  onTicketClick(ticket);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();

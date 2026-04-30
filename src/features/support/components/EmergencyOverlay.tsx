@@ -174,7 +174,7 @@ function DirectionsLayer() {
         travelMode: google.maps.TravelMode.DRIVING,
       },
       // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-      (result: google.maps.DirectionsResult | null, status: google.maps.DirectionsStatus) => {
+      (result, status) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
           directionsRenderer.setDirections(result);
         }

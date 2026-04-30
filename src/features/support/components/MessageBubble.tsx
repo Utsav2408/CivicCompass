@@ -47,9 +47,49 @@ export const MessageBubble = memo(function MessageBubble({ message }: MessageBub
       </div>
 
       {isAi && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px", marginLeft: "4px" }}>
-          <span style={{ fontSize: "10px", color: "var(--text-muted)", fontStyle: "italic" }}>
-            {t("support.chat.ai_disclaimer", "AI-generated response. Verify critical info.")}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            marginLeft: "4px",
+            marginTop: "4px",
+          }}
+        >
+          {/* Source Badge — Rule 2 Compliance */}
+          <div
+            style={{
+              background: "var(--gd-l)",
+              color: "var(--gd-dark)",
+              padding: "2px 8px",
+              borderRadius: "var(--radius-full)",
+              fontSize: "10px",
+              fontWeight: 700,
+              alignSelf: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              border: "1px solid var(--gd-tint)",
+            }}
+          >
+            <span style={{ fontSize: "12px" }}>📍</span>
+            <span>
+              {t("support.chat.source", "Source")}:{" "}
+              {message.source ?? "Gemini 2.5 Flash"}
+            </span>
+          </div>
+
+          <span
+            style={{
+              fontSize: "10px",
+              color: "var(--text-muted)",
+              fontStyle: "italic",
+            }}
+          >
+            {t(
+              "support.chat.ai_disclaimer",
+              "AI-generated response. Verify critical info.",
+            )}
           </span>
         </div>
       )}
