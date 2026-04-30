@@ -91,6 +91,34 @@ export default defineConfig({
             },
           },
 
+          // User Polling Booth — Cache First + Background Update (StaleWhileRevalidate)
+          {
+            urlPattern:
+              /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/pollingBooths\/.*/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "polling-booth-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24, // 24 hours
+              },
+            },
+          },
+
+          // Police Stations (Emergency Data) — Cache First, 7-day TTL
+          {
+            urlPattern:
+              /^https:\/\/firestore\.googleapis\.com\/v1\/projects\/.*\/databases\/\(default\)\/documents\/policeStations.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "police-stations-cache",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+              },
+            },
+          },
+
           // Election Schedule (Static) — Cache First
           {
             urlPattern:

@@ -70,9 +70,15 @@ export const eciVoterLookupHandler = async (req: any, res: any) => {
     const mockResult = {
       constituency: "New Delhi PC-01",
       pollingBooth: {
+        id: "booth-delhi-001",
         name: "Govt. Model School, Connaught Place",
         address: "Connaught Place, New Delhi - 110001",
         coordinates: { lat: 28.6315, lng: 77.2167 },
+        wardName: "Connaught Place Ward",
+        wardCode: "WARD-001",
+        constituency: "New Delhi PC-01",
+        city: "New Delhi",
+        boothNumber: "42",
       },
       wardCode: "WARD-001",
     };

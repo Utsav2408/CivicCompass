@@ -197,6 +197,7 @@ const POLLING_BOOTHS = [
     wardCode: "WARD-001",
     constituency: "New Delhi PC-01",
     city: "New Delhi",
+    boothNumber: "42",
   },
   {
     id: "booth-mumbai-001",
@@ -207,6 +208,7 @@ const POLLING_BOOTHS = [
     wardCode: "WARD-MW-001",
     constituency: "Mumbai North PC-06",
     city: "Mumbai",
+    boothNumber: "87",
   },
 ];
 

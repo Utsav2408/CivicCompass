@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 import { AshokaCakraLoader } from "@/shared/components/AshokaCakraLoader";
 import { JaaliHero } from "@/shared/components/MughalJaaliPattern";
+import type { PollingBooth } from "@/shared/types/map";
 
 import { useProfileRoute } from "./ProfileRouteContext";
 import { PersonalizationStep } from "./login.types";
@@ -13,11 +14,7 @@ import { usePhoneOtp } from "./usePhoneOtp";
 
 interface EciLookupResponse {
   constituency: string;
-  pollingBooth: {
-    name: string;
-    address: string;
-    coordinates: { lat: number; lng: number };
-  };
+  pollingBooth: PollingBooth;
   wardCode: string;
 }
 

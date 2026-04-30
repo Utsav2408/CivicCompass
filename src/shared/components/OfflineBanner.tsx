@@ -14,7 +14,7 @@ export function OfflineBanner() {
 
   return (
     <div
-      role="alert"
+      role="status"
       style={{
         background: "var(--lo-l)",
         color: "var(--lo)",

@@ -9,9 +9,26 @@ export interface Coordinates {
 }
 
 export interface PollingBooth {
+  id: string;
   name: string;
   address: string;
   coordinates: Coordinates;
+  wardName: string;
+  wardCode: string;
+  constituency: string;
+  city: string;
+  boothNumber: string;
+}
+
+export interface PoliceStation {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+  state: string;
 }
 
 export interface Constituency {

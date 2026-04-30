@@ -44,10 +44,12 @@
   },
   "dependencies": {
     "@types/react-window": "^1.8.8",
+    "@vis.gl/react-google-maps": "^1.8.3",
     "firebase": "^12.12.1",
     "i18next": "^26.0.8",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-error-boundary": "^6.1.1",
     "react-i18next": "^17.0.4",
     "react-router-dom": "^7.14.2",
     "react-window": "^2.2.7",
