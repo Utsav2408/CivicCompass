@@ -29,7 +29,7 @@ All AI-generated content cites its source. All core screens work offline. The ap
 
 ## Stack
 
-Vite · React · TypeScript · Firebase · Gemini 2.0 Flash · Google Maps · Tailwind
+Vite · React · TypeScript · Firebase · Gemini 2.5 Flash · Google Maps · Tailwind
 
 ---
 
