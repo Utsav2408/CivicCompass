@@ -1,4 +1,8 @@
-import { AdvancedMarker, InfoWindow, useAdvancedMarkerRef } from "@vis.gl/react-google-maps";
+import {
+  AdvancedMarker,
+  InfoWindow,
+  useAdvancedMarkerRef,
+} from "@vis.gl/react-google-maps";
 import { useState } from "react";
 
 import type { PoliceStation } from "@/shared/types/map";
@@ -9,7 +13,7 @@ interface PoliceStationMarkerProps {
 
 export function PoliceStationMarker({ station }: PoliceStationMarkerProps) {
   const [open, setOpen] = useState(false);
-   
+
   const [markerRef, marker] = useAdvancedMarkerRef();
 
   return (
@@ -17,7 +21,9 @@ export function PoliceStationMarker({ station }: PoliceStationMarkerProps) {
       <AdvancedMarker
         ref={markerRef}
         position={{ lat: station.latitude, lng: station.longitude }}
-        onClick={() => { setOpen(true); }}
+        onClick={() => {
+          setOpen(true);
+        }}
         title={station.name}
       >
         <div
@@ -40,15 +46,33 @@ export function PoliceStationMarker({ station }: PoliceStationMarkerProps) {
       </AdvancedMarker>
 
       {open && (
-         
-        <InfoWindow anchor={marker} onCloseClick={() => { setOpen(false); }}>
+        <InfoWindow
+          anchor={marker}
+          onCloseClick={() => {
+            setOpen(false);
+          }}
+        >
           <div style={{ padding: "4px", color: "var(--text)" }}>
-            <h3 style={{ margin: "0 0 4px 0", fontSize: "14px", fontWeight: "600" }}>{station.name}</h3>
-            <p style={{ margin: "0 0 4px 0", fontSize: "12px" }}>{station.city}</p>
+            <h3
+              style={{
+                margin: "0 0 4px 0",
+                fontSize: "14px",
+                fontWeight: "600",
+              }}
+            >
+              {station.name}
+            </h3>
+            <p style={{ margin: "0 0 4px 0", fontSize: "12px" }}>
+              {station.city}
+            </p>
             {station.phone && (
-              <a 
+              <a
                 href={`tel:${station.phone}`}
-                style={{ fontSize: "12px", color: "var(--in)", textDecoration: "none" }}
+                style={{
+                  fontSize: "12px",
+                  color: "var(--in)",
+                  textDecoration: "none",
+                }}
               >
                 📞 {station.phone}
               </a>

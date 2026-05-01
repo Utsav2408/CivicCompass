@@ -13,31 +13,46 @@ interface TicketListProps {
   onFilterChange: (filter: TicketStatus | "all") => void;
 }
 
-export const TicketList = memo(function TicketList({ 
-  tickets, 
-  onTicketClick, 
-  activeFilter, 
-  onFilterChange 
+export const TicketList = memo(function TicketList({
+  tickets,
+  onTicketClick,
+  activeFilter,
+  onFilterChange,
 }: TicketListProps) {
   const { t } = useTranslation();
   const filteredTickets = useMemo(() => {
     if (activeFilter === "all") return tickets;
     return tickets.filter(
-      (ticket) =>
-        ticket.status.toLowerCase() === activeFilter.toLowerCase(),
+      (ticket) => ticket.status.toLowerCase() === activeFilter.toLowerCase(),
     );
   }, [tickets, activeFilter]);
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-md)",
+      }}
+    >
       {/* Filter Bar */}
-      <div style={{ display: "flex", gap: "var(--space-sm)", overflowX: "auto", paddingBottom: "4px" }}>
-        {(["all", "open", "resolved", "closed"] as const).map(f => (
-          <FilterChip 
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space-sm)",
+          overflowX: "auto",
+          paddingBottom: "4px",
+        }}
+      >
+        {(["all", "open", "resolved", "closed"] as const).map((f) => (
+          <FilterChip
             key={f}
-            label={f.charAt(0).toUpperCase() + f.slice(1)} 
-            active={activeFilter === f} 
-            onClick={() => { onFilterChange(f); }} 
+            label={f.charAt(0).toUpperCase() + f.slice(1)}
+            active={activeFilter === f}
+            onClick={() => {
+              onFilterChange(f);
+            }}
           />
         ))}
       </div>
@@ -86,7 +101,15 @@ export const TicketList = memo(function TicketList({
   );
 });
 
-function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+function FilterChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
@@ -100,7 +123,7 @@ function FilterChip({ label, active, onClick }: { label: string; active: boolean
         fontWeight: 600,
         cursor: "pointer",
         whiteSpace: "nowrap",
-        transition: "var(--transition-base)"
+        transition: "var(--transition-base)",
       }}
     >
       {label}

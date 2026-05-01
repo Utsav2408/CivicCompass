@@ -14,7 +14,12 @@ vi.mock("@vis.gl/react-google-maps", () => ({
     onClick: () => void;
     title: string;
   }) => (
-    <button type="button" data-testid="ps-marker" onClick={onClick} title={title}>
+    <button
+      type="button"
+      data-testid="ps-marker"
+      onClick={onClick}
+      title={title}
+    >
       {children}
     </button>
   ),

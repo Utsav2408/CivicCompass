@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import { HistoricalWinnerTable } from "@/features/ward/components/HistoricalWinnerTable";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 
 describe("HistoricalWinnerTable", () => {
@@ -17,7 +19,13 @@ describe("HistoricalWinnerTable", () => {
     render(
       <HistoricalWinnerTable
         winners={[
-          { id: "1", year: 2024, winnerName: "A", party: "X", voteMargin: 1000 },
+          {
+            id: "1",
+            year: 2024,
+            winnerName: "A",
+            party: "X",
+            voteMargin: 1000,
+          },
           { id: "2", year: 2019, winnerName: "B", party: "Y", voteMargin: 900 },
           { id: "3", year: 2014, winnerName: "C", party: "Z", voteMargin: 800 },
         ]}

@@ -5,7 +5,9 @@ import { describe, expect, it, vi } from "vitest";
 import { MapView } from "@/features/map/components/MapView";
 
 vi.mock("@vis.gl/react-google-maps", () => ({
-  Map: ({ children }: { children: ReactNode }) => <div data-testid="map">{children}</div>,
+  Map: ({ children }: { children: ReactNode }) => (
+    <div data-testid="map">{children}</div>
+  ),
   AdvancedMarker: ({
     children,
     onClick,
@@ -13,9 +15,9 @@ vi.mock("@vis.gl/react-google-maps", () => ({
     children: ReactNode;
     onClick?: () => void;
   }) => (
-    <div data-testid="marker" onClick={onClick}>
+    <button type="button" data-testid="marker" onClick={onClick}>
       {children}
-    </div>
+    </button>
   ),
   Pin: () => <div data-testid="pin" />,
   useMap: () => null,
@@ -31,6 +33,7 @@ describe("MapView", () => {
       <MapView
         center={{ lat: 1, lng: 2 }}
         userCoords={{ lat: 1, lng: 2 }}
+        searchedPlace={null}
         booth={{
           id: "b1",
           name: "Booth",
@@ -51,6 +54,7 @@ describe("MapView", () => {
             state: "s",
             latitude: 1,
             longitude: 2,
+            phone: "100",
           },
         ]}
       />,
@@ -103,7 +107,7 @@ describe("MapView", () => {
     expect(markers.length).toBe(3); // 2 booth markers + searched place marker
 
     markers.forEach((marker) => {
-      fireEvent.click(marker as HTMLElement);
+      fireEvent.click(marker);
     });
     expect(onBoothSelect).toHaveBeenCalled();
   });

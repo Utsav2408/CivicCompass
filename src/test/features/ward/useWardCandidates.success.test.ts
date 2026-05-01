@@ -15,7 +15,9 @@ describe("useWardCandidates success branches", () => {
   });
 
   it("sets nomination deadline when election doc exists and returns candidates", async () => {
-    vi.mocked(authHook.useAuth).mockReturnValue({ user: { uid: "u1" } } as never);
+    vi.mocked(authHook.useAuth).mockReturnValue({
+      user: { uid: "u1" },
+    } as never);
     vi.mocked(getDoc).mockResolvedValue({
       exists: () => true,
       data: () => ({ nominationDeadline: "2026-05-01" }),
@@ -28,7 +30,9 @@ describe("useWardCandidates success branches", () => {
     const { result } = renderHook(() =>
       useWardCandidates("New Delhi PC-01", "lok_sabha"),
     );
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.nominationDeadline).toBe("2026-05-01");
     expect(result.current.candidates).toHaveLength(1);
   });

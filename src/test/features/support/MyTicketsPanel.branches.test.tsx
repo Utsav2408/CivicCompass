@@ -8,7 +8,9 @@ const { useTicketsMock } = vi.hoisted(() => ({
 }));
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),

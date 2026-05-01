@@ -22,7 +22,9 @@ const MockSpeechRecognition = vi.fn(() => {
 type MockSpeechRecognition = ReturnType<typeof MockSpeechRecognition>;
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/shared/hooks/useOfflineStatus", () => ({
   useOfflineStatus: () => false,
@@ -30,9 +32,15 @@ vi.mock("@/shared/hooks/useOfflineStatus", () => ({
 
 describe("ChatInput speech handlers", () => {
   it("updates state via speech result and handles error/end", () => {
-    (window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }).SpeechRecognition =
-      MockSpeechRecognition;
-    render(<ChatInput onSend={vi.fn().mockResolvedValue(undefined)} disabled={false} />);
+    (
+      window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }
+    ).SpeechRecognition = MockSpeechRecognition;
+    render(
+      <ChatInput
+        onSend={vi.fn().mockResolvedValue(undefined)}
+        disabled={false}
+      />,
+    );
     fireEvent.click(screen.getAllByRole("button")[0] as HTMLButtonElement);
     const speechResult = { 0: { transcript: "spoken text" } };
     const results = {
@@ -43,12 +51,15 @@ describe("ChatInput speech handlers", () => {
       },
     };
     act(() => {
-      latestRecognition?.onresult({ results });
+      if (!latestRecognition) return;
+      (latestRecognition.onresult as (event: { results: unknown }) => void)({
+        results,
+      });
     });
     expect(screen.getByRole("textbox")).toHaveValue("spoken text");
     act(() => {
-      latestRecognition?.onerror({});
-      latestRecognition?.onend({});
+      latestRecognition?.onerror();
+      latestRecognition?.onend();
     });
     expect(screen.getAllByRole("button")[0]).toBeInTheDocument();
   });

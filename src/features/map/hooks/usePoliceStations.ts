@@ -27,7 +27,9 @@ function prioritizeTargetStations(stations: PoliceStation[]): PoliceStation[] {
   }
 
   const targetIds = new Set(targetMatches.map((station) => station.id));
-  const nearestFallback = stations.filter((station) => !targetIds.has(station.id));
+  const nearestFallback = stations.filter(
+    (station) => !targetIds.has(station.id),
+  );
   return [...targetMatches, ...nearestFallback].slice(0, 3);
 }
 
@@ -46,7 +48,7 @@ export function usePoliceStations(
     if (!currentCity) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setStations([]);
-       
+
       setIsLoading(false);
       return;
     }
@@ -72,7 +74,10 @@ export function usePoliceStations(
           const deduped = new Map<string, PoliceStation>();
           snapshots.forEach((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-              deduped.set(doc.id, { id: doc.id, ...doc.data() } as PoliceStation);
+              deduped.set(doc.id, {
+                id: doc.id,
+                ...doc.data(),
+              } as PoliceStation);
             });
           });
           setStations(Array.from(deduped.values()));

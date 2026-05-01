@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import { ElectionTypeToggle } from "@/features/ward/components/ElectionTypeToggle";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 
 describe("ElectionTypeToggle", () => {

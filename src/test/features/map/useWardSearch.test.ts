@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call */
 import { renderHook, waitFor } from "@testing-library/react";
 import { getDocs } from "firebase/firestore";
 import { describe, expect, it, vi, afterEach } from "vitest";
@@ -43,23 +44,33 @@ describe("useWardSearch", () => {
 
     expect(result.current.isSearching).toBe(true);
 
-    await waitFor(() => {
-      expect(result.current.isSearching).toBe(false);
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(result.current.isSearching).toBe(false);
+      },
+      { timeout: 2000 },
+    );
   });
 
   it("should handle Firestore results correctly", async () => {
     const mockBooths = [{ id: "b1", wardName: "Connaught Place" }];
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     vi.mocked(getDocs).mockResolvedValue({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      forEach: (callback: any) => { mockBooths.forEach((b) => callback({ id: b.id, data: () => b })); },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      forEach: (callback: any) => {
+        mockBooths.forEach((b) => callback({ id: b.id, data: () => b }));
+      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     const { result } = renderHook(() => useWardSearch("Connaught"));
 
-    await waitFor(() => { expect(result.current.results.length).toBe(1); }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(result.current.results.length).toBe(1);
+      },
+      { timeout: 2000 },
+    );
     expect(result.current.results[0]?.wardName).toBe("Connaught Place");
     expect(result.current.isSearching).toBe(false);
   });

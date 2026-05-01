@@ -6,7 +6,9 @@ import { ChatPanel } from "@/features/support/components/ChatPanel";
 const raisePendingTicket = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/support/hooks/useGeminiSupport", () => ({
   useGeminiSupport: () => ({
@@ -24,7 +26,9 @@ vi.mock("@/features/support/components/ChatInput", () => ({
   ChatInput: () => <div>chat-input</div>,
 }));
 vi.mock("@/features/support/components/MessageBubble", () => ({
-  MessageBubble: ({ message }: { message: { text: string } }) => <div>{message.text}</div>,
+  MessageBubble: ({ message }: { message: { text: string } }) => (
+    <div>{message.text}</div>
+  ),
 }));
 vi.mock("@/shared/components/AshokaCakraLoader", () => ({
   AshokaCakraLoader: () => <div>loader</div>,

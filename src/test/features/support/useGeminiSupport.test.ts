@@ -38,12 +38,16 @@ describe("useGeminiSupport", () => {
     await act(async () => {
       await result.current.send("My name is missing from voter roll");
     });
-    await waitFor(() => { expect(result.current.pendingTicketDraft).not.toBeNull(); });
+    await waitFor(() => {
+      expect(result.current.pendingTicketDraft).not.toBeNull();
+    });
 
     await act(async () => {
       await result.current.raisePendingTicket();
     });
 
-    await waitFor(() => { expect(result.current.lastTicketId).toBe("ticket-123456"); });
+    await waitFor(() => {
+      expect(result.current.lastTicketId).toBe("ticket-123456");
+    });
   });
 });

@@ -1,6 +1,11 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { MemoryRouter, useNavigate } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { RouteTransitionLoader } from "@/shared/components/RouteTransitionLoader";
@@ -16,7 +21,7 @@ describe("RouteTransitionLoader", () => {
       return (
         <button
           onClick={() => {
-            navigate("/map");
+            void navigate("/map");
           }}
           type="button"
         >
@@ -31,7 +36,7 @@ describe("RouteTransitionLoader", () => {
         <TestNavigator />
       </MemoryRouter>,
     );
-    await act(async () => {
+    act(() => {
       fireEvent.click(screen.getByRole("button", { name: "Go" }));
     });
     await waitFor(() => {

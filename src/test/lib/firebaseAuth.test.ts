@@ -67,8 +67,12 @@ describe("lib/firebaseAuth", () => {
 
     await import("@/lib/firebaseAuth");
 
-    expect(connectAuthEmulator).toHaveBeenCalledWith(auth, "http://127.0.0.1:9099", {
-      disableWarnings: true,
-    });
+    expect(connectAuthEmulator).toHaveBeenCalledWith(
+      auth,
+      "http://127.0.0.1:9099",
+      {
+        disableWarnings: true,
+      },
+    );
   });
 });

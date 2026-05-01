@@ -19,7 +19,9 @@ export function RouteTransitionLoader() {
       setIsVisible(false);
     }, 500);
 
-    return () => { window.clearTimeout(timeoutId); };
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, [location.pathname]);
 
   if (!isVisible) return null;

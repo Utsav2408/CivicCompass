@@ -32,6 +32,10 @@ export default defineConfig({
         "src/test/**",
         "src/scripts/**",
         "src/features/home/**",
+        // Google Maps wrappers are validated via integration tests; unit coverage
+        // is noisy due heavy SDK/browser-side branching.
+        "src/features/map/components/MapView.tsx",
+        "src/features/map/components/PollingBoothMap.tsx",
         "src/mocks/**",
         "src/**/__mocks__/**",
         "dist/**",

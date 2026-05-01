@@ -31,7 +31,9 @@ describe("useAllPollingBooths", () => {
     } as never);
 
     const { result } = renderHook(() => useAllPollingBooths(true));
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.booths).toHaveLength(1);
   });
 });

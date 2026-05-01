@@ -6,7 +6,9 @@ import { MyTicketsPanel } from "@/features/support/components/MyTicketsPanel";
 const setFilter = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),
@@ -29,8 +31,20 @@ vi.mock("@/features/support/components/TicketList", () => ({
     onTicketClick: (t: { id: string }) => void;
   }) => (
     <div>
-      <button onClick={() => { onFilterChange("open"); }}>Filter Open</button>
-      <button onClick={() => { onTicketClick({ id: "t1" }); }}>Select Ticket</button>
+      <button
+        onClick={() => {
+          onFilterChange("open");
+        }}
+      >
+        Filter Open
+      </button>
+      <button
+        onClick={() => {
+          onTicketClick({ id: "t1" });
+        }}
+      >
+        Select Ticket
+      </button>
     </div>
   ),
 }));

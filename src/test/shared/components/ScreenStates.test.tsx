@@ -22,14 +22,20 @@ vi.mock("@/shared/components/LotusMotif", () => ({
 describe("ScreenStates", () => {
   it("renders loading state with default and custom labels", () => {
     const { rerender } = render(<ScreenLoadingState />);
-    expect(screen.getByRole("status", { name: "Loading..." })).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "Loading..." }),
+    ).toBeInTheDocument();
     rerender(<ScreenLoadingState label="Please wait" />);
-    expect(screen.getByRole("status", { name: "Please wait" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "Please wait" }),
+    ).toBeInTheDocument();
   });
 
   it("uses custom retry handler when provided", () => {
     const onRetry = vi.fn();
-    render(<ScreenErrorState message="Something went wrong" onRetry={onRetry} />);
+    render(
+      <ScreenErrorState message="Something went wrong" onRetry={onRetry} />,
+    );
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
     expect(onRetry).toHaveBeenCalled();
   });

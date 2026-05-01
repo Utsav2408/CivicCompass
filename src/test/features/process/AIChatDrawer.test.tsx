@@ -25,7 +25,9 @@ vi.mock("@/shared/components/AshokaCakraLoader", () => ({
 
 describe("AIChatDrawer", () => {
   it("returns null when closed", () => {
-    const { container } = render(<AIChatDrawer isOpen={false} onClose={vi.fn()} />);
+    const { container } = render(
+      <AIChatDrawer isOpen={false} onClose={vi.fn()} />,
+    );
     expect(container).toBeEmptyDOMElement();
   });
 

@@ -57,7 +57,9 @@ export function WardSearchBar({
           type="text"
           placeholder="Search Ward (e.g. Connaught Place)"
           value={value}
-          onChange={(e) => { onChange(e.target.value); }}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
           style={{
             flex: 1,
             border: "none",
@@ -110,7 +112,12 @@ export function WardSearchBar({
                   {place.title}
                 </span>
                 {place.subtitle && (
-                  <span style={{ font: "var(--text-small)", color: "var(--text-muted)" }}>
+                  <span
+                    style={{
+                      font: "var(--text-small)",
+                      color: "var(--text-muted)",
+                    }}
+                  >
                     {place.subtitle}
                   </span>
                 )}
@@ -120,7 +127,9 @@ export function WardSearchBar({
           {boothResults.map((booth) => (
             <li key={booth.id} role="option" aria-selected={false}>
               <button
-                onClick={() => { onSelectBooth(booth); }}
+                onClick={() => {
+                  onSelectBooth(booth);
+                }}
                 style={{
                   width: "100%",
                   textAlign: "left",
@@ -137,7 +146,12 @@ export function WardSearchBar({
                 <span style={{ font: "var(--text-h2)", color: "var(--sf)" }}>
                   {booth.wardName}
                 </span>
-                <span style={{ font: "var(--text-small)", color: "var(--text-muted)" }}>
+                <span
+                  style={{
+                    font: "var(--text-small)",
+                    color: "var(--text-muted)",
+                  }}
+                >
                   {booth.name}
                 </span>
               </button>

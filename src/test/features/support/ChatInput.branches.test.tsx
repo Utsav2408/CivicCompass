@@ -24,7 +24,9 @@ const MockSpeechRecognition = vi.fn(() => {
 type MockSpeechRecognition = ReturnType<typeof MockSpeechRecognition>;
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/shared/hooks/useOfflineStatus", () => ({
   useOfflineStatus: () => useOfflineStatus(),
@@ -37,12 +39,15 @@ describe("ChatInput extra branches", () => {
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "button-send" } });
     fireEvent.click(screen.getAllByRole("button")[1] as HTMLButtonElement);
-    await waitFor(() => { expect(onSend).toHaveBeenCalledWith("button-send"); });
+    await waitFor(() => {
+      expect(onSend).toHaveBeenCalledWith("button-send");
+    });
   });
 
   it("toggles speech recognition start/stop", () => {
-    (window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }).SpeechRecognition =
-      MockSpeechRecognition;
+    (
+      window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }
+    ).SpeechRecognition = MockSpeechRecognition;
     const onSend = vi.fn().mockResolvedValue(undefined);
     render(<ChatInput onSend={onSend} disabled={false} />);
 

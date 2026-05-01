@@ -24,15 +24,25 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
 vi.mock("@/features/process/hooks/useGeminiChat", () => ({
-  useGeminiChat: () => ({ messages: [], send: vi.fn(), isLoading: false, error: null }),
+  useGeminiChat: () => ({
+    messages: [],
+    send: vi.fn(),
+    isLoading: false,
+    error: null,
+  }),
 }));
-vi.mock("@/shared/hooks/useOfflineStatus", () => ({ useOfflineStatus: () => false }));
-vi.mock("@/shared/components/AshokaCakraLoader", () => ({ AshokaCakraLoader: () => <div>loader</div> }));
+vi.mock("@/shared/hooks/useOfflineStatus", () => ({
+  useOfflineStatus: () => false,
+}));
+vi.mock("@/shared/components/AshokaCakraLoader", () => ({
+  AshokaCakraLoader: () => <div>loader</div>,
+}));
 
 describe("AIChatDrawer speech handlers", () => {
   it("updates transcript and handles recognition error/end", () => {
-    (window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }).SpeechRecognition =
-      MockSpeechRecognition;
+    (
+      window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }
+    ).SpeechRecognition = MockSpeechRecognition;
     render(<AIChatDrawer isOpen={true} onClose={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: "🎤" }));
     const speechResult = { 0: { transcript: "spoken prompt" } };
@@ -44,12 +54,15 @@ describe("AIChatDrawer speech handlers", () => {
       },
     };
     act(() => {
-      latestRecognition?.onresult({ results });
+      if (!latestRecognition) return;
+      (latestRecognition.onresult as (event: { results: unknown }) => void)({
+        results,
+      });
     });
     expect(screen.getByRole("textbox")).toHaveValue("spoken prompt");
     act(() => {
-      latestRecognition?.onerror({});
-      latestRecognition?.onend({});
+      latestRecognition?.onerror();
+      latestRecognition?.onend();
     });
     expect(screen.getByRole("button", { name: "🎤" })).toBeInTheDocument();
   });

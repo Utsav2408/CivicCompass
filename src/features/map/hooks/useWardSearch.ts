@@ -10,26 +10,18 @@ export function useWardSearch(searchQuery: string) {
   const [allBooths, setAllBooths] = useState<PollingBooth[] | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
     void (async () => {
       try {
         const snapshot = await getDocs(query(collection(db, "pollingBooths")));
-        if (!isMounted) return;
         const docs: PollingBooth[] = [];
         snapshot.forEach((doc) => {
           docs.push({ id: doc.id, ...doc.data() } as PollingBooth);
         });
         setAllBooths(docs);
       } catch {
-        if (isMounted) {
-          setAllBooths([]);
-        }
+        setAllBooths([]);
       }
     })();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   useEffect(() => {
@@ -38,12 +30,11 @@ export function useWardSearch(searchQuery: string) {
     if (!searchQuery.trim()) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setResults([]);
-       
+
       setIsSearching(false);
       return;
     }
 
-     
     setIsSearching(true);
 
     const timeoutId = setTimeout(() => {

@@ -54,8 +54,12 @@ export function WardPage() {
     (errorMessage) => errorMessage != null,
   );
   const firstError =
-    partyError ?? winnersError ?? candidatesError ?? "Failed to load ward data.";
-  const isAnyLoading = isLoadingParties || isLoadingCandidates || isLoadingWinners;
+    partyError ??
+    winnersError ??
+    candidatesError ??
+    "Failed to load ward data.";
+  const isAnyLoading =
+    isLoadingParties || isLoadingCandidates || isLoadingWinners;
   const isAllEmpty =
     Boolean(constituencyId) &&
     !isAnyLoading &&
@@ -126,7 +130,10 @@ export function WardPage() {
           {isAllEmpty && (
             <ScreenEmptyState
               title={t("ward.empty_title", "No ward data yet")}
-              message={t("ward.empty", "No data available for this constituency")}
+              message={t(
+                "ward.empty",
+                "No data available for this constituency",
+              )}
             />
           )}
 
@@ -148,7 +155,10 @@ export function WardPage() {
                   marginBottom: "var(--space-sm)",
                 }}
               >
-                {t("ward.profile_required_title", "Complete profile to continue")}
+                {t(
+                  "ward.profile_required_title",
+                  "Complete profile to continue",
+                )}
               </h2>
               <p
                 style={{
@@ -195,7 +205,10 @@ export function WardPage() {
             </h2>
             {!constituencyId ? (
               <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
-                {t("ward.profile_required", "Update profile to access Ward data.")}
+                {t(
+                  "ward.profile_required",
+                  "Update profile to access Ward data.",
+                )}
               </p>
             ) : isLoadingParties ? (
               <div
@@ -243,7 +256,10 @@ export function WardPage() {
             </h2>
             {!constituencyId ? (
               <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
-                {t("ward.profile_required", "Update profile to access Ward data.")}
+                {t(
+                  "ward.profile_required",
+                  "Update profile to access Ward data.",
+                )}
               </p>
             ) : isLoadingWinners ? (
               <div
@@ -263,7 +279,10 @@ export function WardPage() {
             ) : winners.length === 0 ? (
               <ScreenEmptyState
                 title={t("ward.empty_title", "No ward data yet")}
-                message={t("ward.empty", "No data available for this constituency")}
+                message={t(
+                  "ward.empty",
+                  "No data available for this constituency",
+                )}
               />
             ) : (
               <HistoricalWinnerTable winners={winners} />
@@ -283,7 +302,10 @@ export function WardPage() {
             </h2>
             {!constituencyId ? (
               <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
-                {t("ward.profile_required", "Update profile to access Ward data.")}
+                {t(
+                  "ward.profile_required",
+                  "Update profile to access Ward data.",
+                )}
               </p>
             ) : isLoadingCandidates ? (
               <div

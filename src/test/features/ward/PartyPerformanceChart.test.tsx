@@ -6,7 +6,7 @@ import type { PartyResult } from "@/shared/types/ward";
 
 // Mock Recharts so JSDOM doesn't choke on SVGs/ResizeObserver
 vi.mock("recharts", async (importOriginal) => {
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const OriginalRecharts = await importOriginal<typeof import("recharts")>();
   return {
     ...OriginalRecharts,

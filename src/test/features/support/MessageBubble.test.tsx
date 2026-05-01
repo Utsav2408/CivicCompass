@@ -4,14 +4,20 @@ import { describe, expect, it, vi } from "vitest";
 import { MessageBubble } from "@/features/support/components/MessageBubble";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 
 describe("MessageBubble", () => {
   it("renders AI message with source badge", () => {
     render(
       <MessageBubble
-        message={{ role: "model", text: "Use ECI portal", source: "eci.gov.in" }}
+        message={{
+          role: "model",
+          text: "Use ECI portal",
+          source: "eci.gov.in",
+        }}
       />,
     );
     expect(screen.getByText("Use ECI portal")).toBeInTheDocument();

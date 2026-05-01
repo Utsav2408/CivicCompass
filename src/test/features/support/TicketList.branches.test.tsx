@@ -5,13 +5,17 @@ import { TicketList } from "@/features/support/components/TicketList";
 import type { Ticket } from "@/shared/types/support";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/shared/components/LotusMotif", () => ({
   LotusEmptyState: ({ title }: { title: string }) => <div>{title}</div>,
 }));
 vi.mock("@/features/support/components/TicketCard", () => ({
-  TicketCard: ({ ticket }: { ticket: { id: string } }) => <div>{ticket.id}</div>,
+  TicketCard: ({ ticket }: { ticket: { id: string } }) => (
+    <div>{ticket.id}</div>
+  ),
 }));
 
 const ticket: Ticket = {

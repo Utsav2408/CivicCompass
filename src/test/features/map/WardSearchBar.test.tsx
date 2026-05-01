@@ -20,7 +20,10 @@ describe("WardSearchBar", () => {
 
     const input = screen.getByLabelText("Search by Ward Name");
     expect(input).toHaveValue("Con");
-    expect(screen.getByRole("combobox")).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("combobox")).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: "Connaught Place" } });
@@ -66,7 +69,10 @@ describe("WardSearchBar", () => {
       />,
     );
 
-    expect(screen.getByRole("combobox")).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("combobox")).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
     expect(screen.getByRole("listbox")).toBeInTheDocument();
     expect(screen.getByText("Connaught Place")).toBeInTheDocument();
     expect(screen.getByText("New Delhi")).toBeInTheDocument();

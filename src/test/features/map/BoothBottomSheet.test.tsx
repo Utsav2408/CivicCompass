@@ -30,7 +30,7 @@ describe("BoothBottomSheet", () => {
         onGetDirections={vi.fn()}
       />,
     );
-    
+
     expect(screen.getByText("Model School")).toBeInTheDocument();
     expect(screen.getByText("Central Delhi")).toBeInTheDocument();
     expect(screen.getByText("2.5 km away")).toBeInTheDocument();

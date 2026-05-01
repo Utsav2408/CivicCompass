@@ -6,7 +6,9 @@ import { TicketCreationDrawer } from "@/features/support/components/TicketCreati
 const createTicket = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),
@@ -23,13 +25,21 @@ vi.mock("@/features/support/components/MediaUpload", () => ({
   }: {
     onUploadComplete: (url: string, type: string) => void;
   }) => (
-    <button onClick={() => { onUploadComplete("https://img", "image/png"); }}>Upload</button>
+    <button
+      onClick={() => {
+        onUploadComplete("https://img", "image/png");
+      }}
+    >
+      Upload
+    </button>
   ),
 }));
 
 describe("TicketCreationDrawer", () => {
   it("returns null when closed", () => {
-    const { container } = render(<TicketCreationDrawer isOpen={false} onClose={vi.fn()} />);
+    const { container } = render(
+      <TicketCreationDrawer isOpen={false} onClose={vi.fn()} />,
+    );
     expect(container).toBeEmptyDOMElement();
   });
 
@@ -41,10 +51,14 @@ describe("TicketCreationDrawer", () => {
       target: { value: "Water leakage" },
     });
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    await waitFor(() => { expect(createTicket).toHaveBeenCalled(); });
+    await waitFor(() => {
+      expect(createTicket).toHaveBeenCalled();
+    });
 
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
     expect(screen.getByText(/ai summary/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /raise ticket/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /raise ticket/i }),
+    ).toBeInTheDocument();
   });
 });

@@ -33,11 +33,15 @@ describe("useGeminiSupport extra branches", () => {
       role: "model",
       text: "General support reply",
     });
-    const requestBody = JSON.parse((fetchSpy.mock.calls[0]?.[1] as RequestInit).body as string) as {
+    const requestBody = JSON.parse(
+      (fetchSpy.mock.calls[0]?.[1] as RequestInit).body as string,
+    ) as {
       prompt: string;
       chatSummary: string;
     };
-    expect(requestBody.chatSummary).toContain("User: How do I file a complaint?");
+    expect(requestBody.chatSummary).toContain(
+      "User: How do I file a complaint?",
+    );
   });
 
   it("sets API error when supportAgent returns non-ok", async () => {
@@ -68,7 +72,9 @@ describe("useGeminiSupport extra branches", () => {
     await act(async () => {
       await result.current.send("My name is missing from voter roll");
     });
-    await waitFor(() => { expect(result.current.pendingTicketDraft).not.toBeNull(); });
+    await waitFor(() => {
+      expect(result.current.pendingTicketDraft).not.toBeNull();
+    });
     await act(async () => {
       await result.current.raisePendingTicket();
     });

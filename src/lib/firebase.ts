@@ -46,13 +46,15 @@ if (debugToken) {
   if (typeof self !== "undefined") {
     (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN =
       debugToken;
-    (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER =
-      debugToken;
+    (
+      self as unknown as FirebaseGlobal
+    ).FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER = debugToken;
   } else if (typeof global !== "undefined") {
     (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN =
       debugToken;
-    (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER =
-      debugToken;
+    (
+      global as unknown as FirebaseGlobal
+    ).FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER = debugToken;
   }
 }
 
@@ -61,10 +63,10 @@ if (debugToken) {
 export const appCheck: AppCheck | null =
   typeof document !== "undefined"
     ? initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(
-      import.meta.env["VITE_APPCHECK_SITE_KEY"] as string,
-    ),
-    isTokenAutoRefreshEnabled: true,
+        provider: new ReCaptchaV3Provider(
+          import.meta.env["VITE_APPCHECK_SITE_KEY"] as string,
+        ),
+        isTokenAutoRefreshEnabled: true,
       })
     : null;
 

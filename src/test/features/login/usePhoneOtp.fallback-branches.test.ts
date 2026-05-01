@@ -19,11 +19,13 @@ describe("usePhoneOtp fallback branches", () => {
     signInWithPhoneNumber.mockRejectedValue("sms-broke");
     const { result } = renderHook(() => usePhoneOtp());
     await act(async () => {
-      await expect(result.current.sendOtp("+911234567890", "recaptcha")).rejects.toBe(
-        "sms-broke",
-      );
+      await expect(
+        result.current.sendOtp("+911234567890", "recaptcha"),
+      ).rejects.toBe("sms-broke");
     });
-    await waitFor(() => { expect(result.current.error).toBe("Failed to send OTP."); });
+    await waitFor(() => {
+      expect(result.current.error).toBe("Failed to send OTP.");
+    });
   });
 
   it("uses fallback verifyOtp error for non-Error rejection", async () => {
@@ -37,6 +39,8 @@ describe("usePhoneOtp fallback branches", () => {
     await act(async () => {
       await expect(result.current.verifyOtp("000000")).rejects.toBe("invalid");
     });
-    await waitFor(() => { expect(result.current.error).toBe("Invalid OTP code."); });
+    await waitFor(() => {
+      expect(result.current.error).toBe("Invalid OTP code.");
+    });
   });
 });

@@ -26,7 +26,9 @@ describe("usePollingBooth", () => {
     } as never);
 
     const { result } = renderHook(() => usePollingBooth("u1"));
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.booth).toMatchObject({ id: "b1" });
   });
 });

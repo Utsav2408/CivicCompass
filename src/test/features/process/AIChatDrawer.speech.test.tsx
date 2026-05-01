@@ -28,13 +28,18 @@ vi.mock("react-i18next", () => ({
 vi.mock("@/features/process/hooks/useGeminiChat", () => ({
   useGeminiChat: () => ({ messages: [], send, isLoading: false, error: null }),
 }));
-vi.mock("@/shared/hooks/useOfflineStatus", () => ({ useOfflineStatus: () => false }));
-vi.mock("@/shared/components/AshokaCakraLoader", () => ({ AshokaCakraLoader: () => <div>loader</div> }));
+vi.mock("@/shared/hooks/useOfflineStatus", () => ({
+  useOfflineStatus: () => false,
+}));
+vi.mock("@/shared/components/AshokaCakraLoader", () => ({
+  AshokaCakraLoader: () => <div>loader</div>,
+}));
 
 describe("AIChatDrawer speech branch", () => {
   it("renders speech button and toggles start/stop", () => {
-    (window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }).SpeechRecognition =
-      MockSpeechRecognition;
+    (
+      window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }
+    ).SpeechRecognition = MockSpeechRecognition;
     render(<AIChatDrawer isOpen={true} onClose={vi.fn()} />);
     const mic = screen.getByRole("button", { name: "🎤" });
     fireEvent.click(mic);

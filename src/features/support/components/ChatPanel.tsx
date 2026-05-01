@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, memo } from "react";
+import { useRef, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ChatInput } from "@/features/support/components/ChatInput";
@@ -29,7 +29,9 @@ export const ChatPanel = memo(function ChatPanel() {
   }, [messages, isLoading]);
 
   return (
-    <div style={{ display: "flex", height: "100%", background: "var(--paper)" }}>
+    <div
+      style={{ display: "flex", height: "100%", background: "var(--paper)" }}
+    >
       <div
         style={{
           flex: 1,
@@ -56,7 +58,9 @@ export const ChatPanel = memo(function ChatPanel() {
             <h3 style={{ margin: 0, fontSize: "16px" }}>
               {t("support.chat.agent_name", "Support Agent")}
             </h3>
-            <span style={{ fontSize: "12px", color: "var(--in)", fontWeight: 600 }}>
+            <span
+              style={{ fontSize: "12px", color: "var(--in)", fontWeight: 600 }}
+            >
               ● Online
             </span>
           </div>
@@ -79,23 +83,26 @@ export const ChatPanel = memo(function ChatPanel() {
         </div>
 
         {/* Message List */}
-        <div 
+        <div
           ref={scrollRef}
           aria-busy={isLoading}
           aria-live="polite"
-          style={{ 
-            flex: 1, 
-            overflowY: "auto", 
+          style={{
+            flex: 1,
+            overflowY: "auto",
             padding: "var(--space-md)",
             display: "flex",
             flexDirection: "column",
-            gap: "var(--space-md)"
+            gap: "var(--space-md)",
           }}
         >
           {messages.length === 0 && (
             <div style={{ marginTop: "var(--space-xl)" }}>
               <LotusEmptyState
-                title={t("support.chat.welcome_title", "Support Assistant Ready")}
+                title={t(
+                  "support.chat.welcome_title",
+                  "Support Assistant Ready",
+                )}
                 message={t(
                   "support.chat.welcome",
                   "Hello! I am your CivicCompass Assistant. How can I help you today?",
@@ -109,14 +116,33 @@ export const ChatPanel = memo(function ChatPanel() {
           ))}
 
           {isLoading && (
-            <div style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: "8px" }}>
+            <div
+              style={{
+                alignSelf: "flex-start",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
               <AshokaCakraLoader size={20} color="var(--in)" />
-              <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>{t("support.chat.thinking", "Agent is typing...")}</span>
+              <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
+                {t("support.chat.thinking", "Agent is typing...")}
+              </span>
             </div>
           )}
 
           {error && (
-            <div role="alert" style={{ padding: "var(--space-sm)", background: "var(--lo-l)", color: "var(--lo-text)", borderRadius: "var(--radius-sm)", fontSize: "12px", textAlign: "center" }}>
+            <div
+              role="alert"
+              style={{
+                padding: "var(--space-sm)",
+                background: "var(--lo-l)",
+                color: "var(--lo-text)",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "12px",
+                textAlign: "center",
+              }}
+            >
               {error}
             </div>
           )}

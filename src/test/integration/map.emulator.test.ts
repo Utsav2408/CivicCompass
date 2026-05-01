@@ -2,7 +2,15 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 vi.stubEnv("VITE_USE_EMULATORS", "true");
@@ -35,7 +43,7 @@ describe("Map Integration — Emulator", () => {
       name: "Alice's Booth",
       address: "123 Street",
       coordinates: { lat: 28.6, lng: 77.2 },
-      city: "Delhi"
+      city: "Delhi",
     };
 
     // Seed the user profile with a booth
@@ -63,13 +71,13 @@ describe("Map Integration — Emulator", () => {
         name: "Delhi Station",
         city: "Delhi",
         latitude: 28.6,
-        longitude: 77.2
+        longitude: 77.2,
       });
       await setDoc(doc(adminDb, "policeStations", "station-mumbai"), {
         name: "Mumbai Station",
         city: "Mumbai",
         latitude: 19.0,
-        longitude: 72.8
+        longitude: 72.8,
       });
     });
 

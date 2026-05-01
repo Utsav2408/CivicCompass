@@ -6,7 +6,9 @@ import { ChatInput } from "@/features/support/components/ChatInput";
 const mockUseOfflineStatus = vi.fn(() => false);
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 vi.mock("@/shared/hooks/useOfflineStatus", () => ({
   useOfflineStatus: () => mockUseOfflineStatus(),
@@ -21,7 +23,9 @@ describe("ChatInput", () => {
     fireEvent.change(input, { target: { value: "Need help" } });
     fireEvent.keyDown(input, { key: "Enter" });
 
-    await waitFor(() => { expect(onSend).toHaveBeenCalledWith("Need help"); });
+    await waitFor(() => {
+      expect(onSend).toHaveBeenCalledWith("Need help");
+    });
     expect((input as HTMLInputElement).value).toBe("");
   });
 

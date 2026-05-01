@@ -17,7 +17,11 @@ vi.mock("firebase/firestore", () => ({
 
 describe("useTickets filter branches", () => {
   it("applies non-all filter in snapshot normalization", async () => {
-    let snapshotCallback: ((snapshot: { docs: Array<{ id: string; data: () => unknown }> }) => void) | undefined;
+    let snapshotCallback:
+      | ((snapshot: {
+          docs: Array<{ id: string; data: () => unknown }>;
+        }) => void)
+      | undefined;
     vi.mocked(firestore.onSnapshot).mockImplementation((_q, cb) => {
       snapshotCallback = cb as typeof snapshotCallback;
       return vi.fn();
@@ -28,7 +32,9 @@ describe("useTickets filter branches", () => {
       result.current.setFilter("Open");
     });
 
-    await waitFor(() => { expect(result.current.filter).toBe("Open"); });
+    await waitFor(() => {
+      expect(result.current.filter).toBe("Open");
+    });
     act(() => {
       snapshotCallback?.({
         docs: [

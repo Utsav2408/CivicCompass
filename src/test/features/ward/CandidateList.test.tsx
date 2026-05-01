@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import { CandidateList } from "@/features/ward/components/CandidateList";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 
 vi.mock("@/features/ward/components/CandidateCard", () => ({
@@ -16,7 +18,10 @@ vi.mock("@/features/ward/components/CandidateCard", () => ({
 describe("CandidateList", () => {
   it("renders empty state and nomination deadline when no candidates", () => {
     render(
-      <CandidateList candidates={[]} nominationDeadline="2026-05-01T00:00:00.000Z" />,
+      <CandidateList
+        candidates={[]}
+        nominationDeadline="2026-05-01T00:00:00.000Z"
+      />,
     );
 
     expect(

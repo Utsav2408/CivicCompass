@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import { MediaUpload } from "@/features/support/components/MediaUpload";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("firebase/storage", () => ({
   ref: vi.fn(),
@@ -18,7 +20,13 @@ describe("MediaUpload click path", () => {
     const clickSpy = vi
       .spyOn(HTMLInputElement.prototype, "click")
       .mockImplementation(() => {});
-    render(<MediaUpload ticketId="t1" onUploadComplete={vi.fn()} onUploading={vi.fn()} />);
+    render(
+      <MediaUpload
+        ticketId="t1"
+        onUploadComplete={vi.fn()}
+        onUploading={vi.fn()}
+      />,
+    );
     fireEvent.click(screen.getByRole("button"));
     expect(clickSpy).toHaveBeenCalled();
     clickSpy.mockRestore();

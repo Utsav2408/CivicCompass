@@ -9,7 +9,9 @@ const { uploadBytes, getDownloadURL } = vi.hoisted(() => ({
 }));
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 vi.mock("firebase/storage", () => ({
   ref: () => ({ path: "mock" }),
@@ -29,7 +31,9 @@ describe("MediaUpload", () => {
       />,
     );
 
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const input = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
     const file = new File(["x"], "big.png", { type: "image/png" });
     Object.defineProperty(file, "size", { value: 11 * 1024 * 1024 });
     fireEvent.change(input, { target: { files: [file] } });
@@ -50,15 +54,17 @@ describe("MediaUpload", () => {
       />,
     );
 
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const input = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
     const file = new File(["img"], "ok.png", { type: "image/png" });
     fireEvent.change(input, { target: { files: [file] } });
 
-    await waitFor(() =>
-      { expect(onUploadComplete).toHaveBeenCalledWith(
+    await waitFor(() => {
+      expect(onUploadComplete).toHaveBeenCalledWith(
         "https://cdn/file.png",
         "image/png",
-      ); },
-    );
+      );
+    });
   });
 });

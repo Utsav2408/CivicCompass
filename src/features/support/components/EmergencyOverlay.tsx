@@ -1,4 +1,10 @@
-import { useMap, Map, AdvancedMarker, Pin, useMapsLibrary } from "@vis.gl/react-google-maps";
+import {
+  useMap,
+  Map,
+  AdvancedMarker,
+  Pin,
+  useMapsLibrary,
+} from "@vis.gl/react-google-maps";
 import { useState, useEffect, useMemo, memo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,8 +27,8 @@ export const EmergencyOverlay = memo(function EmergencyOverlay() {
     const timer = setTimeout(() => {
       setStep("alerted");
     }, 2000);
-    return () => { 
-      clearTimeout(timer); 
+    return () => {
+      clearTimeout(timer);
       setStep("alerting"); // Reset when inactive or cleanup
     };
   }, [isActive]);
@@ -76,34 +82,88 @@ export const EmergencyOverlay = memo(function EmergencyOverlay() {
         ✕
       </button>
 
-      <div style={{ textAlign: "center", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", width: "100%" }}>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "32px", marginBottom: "var(--space-md)" }}>
-          {step === "alerting" ? t("support.sos.alerting", "Alerting Authorities...") : t("support.sos.alerted", "Police Alerted")}
+      <div
+        style={{
+          textAlign: "center",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "32px",
+            marginBottom: "var(--space-md)",
+          }}
+        >
+          {step === "alerting"
+            ? t("support.sos.alerting", "Alerting Authorities...")
+            : t("support.sos.alerted", "Police Alerted")}
         </h1>
-        
-        <p style={{ fontSize: "18px", opacity: 0.9, marginBottom: "var(--space-lg)" }}>
-          {step === "alerting" 
-            ? t("support.sos.connecting", "Connecting to the nearest control room...") 
-            : t("support.sos.eta_msg", "Arriving in approx. {{eta}} minutes", { eta: eta ?? 3 })}
+
+        <p
+          style={{
+            fontSize: "18px",
+            opacity: 0.9,
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          {step === "alerting"
+            ? t(
+                "support.sos.connecting",
+                "Connecting to the nearest control room...",
+              )
+            : t("support.sos.eta_msg", "Arriving in approx. {{eta}} minutes", {
+                eta: eta ?? 3,
+              })}
         </p>
 
         {nearestStation && (
-          <p style={{ fontSize: "16px", fontWeight: 700, marginBottom: "var(--space-md)" }}>
+          <p
+            style={{
+              fontSize: "16px",
+              fontWeight: 700,
+              marginBottom: "var(--space-md)",
+            }}
+          >
             {nearestStation.name} — {nearestStation.phone || "N/A"}
           </p>
         )}
 
         {step === "alerted" && (
-          <div 
-            aria-label={t("support.sos.aria.map", "Map showing route from nearest police station")}
-            style={{ width: "100%", height: "300px", borderRadius: "var(--radius-lg)", overflow: "hidden", marginBottom: "var(--space-lg)", border: "2px solid white" }}
+          <div
+            aria-label={t(
+              "support.sos.aria.map",
+              "Map showing route from nearest police station",
+            )}
+            style={{
+              width: "100%",
+              height: "300px",
+              borderRadius: "var(--radius-lg)",
+              overflow: "hidden",
+              marginBottom: "var(--space-lg)",
+              border: "2px solid white",
+            }}
           >
-             <EmergencyMap />
+            <EmergencyMap />
           </div>
         )}
 
-        <p style={{ fontSize: "12px", opacity: 0.7, maxWidth: "280px", margin: "0 auto" }}>
-          {t("support.sos.disclaimer", "IMPORTANT: For life-threatening emergencies, please call 100 directly.")}
+        <p
+          style={{
+            fontSize: "12px",
+            opacity: 0.7,
+            maxWidth: "280px",
+            margin: "0 auto",
+          }}
+        >
+          {t(
+            "support.sos.disclaimer",
+            "IMPORTANT: For life-threatening emergencies, please call 100 directly.",
+          )}
         </p>
       </div>
 
@@ -122,10 +182,10 @@ export const EmergencyOverlay = memo(function EmergencyOverlay() {
 
 function EmergencyMap() {
   const { nearestStation } = useEmergency();
-  const { coords: userCoords } = useEmergencyLocation(); 
+  const { coords: userCoords } = useEmergencyLocation();
 
   const center = useMemo(() => {
-     return userCoords ?? { lat: 28.6139, lng: 77.2090 };
+    return userCoords ?? { lat: 28.6139, lng: 77.209 };
   }, [userCoords]);
 
   return (
@@ -139,12 +199,25 @@ function EmergencyMap() {
       <DirectionsLayer />
       {userCoords && (
         <AdvancedMarker position={userCoords}>
-          <Pin background={"#4285F4"} glyphColor={"#FFFFFF"} borderColor={"#FFFFFF"} />
+          <Pin
+            background={"#4285F4"}
+            glyphColor={"#FFFFFF"}
+            borderColor={"#FFFFFF"}
+          />
         </AdvancedMarker>
       )}
       {nearestStation && (
-        <AdvancedMarker position={{ lat: nearestStation.latitude, lng: nearestStation.longitude }}>
-           <Pin background={"#B80000"} glyphColor={"#FFFFFF"} borderColor={"#FFFFFF"} />
+        <AdvancedMarker
+          position={{
+            lat: nearestStation.latitude,
+            lng: nearestStation.longitude,
+          }}
+        >
+          <Pin
+            background={"#B80000"}
+            glyphColor={"#FFFFFF"}
+            borderColor={"#FFFFFF"}
+          />
         </AdvancedMarker>
       )}
     </Map>
@@ -152,10 +225,9 @@ function EmergencyMap() {
 }
 
 function DirectionsLayer() {
-   
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
-   
+
   const { nearestStation } = useEmergency();
   const { coords: userCoords } = useEmergencyLocation();
 
@@ -179,12 +251,12 @@ function DirectionsLayer() {
         destination: userCoords,
         travelMode: google.maps.TravelMode.DRIVING,
       },
-       
+
       (result, status) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
           directionsRenderer.setDirections(result);
         }
-      }
+      },
     );
 
     return () => {
@@ -197,5 +269,5 @@ function DirectionsLayer() {
 }
 
 function useEmergencyLocation() {
-    return useUserLocation();
+  return useUserLocation();
 }

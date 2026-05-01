@@ -10,7 +10,9 @@ vi.mock("react-router-dom", () => ({
   useNavigate: () => navigate,
 }));
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/shared/hooks/useProfile", () => ({
   useProfile: () => ({ profile: null }),
@@ -30,13 +32,19 @@ vi.mock("@/features/ward/hooks/useHistoricalWinners", () => ({
   useHistoricalWinners: () => ({ winners: [], isLoading: false, error: null }),
 }));
 vi.mock("@/shared/components/ScreenErrorBoundary", () => ({
-  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => <>{children}</>,
+  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 vi.mock("@/shared/components/AshokaCakraLoader", () => ({
   AshokaCakraLoader: () => <div>loader</div>,
 }));
-vi.mock("@/shared/components/BottomNav", () => ({ BottomNav: () => <div>nav</div> }));
-vi.mock("@/shared/components/LotusMotif", () => ({ LotusMotif: () => <div>lotus</div> }));
+vi.mock("@/shared/components/BottomNav", () => ({
+  BottomNav: () => <div>nav</div>,
+}));
+vi.mock("@/shared/components/LotusMotif", () => ({
+  LotusMotif: () => <div>lotus</div>,
+}));
 vi.mock("@/shared/components/ScreenStates", () => ({
   ScreenEmptyState: ({ title }: { title: string }) => <div>{title}</div>,
   ScreenLoadingState: ({ label }: { label: string }) => <div>{label}</div>,
@@ -60,6 +68,8 @@ describe("WardPage branches", () => {
     render(<WardPage />);
     fireEvent.click(screen.getByRole("button", { name: /update profile/i }));
     expect(navigate).toHaveBeenCalledWith("/personalization");
-    expect(screen.getAllByText(/update profile to access ward data/i).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/update profile to access ward data/i).length,
+    ).toBeGreaterThan(0);
   });
 });

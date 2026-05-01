@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -57,8 +58,12 @@ vi.mock("@/features/map/components/MapView", () => ({
     onDirectionsError?: (reason: string) => void;
   }) => (
     <div data-testid="map-view">
-      <div data-testid="map-view-markers-count">{boothMarkers?.length ?? 0}</div>
-      <div data-testid="map-view-show-directions">{showDirections ? "yes" : "no"}</div>
+      <div data-testid="map-view-markers-count">
+        {boothMarkers?.length ?? 0}
+      </div>
+      <div data-testid="map-view-show-directions">
+        {showDirections ? "yes" : "no"}
+      </div>
       <button
         type="button"
         onClick={() => {
@@ -71,11 +76,7 @@ vi.mock("@/features/map/components/MapView", () => ({
   ),
 }));
 vi.mock("@/features/map/components/BoothBottomSheet", () => ({
-  BoothBottomSheet: ({
-    onGetDirections,
-  }: {
-    onGetDirections?: () => void;
-  }) => (
+  BoothBottomSheet: ({ onGetDirections }: { onGetDirections?: () => void }) => (
     <div data-testid="booth-sheet">
       <button type="button" onClick={onGetDirections}>
         get-directions
@@ -202,7 +203,9 @@ describe("PollingBoothMap (lightweight)", () => {
     });
 
     render(<PollingBoothMap initialCoords={null} />);
-    expect(screen.getByText(/offline - showing saved location/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/offline - showing saved location/i),
+    ).toBeInTheDocument();
   });
 
   it("shows loading overlay when any async source is loading", () => {
@@ -285,7 +288,9 @@ describe("PollingBoothMap (lightweight)", () => {
   });
 
   it("falls back to Google Maps and shows directions error banner", () => {
-    const windowOpenSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+    const windowOpenSpy = vi
+      .spyOn(window, "open")
+      .mockImplementation(() => null);
     usePollingBoothMock.mockReturnValue({
       booth: {
         id: "b1",
@@ -308,9 +313,13 @@ describe("PollingBoothMap (lightweight)", () => {
     });
 
     render(<PollingBoothMap initialCoords={null} />);
-    fireEvent.click(screen.getByRole("button", { name: "trigger-directions-error" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "trigger-directions-error" }),
+    );
 
-    expect(screen.getByText(/in-app route unavailable \(REQUEST_DENIED\)/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/in-app route unavailable \(REQUEST_DENIED\)/i),
+    ).toBeInTheDocument();
     expect(windowOpenSpy).toHaveBeenCalledTimes(1);
   });
 });

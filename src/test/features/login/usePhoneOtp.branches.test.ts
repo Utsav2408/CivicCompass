@@ -33,7 +33,9 @@ describe("usePhoneOtp extra branches", () => {
       await result.current.sendOtp("+911234567890", "recaptcha");
     });
     await act(async () => {
-      await expect(result.current.verifyOtp("000000")).rejects.toThrow("invalid otp");
+      await expect(result.current.verifyOtp("000000")).rejects.toThrow(
+        "invalid otp",
+      );
     });
     await waitFor(() => {
       expect(result.current.error).toBe("invalid otp");

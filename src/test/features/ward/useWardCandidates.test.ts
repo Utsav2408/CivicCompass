@@ -5,7 +5,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as authHook from "@/features/login/useAuth";
 import { useWardCandidates } from "@/features/ward/hooks/useWardCandidates";
 
-
 // Mock Firebase auth
 vi.mock("@/features/login/useAuth");
 

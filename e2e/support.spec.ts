@@ -7,7 +7,9 @@ test.describe("Support & Emergency E2E Flow", () => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ text: "I can help you with that. Would you like to create a ticket?" }),
+        body: JSON.stringify({
+          text: "I can help you with that. Would you like to create a ticket?",
+        }),
       });
     });
 
@@ -15,12 +17,14 @@ test.describe("Support & Emergency E2E Flow", () => {
     // For E2E, we assume the emulator is running and seeded with necessary data (like police stations)
   });
 
-  test("Ticket creation journey (chat -> describe -> confirm -> raise)", async ({ page }) => {
+  test("Ticket creation journey (chat -> describe -> confirm -> raise)", async ({
+    page,
+  }) => {
     await page.goto("/support");
 
     // 1. Help Chat Tab
     await expect(page.getByText("Help Chat")).toBeVisible();
-    
+
     const chatInput = page.getByPlaceholder("Type your issue here...");
     await chatInput.fill("I have a problem with my voter ID");
     await page.keyboard.press("Enter");
@@ -49,7 +53,9 @@ test.describe("Support & Emergency E2E Flow", () => {
     await expect(page.getByText("Voter ID card is damaged")).toBeVisible();
   });
 
-  test("Emergency SOS flow (tap -> overlay -> station -> cancel)", async ({ page }) => {
+  test("Emergency SOS flow (tap -> overlay -> station -> cancel)", async ({
+    page,
+  }) => {
     await page.goto("/home");
 
     // 1. Tap SOS Button
@@ -62,8 +68,10 @@ test.describe("Support & Emergency E2E Flow", () => {
     await expect(page.getByText("Alerting Authorities...")).toBeVisible();
 
     // 3. Wait for 'Alerted' state (mocked 2s timer)
-    await expect(page.getByText("Police Alerted")).toBeVisible({ timeout: 5000 });
-    
+    await expect(page.getByText("Police Alerted")).toBeVisible({
+      timeout: 5000,
+    });
+
     // Check for station name and ETA
     await expect(page.getByText("Assistance arriving in")).toBeVisible();
 

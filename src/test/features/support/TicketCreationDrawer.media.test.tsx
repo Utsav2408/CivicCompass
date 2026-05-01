@@ -6,7 +6,9 @@ import { TicketCreationDrawer } from "@/features/support/components/TicketCreati
 const createTicket = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),
@@ -18,8 +20,18 @@ vi.mock("@/shared/components/AshokaCakraLoader", () => ({
   AshokaCakraLoader: () => <div data-testid="loader" />,
 }));
 vi.mock("@/features/support/components/MediaUpload", () => ({
-  MediaUpload: ({ onUploadComplete }: { onUploadComplete: (url: string, type: string) => void }) => (
-    <button onClick={() => { onUploadComplete("https://img", "image/png"); }}>mock upload</button>
+  MediaUpload: ({
+    onUploadComplete,
+  }: {
+    onUploadComplete: (url: string, type: string) => void;
+  }) => (
+    <button
+      onClick={() => {
+        onUploadComplete("https://img", "image/png");
+      }}
+    >
+      mock upload
+    </button>
   ),
 }));
 
@@ -32,9 +44,13 @@ describe("TicketCreationDrawer media summary", () => {
       target: { value: "Street lights issue" },
     });
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    await waitFor(() => { expect(createTicket).toHaveBeenCalled(); });
+    await waitFor(() => {
+      expect(createTicket).toHaveBeenCalled();
+    });
     fireEvent.click(screen.getByRole("button", { name: /mock upload/i }));
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    expect(screen.getByText(/media attached successfully/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/media attached successfully/i),
+    ).toBeInTheDocument();
   });
 });

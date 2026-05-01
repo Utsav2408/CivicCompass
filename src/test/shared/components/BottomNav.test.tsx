@@ -3,8 +3,11 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { BottomNav } from "@/shared/components/BottomNav";
+import type { UserProfile } from "@/shared/types/user";
 
-const mockUseProfile = vi.fn(() => ({ profile: null }));
+const mockUseProfile = vi.fn<() => { profile: UserProfile | null }>(() => ({
+  profile: null,
+}));
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -28,7 +31,18 @@ describe("BottomNav", () => {
   });
 
   it("renders ward as link when profile constituency exists", () => {
-    mockUseProfile.mockReturnValue({ profile: { constituency: "New Delhi" } });
+    mockUseProfile.mockReturnValue({
+      profile: {
+        uid: "user-1",
+        name: "Test User",
+        constituency: "New Delhi",
+        language: "en",
+        electionInterest: ["lok_sabha"],
+        isComplete: true,
+        createdAt: 0,
+        updatedAt: 0,
+      },
+    });
     render(
       <MemoryRouter initialEntries={["/home"]}>
         <BottomNav />

@@ -16,7 +16,10 @@ beforeAll(async () => {
   testEnv = await initializeTestEnvironment({
     projectId: "demo-civiccompass-rules",
     firestore: {
-      rules: readFileSync(resolve(__dirname, "../../../firestore.rules"), "utf8"),
+      rules: readFileSync(
+        resolve(__dirname, "../../../firestore.rules"),
+        "utf8",
+      ),
       host: "127.0.0.1",
       port: 8080,
     },
@@ -36,13 +39,17 @@ describe("Firestore Security Rules", () => {
   describe("policeStations collection", () => {
     it("should allow unauthenticated read", async () => {
       const unauthedDb = testEnv.unauthenticatedContext().firestore();
-      const docRef = unauthedDb.collection("policeStations").doc("test-station");
+      const docRef = unauthedDb
+        .collection("policeStations")
+        .doc("test-station");
       await assertSucceeds(docRef.get());
     });
 
     it("should deny unauthenticated write", async () => {
       const unauthedDb = testEnv.unauthenticatedContext().firestore();
-      const docRef = unauthedDb.collection("policeStations").doc("test-station");
+      const docRef = unauthedDb
+        .collection("policeStations")
+        .doc("test-station");
       await assertFails(docRef.set({ name: "Hacked Station" }));
     });
 

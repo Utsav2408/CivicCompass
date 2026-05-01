@@ -52,19 +52,23 @@ declare global {
   }
 }
 
-export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInputProps) {
+export const ChatInput = memo(function ChatInput({
+  onSend,
+  disabled,
+}: ChatInputProps) {
   const { t } = useTranslation();
   const isOffline = useOfflineStatus();
   const [value, setValue] = useState("");
   const [isListening, setIsListening] = useState(false);
-  
+
   const isInteractionDisabled = disabled || isOffline;
-  
+
   // Speech Recognition
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition ?? window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
@@ -73,15 +77,17 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
 
       recognition.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = Array.from(event.results)
-          .map(
-            (result: SpeechRecognitionResult) => result[0]?.transcript ?? "",
-          )
+          .map((result: SpeechRecognitionResult) => result[0]?.transcript ?? "")
           .join("");
         setValue(transcript);
       };
 
-      recognition.onerror = () => { setIsListening(false); };
-      recognition.onend = () => { setIsListening(false); };
+      recognition.onerror = () => {
+        setIsListening(false);
+      };
+      recognition.onend = () => {
+        setIsListening(false);
+      };
       recognitionRef.current = recognition;
     }
   }, []);
@@ -104,14 +110,16 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
   };
 
   return (
-    <div style={{ 
-      padding: "var(--space-md)", 
-      background: "var(--paper)", 
-      borderTop: "1px solid var(--border)",
-      display: "flex",
-      gap: "var(--space-sm)",
-      alignItems: "center"
-    }}>
+    <div
+      style={{
+        padding: "var(--space-md)",
+        background: "var(--paper)",
+        borderTop: "1px solid var(--border)",
+        display: "flex",
+        gap: "var(--space-sm)",
+        alignItems: "center",
+      }}
+    >
       <button
         type="button"
         onClick={toggleListening}
@@ -128,7 +136,7 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
           cursor: isInteractionDisabled ? "not-allowed" : "pointer",
           fontSize: "20px",
           color: isListening ? "var(--lo)" : "var(--text-muted)",
-          transition: "var(--transition-base)"
+          transition: "var(--transition-base)",
         }}
         title={t("support.chat.voice_input", "Voice Input")}
       >
@@ -138,13 +146,19 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
       <input
         type="text"
         value={value}
-        onChange={(e) => { setValue(e.target.value); }}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             void handleSend();
           }
         }}
-        placeholder={isOffline ? t("common.offline", "Offline") : t("support.chat.placeholder", "Type your issue here...")}
+        placeholder={
+          isOffline
+            ? t("common.offline", "Offline")
+            : t("support.chat.placeholder", "Type your issue here...")
+        }
         disabled={isInteractionDisabled}
         style={{
           flex: 1,
@@ -154,13 +168,15 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
           outline: "none",
           fontSize: "14px",
           fontFamily: "var(--font-body)",
-          background: isInteractionDisabled ? "var(--pg)" : "var(--paper)"
+          background: isInteractionDisabled ? "var(--pg)" : "var(--paper)",
         }}
       />
 
       <button
         type="button"
-        onClick={() => { void handleSend(); }}
+        onClick={() => {
+          void handleSend();
+        }}
         disabled={isInteractionDisabled || !value.trim()}
         style={{
           background: "var(--in)",
@@ -172,9 +188,10 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          cursor: (isInteractionDisabled || !value.trim()) ? "not-allowed" : "pointer",
-          opacity: (isInteractionDisabled || !value.trim()) ? 0.6 : 1,
-          transition: "var(--transition-base)"
+          cursor:
+            isInteractionDisabled || !value.trim() ? "not-allowed" : "pointer",
+          opacity: isInteractionDisabled || !value.trim() ? 0.6 : 1,
+          transition: "var(--transition-base)",
         }}
       >
         <SendIcon />
@@ -185,9 +202,27 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
 
 function SendIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22 2L11 13"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M22 2L15 22L11 13L2 9L22 2Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

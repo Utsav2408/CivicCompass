@@ -2,7 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const { mockGenerate, mockDefineTool, mockZ } = vi.hoisted(() => ({
   mockGenerate: vi.fn(),
-  mockDefineTool: vi.fn().mockImplementation((config) => ({ ...config, __isTool: true })),
+  mockDefineTool: vi
+    .fn()
+    .mockImplementation((config) => ({ ...config, __isTool: true })),
   mockZ: {
     object: vi.fn().mockReturnThis(),
     string: vi.fn().mockReturnThis(),
@@ -13,7 +15,7 @@ const { mockGenerate, mockDefineTool, mockZ } = vi.hoisted(() => ({
     optional: vi.fn().mockReturnThis(),
     trim: vi.fn().mockReturnThis(),
     url: vi.fn().mockReturnThis(),
-  }
+  },
 }));
 
 vi.mock("genkit", () => ({
@@ -38,7 +40,10 @@ const { mockDb, mockDoc } = vi.hoisted(() => ({
   mockDoc: { get: vi.fn(), set: vi.fn(), update: vi.fn(), add: vi.fn() },
   mockDb: { collection: vi.fn() },
 }));
-mockDb.collection.mockReturnValue({ doc: vi.fn(() => mockDoc), add: vi.fn(() => mockDoc) });
+mockDb.collection.mockReturnValue({
+  doc: vi.fn(() => mockDoc),
+  add: vi.fn(() => mockDoc),
+});
 
 vi.mock("firebase-admin/firestore", () => ({
   getFirestore: vi.fn(() => mockDb),
@@ -67,7 +72,7 @@ describe("supportAgent Cloud Function", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    
+
     const { checkRateLimit } = await import("../_shared/rateLimiter.js");
     vi.mocked(checkRateLimit).mockResolvedValue({ allowed: true });
 
@@ -90,11 +95,16 @@ describe("supportAgent Cloud Function", () => {
     await supportAgentHandler(mockReq, mockRes);
 
     expect(mockRes.status).toHaveBeenCalledWith(200);
-    expect(mockRes.json).toHaveBeenCalledWith({ response: "How can I help you?" });
+    expect(mockRes.json).toHaveBeenCalledWith({
+      response: "How can I help you?",
+    });
   });
 
   it("registers summary-based ticket tool and includes chat summary in prompt", async () => {
-    mockReq.body = { prompt: "yes, please raise it", chatSummary: "User asked to raise a support ticket" };
+    mockReq.body = {
+      prompt: "yes, please raise it",
+      chatSummary: "User asked to raise a support ticket",
+    };
     mockGenerate.mockResolvedValue({ text: "Ticket raised" });
 
     await supportAgentHandler(mockReq, mockRes);
@@ -104,7 +114,9 @@ describe("supportAgent Cloud Function", () => {
 
     expect(mockGenerate).toHaveBeenCalledWith(
       expect.objectContaining({
-        prompt: expect.stringContaining("Chat summary:\nUser asked to raise a support ticket"),
+        prompt: expect.stringContaining(
+          "Chat summary:\nUser asked to raise a support ticket",
+        ),
       }),
     );
   });
@@ -117,7 +129,10 @@ describe("supportAgent Cloud Function", () => {
 
   it("should return 429 if rate limited", async () => {
     const { checkRateLimit } = await import("../_shared/rateLimiter.js");
-    vi.mocked(checkRateLimit).mockResolvedValue({ allowed: false, retryAfter: "60" });
+    vi.mocked(checkRateLimit).mockResolvedValue({
+      allowed: false,
+      retryAfter: "60",
+    });
 
     await supportAgentHandler(mockReq, mockRes);
     expect(mockRes.status).toHaveBeenCalledWith(429);
@@ -128,6 +143,8 @@ describe("supportAgent Cloud Function", () => {
 
     await supportAgentHandler(mockReq, mockRes);
     expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.json).toHaveBeenCalledWith({ error: "Support agent unavailable" });
+    expect(mockRes.json).toHaveBeenCalledWith({
+      error: "Support agent unavailable",
+    });
   });
 });

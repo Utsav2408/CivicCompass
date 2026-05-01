@@ -16,7 +16,7 @@ export function usePollingBooth(uid: string | undefined) {
     if (!uid) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setBooth(null);
-       
+
       setIsLoading(false);
       return;
     }
@@ -40,7 +40,9 @@ export function usePollingBooth(uid: string | undefined) {
       } catch (err) {
         if (isMounted) {
           setError(
-            err instanceof Error ? err : new Error("Failed to fetch polling booth"),
+            err instanceof Error
+              ? err
+              : new Error("Failed to fetch polling booth"),
           );
         }
       } finally {

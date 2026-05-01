@@ -5,7 +5,9 @@ interface ScreenLoadingStateProps {
   label?: string;
 }
 
-export function ScreenLoadingState({ label = "Loading..." }: ScreenLoadingStateProps) {
+export function ScreenLoadingState({
+  label = "Loading...",
+}: ScreenLoadingStateProps) {
   return (
     <div
       role="status"
@@ -57,7 +59,12 @@ export function ScreenErrorState({
       </p>
       <button
         type="button"
-        onClick={onRetry ?? (() => { window.location.reload(); })}
+        onClick={
+          onRetry ??
+          (() => {
+            window.location.reload();
+          })
+        }
         style={{
           padding: "8px 16px",
           background: "var(--sf)",

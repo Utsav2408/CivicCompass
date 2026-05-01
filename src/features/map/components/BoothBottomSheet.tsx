@@ -14,8 +14,13 @@ export function BoothBottomSheet({
   isLocationEnabled,
   onGetDirections,
 }: BoothBottomSheetProps) {
-  const distance = userCoords 
-    ? getDistance(userCoords.lat, userCoords.lng, booth.coordinates.lat, booth.coordinates.lng)
+  const distance = userCoords
+    ? getDistance(
+        userCoords.lat,
+        userCoords.lng,
+        booth.coordinates.lat,
+        booth.coordinates.lng,
+      )
     : null;
 
   return (
@@ -36,10 +41,24 @@ export function BoothBottomSheet({
         gap: "var(--space-md)",
       }}
     >
-      <div style={{ width: "40px", height: "4px", background: "var(--border)", borderRadius: "2px", margin: "0 auto var(--space-xs)" }} />
-      
+      <div
+        style={{
+          width: "40px",
+          height: "4px",
+          background: "var(--border)",
+          borderRadius: "2px",
+          margin: "0 auto var(--space-xs)",
+        }}
+      />
+
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
           <h2 style={{ font: "var(--text-h1)", color: "var(--sf)", margin: 0 }}>
             {booth.name}
           </h2>
@@ -47,18 +66,42 @@ export function BoothBottomSheet({
             #{booth.boothNumber}
           </span>
         </div>
-        <p style={{ font: "var(--text-body)", color: "var(--text-muted)", margin: "4px 0" }}>
+        <p
+          style={{
+            font: "var(--text-body)",
+            color: "var(--text-muted)",
+            margin: "4px 0",
+          }}
+        >
           {booth.address}
         </p>
         {distance !== null && (
-          <p style={{ font: "var(--text-small)", color: "var(--in)", fontWeight: "600", margin: 0 }}>
+          <p
+            style={{
+              font: "var(--text-small)",
+              color: "var(--in)",
+              fontWeight: "600",
+              margin: 0,
+            }}
+          >
             {distance.toFixed(1)} km away
           </p>
         )}
       </div>
 
-      <div style={{ borderTop: "1px solid var(--border)", paddingTop: "var(--space-md)" }}>
-        <p style={{ font: "var(--text-small)", color: "var(--text-muted)", margin: "0 0 var(--space-sm) 0" }}>
+      <div
+        style={{
+          borderTop: "1px solid var(--border)",
+          paddingTop: "var(--space-md)",
+        }}
+      >
+        <p
+          style={{
+            font: "var(--text-small)",
+            color: "var(--text-muted)",
+            margin: "0 0 var(--space-sm) 0",
+          }}
+        >
           Source: ECI Voter Portal
         </p>
         <button
@@ -80,7 +123,9 @@ export function BoothBottomSheet({
             cursor: "pointer",
           }}
         >
-          {userCoords || isLocationEnabled ? "Get Directions" : "Enable location to proceed"}
+          {userCoords || isLocationEnabled
+            ? "Get Directions"
+            : "Enable location to proceed"}
         </button>
       </div>
     </div>

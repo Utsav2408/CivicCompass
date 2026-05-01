@@ -8,7 +8,9 @@ const { resetConversationMock } = vi.hoisted(() => ({
 }));
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/support/hooks/useGeminiSupport", () => ({
   useGeminiSupport: () => ({
@@ -22,12 +24,20 @@ vi.mock("@/features/support/hooks/useGeminiSupport", () => ({
     resetConversation: resetConversationMock,
   }),
 }));
-vi.mock("@/features/support/components/ChatInput", () => ({ ChatInput: () => <div>input</div> }));
-vi.mock("@/features/support/components/MessageBubble", () => ({
-  MessageBubble: ({ message }: { message: { text: string } }) => <div>{message.text}</div>,
+vi.mock("@/features/support/components/ChatInput", () => ({
+  ChatInput: () => <div>input</div>,
 }));
-vi.mock("@/shared/components/AshokaCakraLoader", () => ({ AshokaCakraLoader: () => <div>loader</div> }));
-vi.mock("@/shared/components/LotusMotif", () => ({ LotusEmptyState: () => <div>empty</div> }));
+vi.mock("@/features/support/components/MessageBubble", () => ({
+  MessageBubble: ({ message }: { message: { text: string } }) => (
+    <div>{message.text}</div>
+  ),
+}));
+vi.mock("@/shared/components/AshokaCakraLoader", () => ({
+  AshokaCakraLoader: () => <div>loader</div>,
+}));
+vi.mock("@/shared/components/LotusMotif", () => ({
+  LotusEmptyState: () => <div>empty</div>,
+}));
 
 describe("ChatPanel mobile branches", () => {
   it("triggers new chat action", () => {

@@ -7,7 +7,9 @@ import { MapPage } from "@/features/map/MapPage";
 const mockPollingBoothMap = vi.fn();
 
 vi.mock("@/features/map/components/PollingBoothMap", () => ({
-  PollingBoothMap: (props: { initialCoords: { lat: number; lng: number } | null }) => {
+  PollingBoothMap: (props: {
+    initialCoords: { lat: number; lng: number } | null;
+  }) => {
     mockPollingBoothMap(props);
     return <div data-testid="polling-booth-map">Map</div>;
   },

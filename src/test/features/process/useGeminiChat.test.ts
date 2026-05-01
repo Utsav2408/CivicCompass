@@ -25,11 +25,12 @@ describe("useGeminiChat", () => {
   it("send() appends a user message then an assistant message to messages array", async () => {
     vi.spyOn(global, "fetch").mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({
-        response: "Nomination starts after ECI schedule.",
-        source: "eci.gov.in",
-        fromCache: false,
-      }),
+      json: () =>
+        Promise.resolve({
+          response: "Nomination starts after ECI schedule.",
+          source: "eci.gov.in",
+          fromCache: false,
+        }),
     } as Response);
 
     const { result } = renderHook(() => useGeminiChat());
@@ -55,19 +56,19 @@ describe("useGeminiChat", () => {
       resolveResponse = resolve;
     });
 
-    vi.spyOn(global, "fetch").mockImplementation(
-      () =>
-        pendingPromise.then(
-          () =>
-            ({
-              ok: true,
-              json: () => Promise.resolve({
+    vi.spyOn(global, "fetch").mockImplementation(() =>
+      pendingPromise.then(
+        () =>
+          ({
+            ok: true,
+            json: () =>
+              Promise.resolve({
                 response: "Response text.",
                 source: "eci.gov.in",
                 fromCache: false,
               }),
-            }) as Response,
-        ),
+          }) as Response,
+      ),
     );
 
     const { result } = renderHook(() => useGeminiChat());
@@ -90,11 +91,12 @@ describe("useGeminiChat", () => {
   it("response includes a source field extracted from the fixture", async () => {
     vi.spyOn(global, "fetch").mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({
-        response: "ECI data response.",
-        source: "eci.gov.in",
-        fromCache: false,
-      }),
+      json: () =>
+        Promise.resolve({
+          response: "ECI data response.",
+          source: "eci.gov.in",
+          fromCache: false,
+        }),
     } as Response);
 
     const { result } = renderHook(() => useGeminiChat());

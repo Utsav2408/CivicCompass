@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
 import { getToken } from "firebase/app-check";
+import { useState, useCallback } from "react";
 
 import { useAuth } from "@/features/login/useAuth";
 import { appCheck } from "@/lib/firebase";
@@ -19,9 +19,15 @@ interface TicketDraft {
 }
 
 function buildChatSummary(messages: Message[], latestPrompt: string): string {
-  const recentTurns = [...messages, { role: "user" as const, text: latestPrompt }]
+  const recentTurns = [
+    ...messages,
+    { role: "user" as const, text: latestPrompt },
+  ]
     .slice(-8)
-    .map((message) => `${message.role === "user" ? "User" : "Assistant"}: ${message.text}`);
+    .map(
+      (message) =>
+        `${message.role === "user" ? "User" : "Assistant"}: ${message.text}`,
+    );
   return recentTurns.join("\n");
 }
 
@@ -35,7 +41,8 @@ export function useGeminiSupport() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pendingTicketDraft, setPendingTicketDraft] = useState<TicketDraft | null>(null);
+  const [pendingTicketDraft, setPendingTicketDraft] =
+    useState<TicketDraft | null>(null);
   const [isRaisingTicket, setIsRaisingTicket] = useState(false);
   const [lastTicketId, setLastTicketId] = useState<string | null>(null);
   const { user } = useAuth();
@@ -61,8 +68,7 @@ export function useGeminiSupport() {
         if (isVoterRollIssue) {
           const aiMessage: Message = {
             role: "model",
-            text:
-              "I understand — your name appears missing from the voter roll. Please confirm if you want me to raise a support ticket for this issue.",
+            text: "I understand — your name appears missing from the voter roll. Please confirm if you want me to raise a support ticket for this issue.",
             source: "CivicCompass Support Rules",
           };
           setMessages((prev) => [...prev, aiMessage]);
@@ -103,7 +109,7 @@ export function useGeminiSupport() {
         const data = (await response.json()) as {
           response: string;
         };
-        
+
         const aiMessage: Message = {
           role: "model",
           text: data.response,
@@ -117,7 +123,7 @@ export function useGeminiSupport() {
         setIsLoading(false);
       }
     },
-    [messages, user]
+    [messages, user],
   );
 
   const raisePendingTicket = useCallback(async () => {

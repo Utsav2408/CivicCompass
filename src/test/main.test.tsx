@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const render = vi.fn();
-const createRoot = vi.fn(() => ({ render }));
+const createRoot = vi.fn((container: unknown) => {
+  void container;
+  return { render };
+});
 
 vi.mock("react-dom/client", () => ({
-  createRoot: (...args: unknown[]) => createRoot(...args),
+  createRoot: (container: unknown) => createRoot(container),
 }));
 
 vi.mock("@/App.tsx", () => ({

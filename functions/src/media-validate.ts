@@ -45,7 +45,10 @@ export const mediaValidate = onObjectFinalized(
 
     if (!ticketId) return;
 
-    const ticketDoc = await getFirestore().collection("tickets").doc(ticketId).get();
+    const ticketDoc = await getFirestore()
+      .collection("tickets")
+      .doc(ticketId)
+      .get();
     const userId = ticketDoc.data()?.userId;
 
     if (!userId) {

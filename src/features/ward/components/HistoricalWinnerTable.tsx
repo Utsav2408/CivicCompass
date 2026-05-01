@@ -103,13 +103,11 @@ export function HistoricalWinnerTable({ winners }: HistoricalWinnerTableProps) {
           {displayWinners.map((winner) => (
             <tr
               key={winner.id}
-              
               style={{
                 borderBottom: "1px solid var(--border)",
               }}
             >
               <td
-                
                 style={{
                   padding: "var(--space-sm) var(--space-md)",
                   font: "var(--text-body)",
@@ -118,7 +116,6 @@ export function HistoricalWinnerTable({ winners }: HistoricalWinnerTableProps) {
                 {winner.year}
               </td>
               <td
-                
                 style={{
                   padding: "var(--space-sm) var(--space-md)",
                   font: "var(--text-body)",
@@ -128,10 +125,7 @@ export function HistoricalWinnerTable({ winners }: HistoricalWinnerTableProps) {
               >
                 {winner.winnerName}
               </td>
-              <td
-                
-                style={{ padding: "var(--space-sm) var(--space-md)" }}
-              >
+              <td style={{ padding: "var(--space-sm) var(--space-md)" }}>
                 <span
                   style={{
                     display: "inline-block",
@@ -146,7 +140,6 @@ export function HistoricalWinnerTable({ winners }: HistoricalWinnerTableProps) {
                 </span>
               </td>
               <td
-                
                 style={{
                   padding: "var(--space-sm) var(--space-md)",
                   font: "var(--text-body)",

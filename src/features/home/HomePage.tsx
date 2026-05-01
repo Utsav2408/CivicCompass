@@ -9,7 +9,10 @@ import { useElectionSchedule } from "@features/home/useElectionSchedule";
 import { BottomNav } from "@shared/components/BottomNav";
 import { MughalJaaliPattern } from "@shared/components/MughalJaaliPattern";
 import { ScreenErrorBoundary } from "@shared/components/ScreenErrorBoundary";
-import { ScreenEmptyState, ScreenErrorState } from "@shared/components/ScreenStates";
+import {
+  ScreenEmptyState,
+  ScreenErrorState,
+} from "@shared/components/ScreenStates";
 
 import { QuickActionGrid } from "./QuickActionGrid";
 import { TopBar } from "./TopBar";

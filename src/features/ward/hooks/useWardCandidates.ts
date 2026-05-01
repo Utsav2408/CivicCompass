@@ -1,5 +1,5 @@
-import { doc, getDoc } from "firebase/firestore";
 import { getToken } from "firebase/app-check";
+import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 
 import { useAuth } from "@/features/login/useAuth";
@@ -46,7 +46,8 @@ export function useWardCandidates(
         const electionSnap = await getDoc(electionDocRef);
         let deadline: string | null = null;
         if (electionSnap.exists()) {
-          deadline = (electionSnap.data().nominationDeadline as string | null) ?? null;
+          deadline =
+            (electionSnap.data().nominationDeadline as string | null) ?? null;
           if (isMounted) setNominationDeadline(deadline);
         }
 

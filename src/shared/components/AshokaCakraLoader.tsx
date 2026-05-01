@@ -59,7 +59,9 @@ export function AshokaCakraLoader({
       viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
       data-chakra="spinner"
-      style={animated ? { animation: "chakra-spin 12s linear infinite" } : undefined}
+      style={
+        animated ? { animation: "chakra-spin 12s linear infinite" } : undefined
+      }
       {...ariaProps}
     >
       {/*

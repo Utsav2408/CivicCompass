@@ -61,11 +61,35 @@ export const EmergencyButton = memo(function EmergencyButton() {
 
 function SirenIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2C7.03 2 3 6.03 3 11V19H21V11C21 6.03 16.97 2 12 2ZM12 4C15.86 4 19 7.14 19 11V17H5V11C5 7.14 8.14 4 12 4Z" fill="currentColor" />
-      <path d="M12 7V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M7.76001 8.76001L9.17001 10.17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M16.24 8.76001L14.83 10.17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 2C7.03 2 3 6.03 3 11V19H21V11C21 6.03 16.97 2 12 2ZM12 4C15.86 4 19 7.14 19 11V17H5V11C5 7.14 8.14 4 12 4Z"
+        fill="currentColor"
+      />
+      <path
+        d="M12 7V9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7.76001 8.76001L9.17001 10.17"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M16.24 8.76001L14.83 10.17"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       <circle cx="12" cy="13" r="2" fill="currentColor" />
     </svg>
   );

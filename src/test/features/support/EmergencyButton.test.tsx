@@ -25,10 +25,6 @@ describe("EmergencyButton", () => {
       isActive: false,
       nearestStation: null,
       eta: null,
-      routeCoordinates: [],
-      userCoordinates: null,
-      profileBoothCoordinates: null,
-      policeStations: [],
     });
   });
 
@@ -57,10 +53,6 @@ describe("EmergencyButton", () => {
       isActive: true,
       nearestStation: null,
       eta: null,
-      routeCoordinates: [],
-      userCoordinates: null,
-      profileBoothCoordinates: null,
-      policeStations: [],
     });
 
     render(<EmergencyButton />);

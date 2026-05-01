@@ -7,7 +7,10 @@ import { EmergencyOverlay } from "@/features/support/components/EmergencyOverlay
 const cancel = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string, vars?: { eta?: number }) => fallback?.replace("{{eta}}", String(vars?.eta ?? 3)) ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string, vars?: { eta?: number }) =>
+      fallback?.replace("{{eta}}", String(vars?.eta ?? 3)) ?? _k,
+  }),
 }));
 vi.mock("@/features/support/hooks/useEmergency", () => ({
   useEmergency: () => ({
@@ -26,8 +29,12 @@ vi.mock("@/features/map/hooks/useUserLocation", () => ({
   useUserLocation: () => ({ coords: { lat: 28.6, lng: 77.2 } }),
 }));
 vi.mock("@vis.gl/react-google-maps", () => ({
-  Map: ({ children }: { children: ReactNode }) => <div data-testid="map">{children}</div>,
-  AdvancedMarker: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  Map: ({ children }: { children: ReactNode }) => (
+    <div data-testid="map">{children}</div>
+  ),
+  AdvancedMarker: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
   Pin: () => <div>pin</div>,
   useMap: () => ({}),
   useMapsLibrary: () => null,
@@ -42,7 +49,9 @@ describe("EmergencyOverlay", () => {
     render(<EmergencyOverlay />);
     expect(screen.getByRole("alert")).toBeInTheDocument();
     expect(screen.getByText(/Alerting Authorities/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /cancel emergency alert/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /cancel emergency alert/i }),
+    );
     expect(cancel).toHaveBeenCalled();
 
     act(() => {

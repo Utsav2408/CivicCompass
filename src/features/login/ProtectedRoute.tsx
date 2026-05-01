@@ -145,8 +145,11 @@ export function ProtectedRoute() {
     <APIProvider
       apiKey={MAPS_API_KEY}
       onError={(error) => {
-        console.error("Google Maps failed to load", error);
-        setMapsLoadError(error.message || "Unknown Maps loader error");
+        if (error instanceof Error) {
+          setMapsLoadError(error.message);
+          return;
+        }
+        setMapsLoadError("Unknown Maps loader error");
       }}
       {...(ENABLE_MAPS_APPCHECK && appCheckInstance
         ? {

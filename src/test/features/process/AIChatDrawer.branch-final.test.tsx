@@ -20,7 +20,9 @@ class MockSpeechRecognition {
 }
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 vi.mock("@/shared/hooks/useOfflineStatus", () => ({
   useOfflineStatus: useOfflineStatusMock,
@@ -28,7 +30,9 @@ vi.mock("@/shared/hooks/useOfflineStatus", () => ({
 vi.mock("@/features/process/hooks/useGeminiChat", () => ({
   useGeminiChat: useGeminiChatMock,
 }));
-vi.mock("@/shared/components/AshokaCakraLoader", () => ({ AshokaCakraLoader: () => <div>loader</div> }));
+vi.mock("@/shared/components/AshokaCakraLoader", () => ({
+  AshokaCakraLoader: () => <div>loader</div>,
+}));
 
 describe("AIChatDrawer remaining branches", () => {
   it("renders user/model messages and uses default source fallback", () => {
@@ -49,8 +53,9 @@ describe("AIChatDrawer remaining branches", () => {
   });
 
   it("disables speech button with offline cursor style when speech is supported", () => {
-    (window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }).SpeechRecognition =
-      MockSpeechRecognition;
+    (
+      window as unknown as { SpeechRecognition: typeof MockSpeechRecognition }
+    ).SpeechRecognition = MockSpeechRecognition;
     useOfflineStatusMock.mockReturnValue(true);
     useGeminiChatMock.mockReturnValue({
       messages: [],

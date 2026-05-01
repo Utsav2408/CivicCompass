@@ -92,11 +92,23 @@ describe("lib/firebase", () => {
 
     await import("@/lib/firebase");
 
-    expect(connectAuthEmulator).toHaveBeenCalledWith({ _tag: "auth" }, "http://127.0.0.1:9099", {
-      disableWarnings: true,
-    });
-    expect(connectFirestoreEmulator).toHaveBeenCalledWith({ _tag: "db" }, "127.0.0.1", 8080);
-    expect(connectStorageEmulator).toHaveBeenCalledWith({ _tag: "storage" }, "127.0.0.1", 9199);
+    expect(connectAuthEmulator).toHaveBeenCalledWith(
+      { _tag: "auth" },
+      "http://127.0.0.1:9099",
+      {
+        disableWarnings: true,
+      },
+    );
+    expect(connectFirestoreEmulator).toHaveBeenCalledWith(
+      { _tag: "db" },
+      "127.0.0.1",
+      8080,
+    );
+    expect(connectStorageEmulator).toHaveBeenCalledWith(
+      { _tag: "storage" },
+      "127.0.0.1",
+      9199,
+    );
   });
 
   it("sets app check debug token on self when configured", async () => {
@@ -104,9 +116,10 @@ describe("lib/firebase", () => {
 
     await import("@/lib/firebase");
 
-    expect((globalThis as { FIREBASE_APPCHECK_DEBUG_TOKEN?: string }).FIREBASE_APPCHECK_DEBUG_TOKEN).toBe(
-      "debug-token",
-    );
+    expect(
+      (globalThis as { FIREBASE_APPCHECK_DEBUG_TOKEN?: string })
+        .FIREBASE_APPCHECK_DEBUG_TOKEN,
+    ).toBe("debug-token");
   });
 
   it("sets app check debug token on global when self is unavailable", async () => {
@@ -116,9 +129,10 @@ describe("lib/firebase", () => {
 
     await import("@/lib/firebase");
 
-    expect((globalThis as { global?: { FIREBASE_APPCHECK_DEBUG_TOKEN?: string } }).global?.FIREBASE_APPCHECK_DEBUG_TOKEN).toBe(
-      "global-debug-token",
-    );
+    expect(
+      (globalThis as { global?: { FIREBASE_APPCHECK_DEBUG_TOKEN?: string } })
+        .global?.FIREBASE_APPCHECK_DEBUG_TOKEN,
+    ).toBe("global-debug-token");
   });
 
   it("returns null appCheck when document is unavailable", async () => {

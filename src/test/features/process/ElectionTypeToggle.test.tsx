@@ -12,7 +12,9 @@ describe("Process ElectionTypeToggle", () => {
     const onChange = vi.fn();
     render(<ElectionTypeToggle value="lok_sabha" onChange={onChange} />);
 
-    const vidhan = screen.getByRole("radio", { name: "process.types.vidhan_sabha" });
+    const vidhan = screen.getByRole("radio", {
+      name: "process.types.vidhan_sabha",
+    });
     fireEvent.click(vidhan);
     expect(onChange).toHaveBeenCalledWith("vidhan_sabha");
   });

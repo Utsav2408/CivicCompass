@@ -14,8 +14,12 @@ vi.mock("@/features/process/hooks/useGeminiChat", () => ({
     error: null,
   }),
 }));
-vi.mock("@/shared/hooks/useOfflineStatus", () => ({ useOfflineStatus: () => false }));
-vi.mock("@/shared/components/AshokaCakraLoader", () => ({ AshokaCakraLoader: () => <div>loader</div> }));
+vi.mock("@/shared/hooks/useOfflineStatus", () => ({
+  useOfflineStatus: () => false,
+}));
+vi.mock("@/shared/components/AshokaCakraLoader", () => ({
+  AshokaCakraLoader: () => <div>loader</div>,
+}));
 
 describe("AIChatDrawer loading branch", () => {
   it("renders thinking indicator while loading", () => {

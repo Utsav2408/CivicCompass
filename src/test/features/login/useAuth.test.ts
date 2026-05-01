@@ -41,7 +41,9 @@ vi.mock("firebase/auth", () => ({
 const mockOnAuthStateChanged = vi.mocked(onAuthStateChanged);
 const mockSignInWithPopup = vi.mocked(signInWithPopup);
 const mockSignInWithEmailAndPassword = vi.mocked(signInWithEmailAndPassword);
-const mockCreateUserWithEmailAndPassword = vi.mocked(createUserWithEmailAndPassword);
+const mockCreateUserWithEmailAndPassword = vi.mocked(
+  createUserWithEmailAndPassword,
+);
 const mockSignOut = vi.mocked(signOut);
 
 // Minimal Firebase User stub

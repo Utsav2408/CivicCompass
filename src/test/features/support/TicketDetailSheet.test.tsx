@@ -18,7 +18,9 @@ const ticket: Ticket = {
 
 describe("TicketDetailSheet", () => {
   it("returns null when ticket is null", () => {
-    const { container } = render(<TicketDetailSheet ticket={null} onClose={vi.fn()} />);
+    const { container } = render(
+      <TicketDetailSheet ticket={null} onClose={vi.fn()} />,
+    );
     expect(container).toBeEmptyDOMElement();
   });
 

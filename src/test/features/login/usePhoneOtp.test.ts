@@ -17,7 +17,9 @@ const {
   recaptchaCtor: vi.fn(),
 }));
 
-vi.mock("@/lib/firebase", () => ({ auth: { currentUser: { uid: "current-user" } } }));
+vi.mock("@/lib/firebase", () => ({
+  auth: { currentUser: { uid: "current-user" } },
+}));
 vi.mock("firebase/auth", () => ({
   PhoneAuthProvider: { credential: phoneCredentialFactory },
   RecaptchaVerifier: recaptchaCtor,

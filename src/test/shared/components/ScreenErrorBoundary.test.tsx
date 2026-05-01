@@ -5,6 +5,7 @@ import { ScreenErrorBoundary } from "@/shared/components/ScreenErrorBoundary";
 
 function Crash() {
   throw new Error("boom");
+  return null;
 }
 
 describe("ScreenErrorBoundary", () => {

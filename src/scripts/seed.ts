@@ -36,7 +36,8 @@ const TEST_USERS = [
     profile: {
       name: "Priya Sharma",
       voterIdNumber: "ABC1234567",
-      phoneHash: "f3e6609b6a9a7f6b655f3e6e1ecf8f3f86210be147ff6ec0f5f9f06e39f5cb69",
+      phoneHash:
+        "f3e6609b6a9a7f6b655f3e6e1ecf8f3f86210be147ff6ec0f5f9f06e39f5cb69",
       constituency: "New Delhi PC-01",
       pollingBooth: {
         name: "Govt. Model School, Connaught Place",
@@ -56,7 +57,8 @@ const TEST_USERS = [
     profile: {
       name: "Rajan Iyer",
       voterIdNumber: "MH4567890",
-      phoneHash: "a628fddfb09f3c35c9f6c9f6c18f13434996c7fdd4f4f6feafad1f4132ed6f67",
+      phoneHash:
+        "a628fddfb09f3c35c9f6c9f6c18f13434996c7fdd4f4f6feafad1f4132ed6f67",
       constituency: "Mumbai North PC-06",
       pollingBooth: {
         name: "Municipal School, Borivali West",

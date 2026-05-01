@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import { CandidateCard } from "@/features/ward/components/CandidateCard";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 
 describe("CandidateCard branch paths", () => {
@@ -26,8 +28,12 @@ describe("CandidateCard branch paths", () => {
     expect(screen.queryByText(/•/)).not.toBeInTheDocument();
     expect(screen.getAllByText("N/A").length).toBeGreaterThanOrEqual(3);
     expect(
-      screen.getByText(/Jane Roe has declared unknown in assets and 0 criminal cases/i),
+      screen.getByText(
+        /Jane Roe has declared unknown in assets and 0 criminal cases/i,
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByText(/background is not specified/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/background is not specified/i),
+    ).toBeInTheDocument();
   });
 });

@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import { MyTicketsPanel } from "@/features/support/components/MyTicketsPanel";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),
@@ -19,8 +21,18 @@ vi.mock("@/features/support/hooks/useTickets", () => ({
   }),
 }));
 vi.mock("@/features/support/components/TicketList", () => ({
-  TicketList: ({ onTicketClick }: { onTicketClick: (t: { id: string }) => void }) => (
-    <button onClick={() => { onTicketClick({ id: "t1" }); }}>open ticket</button>
+  TicketList: ({
+    onTicketClick,
+  }: {
+    onTicketClick: (t: { id: string }) => void;
+  }) => (
+    <button
+      onClick={() => {
+        onTicketClick({ id: "t1" });
+      }}
+    >
+      open ticket
+    </button>
   ),
 }));
 vi.mock("@/features/support/components/TicketDetailSheet", () => ({
@@ -53,11 +65,19 @@ describe("MyTicketsPanel callbacks", () => {
     render(<MyTicketsPanel />);
     fireEvent.click(screen.getByRole("button", { name: /new ticket/i }));
     fireEvent.click(screen.getByRole("button", { name: /open ticket/i }));
-    expect(screen.getByRole("button", { name: /close drawer/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /close detail/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /close drawer/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /close detail/i }),
+    ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /close detail/i }));
-    expect(screen.queryByRole("button", { name: /close detail/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /close detail/i }),
+    ).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /close drawer/i }));
-    expect(screen.queryByRole("button", { name: /close drawer/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /close drawer/i }),
+    ).not.toBeInTheDocument();
   });
 });

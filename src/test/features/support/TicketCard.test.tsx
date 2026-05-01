@@ -7,18 +7,17 @@ import type { Ticket } from "@/shared/types/support";
 const baseTicket: Ticket = {
   id: "abc12345",
   userId: "u1",
-  category: "technical-issue",
+  category: "general",
   description: "Map is not loading",
   status: "open",
   createdAt: { seconds: 1700000000, nanoseconds: 0 },
-  updatedAt: { seconds: 1700000000, nanoseconds: 0 },
-} as Ticket;
+};
 
 describe("TicketCard", () => {
   it("renders ticket info and status label", () => {
     render(<TicketCard ticket={baseTicket} />);
     expect(screen.getByText("#ABC12345")).toBeInTheDocument();
-    expect(screen.getByText("technical issue")).toBeInTheDocument();
+    expect(screen.getByText("general")).toBeInTheDocument();
     expect(screen.getByText("Open")).toBeInTheDocument();
   });
 

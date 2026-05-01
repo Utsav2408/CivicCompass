@@ -28,7 +28,9 @@ describe("AIChatDrawer extra branches", () => {
   it("closes on backdrop click and shows offline lock state", () => {
     render(<AIChatDrawer isOpen={true} onClose={onClose} />);
     expect(screen.getByText("chat failed")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Close chat" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Close chat" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "🔒" })).toBeDisabled();
     fireEvent.click(screen.getByRole("button", { name: "Close chat" }));
     expect(onClose).toHaveBeenCalled();

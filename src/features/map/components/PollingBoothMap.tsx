@@ -1,9 +1,12 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import { useState, useMemo, useEffect, useCallback } from "react";
 
 import { useAuth } from "@/features/login/useAuth";
 import { SectionLoader } from "@/shared/components/AshokaCakraLoader";
-import { ScreenEmptyState, ScreenErrorState } from "@/shared/components/ScreenStates";
+import {
+  ScreenEmptyState,
+  ScreenErrorState,
+} from "@/shared/components/ScreenStates";
 import { useOfflineStatus } from "@/shared/hooks/useOfflineStatus";
 import type { PollingBooth } from "@/shared/types/map";
 
@@ -13,12 +16,10 @@ import { usePollingBooth } from "../hooks/usePollingBooth";
 import { useUserLocation } from "../hooks/useUserLocation";
 import { useWardSearch } from "../hooks/useWardSearch";
 
-
 import { BoothBottomSheet } from "./BoothBottomSheet";
 import { MapView } from "./MapView";
 import type { PlaceSearchResult } from "./WardSearchBar";
 import { WardSearchBar } from "./WardSearchBar";
-
 
 interface PollingBoothMapProps {
   initialCoords: { lat: number; lng: number } | null;
@@ -38,13 +39,18 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
     isLoading: isBoothLoading,
     error: boothError,
   } = usePollingBooth(user?.uid);
-  
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [mapCenter, setMapCenter] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [isDirectionsVisible, setIsDirectionsVisible] = useState(false);
   const [directionsError, setDirectionsError] = useState<string | null>(null);
   const [placeResults, setPlaceResults] = useState<PlaceSearchResult[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState<PlaceSearchResult | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<PlaceSearchResult | null>(
+    null,
+  );
   const placesLibrary = useMapsLibrary("places");
   const { results: searchResults, isSearching } = useWardSearch(searchQuery);
   const [selectedBooth, setSelectedBooth] = useState<PollingBooth | null>(null);
@@ -53,8 +59,7 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
     booths: allBooths,
     isLoading: isAllBoothsLoading,
     error: allBoothsError,
-  } =
-    useAllPollingBooths(shouldLoadAllBooths);
+  } = useAllPollingBooths(shouldLoadAllBooths);
 
   useEffect(() => {
     if (myBooth && !selectedBooth && !initialCoords) {
@@ -83,9 +88,11 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
   const offlineBooth = isOffline ? savedOfflineBooth : null;
   const resolvedBooth = selectedBooth ?? myBooth ?? offlineBooth;
   const city = resolvedBooth?.city ?? "New Delhi";
-  const nearestCoords =
-    resolvedBooth?.coordinates ?? userCoords ?? undefined;
-  const { stations, error: stationsError } = usePoliceStations(city, nearestCoords);
+  const nearestCoords = resolvedBooth?.coordinates ?? userCoords ?? undefined;
+  const { stations, error: stationsError } = usePoliceStations(
+    city,
+    nearestCoords,
+  );
 
   const isLoading =
     isBoothLoading ||
@@ -95,14 +102,16 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
   // Determine center of map
   const fallbackBoothCenter = allBooths[0]?.coordinates ?? null;
   const resolvedCenter = useMemo(() => {
-    return resolvedBooth?.coordinates ??
-           initialCoords ?? 
-           fallbackBoothCenter ??
-           userCoords ?? 
-           { lat: 28.6139, lng: 77.2090 };
+    return (
+      resolvedBooth?.coordinates ??
+      initialCoords ??
+      fallbackBoothCenter ??
+      userCoords ?? { lat: 28.6139, lng: 77.209 }
+    );
   }, [resolvedBooth, initialCoords, userCoords, fallbackBoothCenter]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMapCenter((prev) => {
       if (!prev) return resolvedCenter;
       const movedEnough =
@@ -131,6 +140,7 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
   }, []);
   useEffect(() => {
     if (!placesLibrary || !searchQuery.trim()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPlaceResults([]);
       return;
     }
@@ -147,39 +157,38 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
             }
           : null,
       };
-      service.getPlacePredictions(
-        request,
-        (predictions) => {
-          if (!predictions?.length) {
-            setPlaceResults([]);
-            return;
-          }
+      void service.getPlacePredictions(request, (predictions) => {
+        if (!predictions?.length) {
+          setPlaceResults([]);
+          return;
+        }
 
-          const geocoder = new google.maps.Geocoder();
-          void Promise.all(
-            predictions.slice(0, 5).map(async (prediction) => {
-              const geocodeResult = await geocoder.geocode({ placeId: prediction.place_id });
-              const location = geocodeResult.results[0]?.geometry.location;
-              if (!location) return null;
-              return {
-                id: prediction.place_id,
-                title: prediction.structured_formatting.main_text,
-                subtitle: prediction.structured_formatting.secondary_text,
-                coordinates: {
-                  lat: location.lat(),
-                  lng: location.lng(),
-                },
-              } satisfies PlaceSearchResult;
-            }),
-          ).then((resolvedPlaces) => {
-            setPlaceResults(
-              resolvedPlaces.filter(
-                (place): place is NonNullable<typeof place> => place !== null,
-              ),
-            );
-          });
-        },
-      );
+        const geocoder = new google.maps.Geocoder();
+        void Promise.all(
+          predictions.slice(0, 5).map(async (prediction) => {
+            const geocodeResult = await geocoder.geocode({
+              placeId: prediction.place_id,
+            });
+            const location = geocodeResult.results[0]?.geometry.location;
+            if (!location) return null;
+            return {
+              id: prediction.place_id,
+              title: prediction.structured_formatting.main_text,
+              subtitle: prediction.structured_formatting.secondary_text,
+              coordinates: {
+                lat: location.lat(),
+                lng: location.lng(),
+              },
+            } satisfies PlaceSearchResult;
+          }),
+        ).then((resolvedPlaces) => {
+          setPlaceResults(
+            resolvedPlaces.filter(
+              (place): place is NonNullable<typeof place> => place !== null,
+            ),
+          );
+        });
+      });
     }, 250);
 
     return () => {
@@ -201,13 +210,13 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
     if (!activeBooth) return;
 
     let resolvedCoords = userCoords;
-    if (!resolvedCoords) {
-      resolvedCoords = await requestCurrentLocation();
-    }
+    resolvedCoords ??= await requestCurrentLocation();
 
     if (!resolvedCoords) {
       if (permissionState === "denied") {
-        window.alert("Location access is blocked. Please allow location in browser site settings, then try again.");
+        window.alert(
+          "Location access is blocked. Please allow location in browser site settings, then try again.",
+        );
       }
       return;
     }
@@ -216,29 +225,46 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
     setIsDirectionsVisible(true);
     setDirectionsError(null);
   }, [activeBooth, userCoords, requestCurrentLocation, permissionState]);
-  const isLocationEnabled = permissionState === "granted" || Boolean(userCoords);
+  const isLocationEnabled =
+    permissionState === "granted" || Boolean(userCoords);
 
   const openGoogleMapsFallback = useCallback(() => {
     if (!activeBooth) return;
     const destination = `${activeBooth.coordinates.lat},${activeBooth.coordinates.lng}`;
-    const origin = userCoords ? `${userCoords.lat},${userCoords.lng}` : undefined;
+    const origin = userCoords
+      ? `${userCoords.lat},${userCoords.lng}`
+      : undefined;
     const params = new URLSearchParams({
       api: "1",
       destination,
       ...(origin ? { origin } : {}),
       travelmode: "driving",
     });
-    window.open(`https://www.google.com/maps/dir/?${params.toString()}`, "_blank", "noopener,noreferrer");
+    window.open(
+      `https://www.google.com/maps/dir/?${params.toString()}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
   }, [activeBooth, userCoords]);
 
-  const handleDirectionsError = useCallback((reason: string) => {
-    setIsDirectionsVisible(false);
-    setDirectionsError(reason);
-    openGoogleMapsFallback();
-  }, [openGoogleMapsFallback]);
+  const handleDirectionsError = useCallback(
+    (reason: string) => {
+      setIsDirectionsVisible(false);
+      setDirectionsError(reason);
+      openGoogleMapsFallback();
+    },
+    [openGoogleMapsFallback],
+  );
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100dvh",
+        overflow: "hidden",
+      }}
+    >
       {isLoading && (
         <div
           style={{
@@ -255,15 +281,24 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
         </div>
       )}
       {mapError && (
-        <div style={{ position: "absolute", zIndex: "var(--z-overlay)", inset: "84px 16px auto 16px" }}>
-          <ScreenErrorState
-            message={mapError.message}
-            retryLabel="Retry"
-          />
+        <div
+          style={{
+            position: "absolute",
+            zIndex: "var(--z-overlay)",
+            inset: "84px 16px auto 16px",
+          }}
+        >
+          <ScreenErrorState message={mapError.message} retryLabel="Retry" />
         </div>
       )}
       {showEmptyState && (
-        <div style={{ position: "absolute", zIndex: "var(--z-raised)", inset: "120px 16px auto 16px" }}>
+        <div
+          style={{
+            position: "absolute",
+            zIndex: "var(--z-raised)",
+            inset: "120px 16px auto 16px",
+          }}
+        >
           <ScreenEmptyState
             title="No polling booth data"
             message="No booth records are available yet. Try again after syncing data."
@@ -311,7 +346,8 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
             fontWeight: 600,
           }}
         >
-          Location is off. Tap "Enable location to proceed" to open the permission prompt.
+          Location is off. Tap "Enable location to proceed" to open the
+          permission prompt.
         </div>
       )}
       {directionsError && (
@@ -333,20 +369,21 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
             fontWeight: 600,
           }}
         >
-          In-app route unavailable ({directionsError}). Opened directions in Google Maps.
+          In-app route unavailable ({directionsError}). Opened directions in
+          Google Maps.
         </div>
       )}
-      
-      <WardSearchBar 
-        value={searchQuery} 
-        onChange={setSearchQuery} 
+
+      <WardSearchBar
+        value={searchQuery}
+        onChange={setSearchQuery}
         boothResults={searchResults}
         placeResults={placeResults}
         onSelectBooth={handleSelectBooth}
         onSelectPlace={handleSelectPlace}
       />
 
-      <MapView 
+      <MapView
         center={mapCenter ?? resolvedCenter}
         userCoords={userCoords}
         booth={activeBooth}
@@ -358,12 +395,14 @@ export function PollingBoothMap({ initialCoords }: PollingBoothMapProps) {
         onDirectionsError={handleDirectionsError}
       />
 
-      { activeBooth && (
-        <BoothBottomSheet 
+      {activeBooth && (
+        <BoothBottomSheet
           booth={activeBooth}
           userCoords={userCoords}
           isLocationEnabled={isLocationEnabled}
-          onGetDirections={handleGetDirections}
+          onGetDirections={() => {
+            void handleGetDirections();
+          }}
         />
       )}
     </div>

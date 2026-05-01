@@ -6,7 +6,9 @@ import { TicketCreationDrawer } from "@/features/support/components/TicketCreati
 const createTicket = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),
@@ -18,8 +20,18 @@ vi.mock("@/shared/components/AshokaCakraLoader", () => ({
   AshokaCakraLoader: () => <div data-testid="loader" />,
 }));
 vi.mock("@/features/support/components/MediaUpload", () => ({
-  MediaUpload: ({ onUploadComplete }: { onUploadComplete: (u: string, t: string) => void }) => (
-    <button onClick={() => { onUploadComplete("https://img", "image/png"); }}>upload</button>
+  MediaUpload: ({
+    onUploadComplete,
+  }: {
+    onUploadComplete: (u: string, t: string) => void;
+  }) => (
+    <button
+      onClick={() => {
+        onUploadComplete("https://img", "image/png");
+      }}
+    >
+      upload
+    </button>
   ),
 }));
 
@@ -33,9 +45,16 @@ describe("TicketCreationDrawer confirm flow", () => {
       target: { value: "Road damage" },
     });
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    await waitFor(() => { expect(createTicket).toHaveBeenCalled(); });
+    await waitFor(() => {
+      expect(createTicket).toHaveBeenCalled();
+    });
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
     fireEvent.click(screen.getByRole("button", { name: /raise ticket/i }));
-    await waitFor(() => { expect(onClose).toHaveBeenCalled(); }, { timeout: 2200 });
+    await waitFor(
+      () => {
+        expect(onClose).toHaveBeenCalled();
+      },
+      { timeout: 2200 },
+    );
   }, 10000);
 });

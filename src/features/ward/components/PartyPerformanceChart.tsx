@@ -122,7 +122,7 @@ function PartyPerformanceChartBase({ parties }: PartyPerformanceChartProps) {
         </div>
       </div>
 
-      <div 
+      <div
         style={{ width: "100%", height: 300 }}
         role="region"
         aria-label={t("ward.chart.title", "Party Performance")}

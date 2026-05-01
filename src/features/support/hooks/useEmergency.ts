@@ -23,11 +23,11 @@ export function useEmergency() {
   const [isActive, setIsActive] = useState(emergencyActive);
   const { profile } = useProfile();
   const { coords } = useUserLocation();
-  
+
   // Attempt to find the city from the user profile's polling booth.
   // Default to New Delhi as a fallback for the lookup.
   const city = profile?.pollingBooth?.city ?? "New Delhi";
-  
+
   const { stations } = usePoliceStations(city, coords ?? undefined);
 
   useEffect(() => {
@@ -54,17 +54,17 @@ export function useEmergency() {
 
   const eta = useMemo(() => {
     if (!coords || !nearestStation) return null;
-    
+
     const distance = getDistance(
       coords.lat,
       coords.lng,
       nearestStation.latitude,
-      nearestStation.longitude
+      nearestStation.longitude,
     );
-    
+
     // Estimate ETA assuming an average urban response speed of 40 km/h
     const timeInMinutes = (distance / 40) * 60;
-    
+
     // Add a minimum 2-minute response time buffer
     return Math.max(2, Math.ceil(timeInMinutes));
   }, [coords, nearestStation]);

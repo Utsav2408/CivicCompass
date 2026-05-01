@@ -3,11 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { usePhoneOtp } from "@/features/login/usePhoneOtp";
 
-const { signInWithPhoneNumber, recaptchaClear, recaptchaCtor } = vi.hoisted(() => ({
-  signInWithPhoneNumber: vi.fn(),
-  recaptchaClear: vi.fn(),
-  recaptchaCtor: vi.fn(() => ({ clear: recaptchaClear })),
-}));
+const { signInWithPhoneNumber, recaptchaClear, recaptchaCtor } = vi.hoisted(
+  () => ({
+    signInWithPhoneNumber: vi.fn(),
+    recaptchaClear: vi.fn(),
+    recaptchaCtor: vi.fn(() => ({ clear: recaptchaClear })),
+  }),
+);
 
 vi.mock("@/lib/firebase", () => ({ auth: {} }));
 vi.mock("firebase/auth", () => ({
@@ -43,9 +45,13 @@ describe("usePhoneOtp setupRecaptcha extra branches", () => {
     act(() => {
       result.current.setupRecaptcha("recaptcha");
     });
-    const config = recaptchaCtor.mock.calls[0]?.[2] as { callback?: () => void };
+    const config = (
+      recaptchaCtor as unknown as {
+        mock: { calls: unknown[][] };
+      }
+    ).mock.calls[0]?.[2] as { callback?: () => void } | undefined;
     act(() => {
-      config.callback?.();
+      config?.callback?.();
     });
     expect(result.current.error).toBeNull();
   });

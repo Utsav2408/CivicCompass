@@ -10,7 +10,11 @@ interface MediaUploadProps {
   onUploading: (isUploading: boolean) => void;
 }
 
-export const MediaUpload = memo(function MediaUpload({ ticketId, onUploadComplete, onUploading }: MediaUploadProps) {
+export const MediaUpload = memo(function MediaUpload({
+  ticketId,
+  onUploadComplete,
+  onUploading,
+}: MediaUploadProps) {
   const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -22,12 +26,16 @@ export const MediaUpload = memo(function MediaUpload({ ticketId, onUploadComplet
 
     // Validation
     if (file.size > 10 * 1024 * 1024) {
-      setError(t("support.media.too_large", "File size must be less than 10MB"));
+      setError(
+        t("support.media.too_large", "File size must be less than 10MB"),
+      );
       return;
     }
 
     if (!file.type.match("image/.*|video/.*")) {
-      setError(t("support.media.invalid_type", "Only images and videos are allowed"));
+      setError(
+        t("support.media.invalid_type", "Only images and videos are allowed"),
+      );
       return;
     }
 
@@ -37,11 +45,16 @@ export const MediaUpload = memo(function MediaUpload({ ticketId, onUploadComplet
     try {
       // Local preview
       const reader = new FileReader();
-      reader.onload = (prev) => { setPreview(prev.target?.result as string); };
+      reader.onload = (prev) => {
+        setPreview(prev.target?.result as string);
+      };
       reader.readAsDataURL(file);
 
       // Upload to Storage
-      const storageRef = ref(storage, `tickets/${ticketId}/media/${Date.now()}_${file.name}`);
+      const storageRef = ref(
+        storage,
+        `tickets/${ticketId}/media/${Date.now()}_${file.name}`,
+      );
       const snapshot = await uploadBytes(storageRef, file);
       const url = await getDownloadURL(snapshot.ref);
 
@@ -54,8 +67,14 @@ export const MediaUpload = memo(function MediaUpload({ ticketId, onUploadComplet
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-      <div 
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-md)",
+      }}
+    >
+      <div
         role="button"
         tabIndex={0}
         onClick={() => fileInputRef.current?.click()}
@@ -77,16 +96,29 @@ export const MediaUpload = memo(function MediaUpload({ ticketId, onUploadComplet
           cursor: "pointer",
           background: "var(--pg)",
           position: "relative",
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         {preview ? (
-           <img src={preview} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img
+            src={preview}
+            alt="Preview"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         ) : (
           <>
             <span style={{ fontSize: "32px" }}>📸</span>
-            <span style={{ fontSize: "14px", color: "var(--text-muted)", marginTop: "8px" }}>
-              {t("support.media.click_to_upload", "Click to upload image or video")}
+            <span
+              style={{
+                fontSize: "14px",
+                color: "var(--text-muted)",
+                marginTop: "8px",
+              }}
+            >
+              {t(
+                "support.media.click_to_upload",
+                "Click to upload image or video",
+              )}
             </span>
             <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
               Max 10MB
@@ -94,17 +126,21 @@ export const MediaUpload = memo(function MediaUpload({ ticketId, onUploadComplet
           </>
         )}
       </div>
-      
-      <input 
-        type="file" 
-        ref={fileInputRef} 
-        onChange={(e) => { void handleFileChange(e); }} 
-        accept="image/*,video/*" 
-        style={{ display: "none" }} 
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={(e) => {
+          void handleFileChange(e);
+        }}
+        accept="image/*,video/*"
+        style={{ display: "none" }}
       />
 
       {error && (
-        <div style={{ fontSize: "12px", color: "var(--lo)", textAlign: "center" }}>
+        <div
+          style={{ fontSize: "12px", color: "var(--lo)", textAlign: "center" }}
+        >
           {error}
         </div>
       )}

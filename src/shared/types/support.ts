@@ -8,7 +8,15 @@ export type TicketStatus =
   | "Resolved"
   | "Closed";
 
-export type TicketCategory = "voter-roll" | "booth" | "id-card" | "voter-card" | "infrastructure" | "safety" | "general" | "other";
+export type TicketCategory =
+  | "voter-roll"
+  | "booth"
+  | "id-card"
+  | "voter-card"
+  | "infrastructure"
+  | "safety"
+  | "general"
+  | "other";
 
 export interface FirestoreTimestamp {
   seconds: number;

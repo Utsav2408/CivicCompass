@@ -30,7 +30,9 @@ describe("useAuth extra branches", () => {
       return vi.fn();
     });
     const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
-    await waitFor(() => { expect(result.current.error).toBe("listener failed"); });
+    await waitFor(() => {
+      expect(result.current.error).toBe("listener failed");
+    });
   });
 
   it("sets signOut error on failure", async () => {

@@ -6,7 +6,9 @@ import { TicketCreationDrawer } from "@/features/support/components/TicketCreati
 const createTicket = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
+  useTranslation: () => ({
+    t: (_k: string, fallback?: string) => fallback ?? _k,
+  }),
 }));
 vi.mock("@/features/login/useAuth", () => ({
   useAuth: () => ({ user: { uid: "u1" } }),
@@ -29,7 +31,9 @@ describe("TicketCreationDrawer error branches", () => {
       target: { value: "Issue content" },
     });
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    await waitFor(() => { expect(createTicket).toHaveBeenCalled(); });
+    await waitFor(() => {
+      expect(createTicket).toHaveBeenCalled();
+    });
     expect(screen.getByLabelText(/what's the issue/i)).toBeInTheDocument();
   });
 });

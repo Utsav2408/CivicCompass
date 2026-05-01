@@ -1,4 +1,10 @@
-import { useMap, Map, AdvancedMarker, Pin, useMapsLibrary } from "@vis.gl/react-google-maps";
+import {
+  useMap,
+  Map,
+  AdvancedMarker,
+  Pin,
+  useMapsLibrary,
+} from "@vis.gl/react-google-maps";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
@@ -64,16 +70,24 @@ export const MapView = memo(function MapView({
           enabled={showDirections}
           onError={onDirectionsError}
         />
-        
+
         {/* User Location */}
         {userCoords && (
           <AdvancedMarker position={userCoords}>
-            <Pin background={"#4285F4"} glyphColor={"#FFFFFF"} borderColor={"#FFFFFF"} />
+            <Pin
+              background={"#4285F4"}
+              glyphColor={"#FFFFFF"}
+              borderColor={"#FFFFFF"}
+            />
           </AdvancedMarker>
         )}
         {searchedPlace && (
           <AdvancedMarker position={searchedPlace}>
-            <Pin background={"#0F9D58"} glyphColor={"#FFFFFF"} borderColor={"#FFFFFF"} />
+            <Pin
+              background={"#0F9D58"}
+              glyphColor={"#FFFFFF"}
+              borderColor={"#FFFFFF"}
+            />
           </AdvancedMarker>
         )}
 
@@ -171,6 +185,7 @@ function DirectionsLayer({
 }) {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
   const rendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
 
   useEffect(() => {
@@ -206,25 +221,24 @@ function DirectionsLayer({
     if (!origin || !destination) return;
 
     const directionsService = new routesLibrary.DirectionsService();
-    directionsService.route(
-      {
+    void directionsService
+      .route({
         origin,
         destination,
         travelMode: google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK && result) {
-          rendererRef.current?.setDirections(result);
+      })
+      .then((result) => {
+        rendererRef.current?.setDirections(result);
+      })
+      .catch((error: unknown) => {
+        const statusText =
+          error instanceof Error ? error.message : "UNKNOWN_ERROR";
+        if (statusText.includes("REQUEST_DENIED")) {
+          onError?.("REQUEST_DENIED");
           return;
         }
-        const statusText = String(status ?? "UNKNOWN");
-        if (statusText === "REQUEST_DENIED") {
-          onError?.("REQUEST_DENIED");
-        } else {
-          onError?.(statusText);
-        }
-      },
-    );
+        onError?.(statusText);
+      });
   }, [map, routesLibrary, enabled, origin, destination, onError]);
 
   return null;
@@ -306,7 +320,13 @@ const zoomButtonStyle: CSSProperties = {
 
 function BoothPin() {
   return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z"
         fill="#B84200" // Specific Saffron

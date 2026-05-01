@@ -38,11 +38,17 @@ vi.mock("@/features/ward/hooks/useWardCandidates", () => ({
   })),
 }));
 vi.mock("@/features/ward/hooks/useHistoricalWinners", () => ({
-  useHistoricalWinners: vi.fn(() => ({ winners: [], isLoading: false, error: null })),
+  useHistoricalWinners: vi.fn(() => ({
+    winners: [],
+    isLoading: false,
+    error: null,
+  })),
 }));
 
 vi.mock("@/shared/components/ScreenErrorBoundary", () => ({
-  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => <>{children}</>,
+  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 vi.mock("@/shared/components/BottomNav", () => ({
   BottomNav: () => <div data-testid="bottom-nav" />,
@@ -79,7 +85,9 @@ describe("WardPage", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText(/complete profile to continue/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/complete profile to continue/i),
+    ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /update profile/i }));
     expect(mockNavigate).toHaveBeenCalledWith("/personalization");
   });
@@ -87,10 +95,10 @@ describe("WardPage", () => {
   it("renders data sections for constituency profile", async () => {
     const { useProfile } = await import("@/shared/hooks/useProfile");
     const { usePartyData } = await import("@/features/ward/hooks/usePartyData");
-    const { useHistoricalWinners } = await import(
-      "@/features/ward/hooks/useHistoricalWinners"
-    );
-    const { useWardCandidates } = await import("@/features/ward/hooks/useWardCandidates");
+    const { useHistoricalWinners } =
+      await import("@/features/ward/hooks/useHistoricalWinners");
+    const { useWardCandidates } =
+      await import("@/features/ward/hooks/useWardCandidates");
 
     vi.mocked(useProfile).mockReturnValue({
       profile: { constituency: "New Delhi" },

@@ -15,7 +15,11 @@ describe("useAllPollingBooths error branch", () => {
   it("sets normalized error when getDocs rejects with non-Error", async () => {
     vi.mocked(getDocs).mockRejectedValue("bad");
     const { result } = renderHook(() => useAllPollingBooths(true));
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
-    expect(result.current.error?.message).toBe("Failed to fetch polling booths");
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.error?.message).toBe(
+      "Failed to fetch polling booths",
+    );
   });
 });

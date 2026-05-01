@@ -24,7 +24,9 @@ vi.mock("@/features/process/hooks/useProcessSteps", () => ({
   useProcessSteps: mockUseProcessSteps,
 }));
 vi.mock("@/shared/components/ScreenErrorBoundary", () => ({
-  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => <>{children}</>,
+  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 vi.mock("@/shared/components/AshokaCakraLoader", () => ({
   AshokaCakraLoader: () => <div data-testid="loader" />,
@@ -45,7 +47,9 @@ vi.mock("@/features/process/components/PhaseTabBar", () => ({
   PhaseTabBar: () => <div data-testid="phase-tabbar" />,
 }));
 vi.mock("@/features/process/components/ProcessStepCard", () => ({
-  ProcessStepCard: ({ step }: { step: { title: string } }) => <div>{step.title}</div>,
+  ProcessStepCard: ({ step }: { step: { title: string } }) => (
+    <div>{step.title}</div>
+  ),
 }));
 vi.mock("@/features/process/components/AIChatDrawer", () => ({
   AIChatDrawer: ({ isOpen }: { isOpen: boolean }) =>
@@ -67,12 +71,18 @@ describe("ProcessPage", () => {
     );
 
     expect(screen.getByText("Step 1")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /process.ai.open_button_label/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /process.ai.open_button_label/i }),
+    );
     expect(screen.getByTestId("ai-drawer")).toBeInTheDocument();
   });
 
   it("navigates back to home from header back button", () => {
-    mockUseProcessSteps.mockReturnValue({ steps: [], isLoading: false, error: null });
+    mockUseProcessSteps.mockReturnValue({
+      steps: [],
+      isLoading: false,
+      error: null,
+    });
 
     render(
       <MemoryRouter>

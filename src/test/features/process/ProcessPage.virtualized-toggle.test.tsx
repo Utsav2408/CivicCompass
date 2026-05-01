@@ -5,10 +5,15 @@ import { describe, expect, it, vi } from "vitest";
 import { ProcessPage } from "@/features/process/ProcessPage";
 
 vi.mock("react-router-dom", () => ({ useNavigate: () => vi.fn() }));
-vi.mock("react-i18next", () => ({ useTranslation: () => ({ t: (k: string) => k }) }));
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: (k: string) => k }),
+}));
 vi.mock("@/features/process/hooks/useProcessSteps", () => ({
   useProcessSteps: () => ({
-    steps: Array.from({ length: 9 }).map((_, i) => ({ id: `s${i}`, title: `Step ${i}` })),
+    steps: Array.from({ length: 9 }).map((_, i) => ({
+      id: `s${i}`,
+      title: `Step ${i}`,
+    })),
     isLoading: false,
     error: null,
   }),
@@ -29,13 +34,25 @@ vi.mock("react-window", () => ({
   ),
 }));
 vi.mock("@/shared/components/ScreenErrorBoundary", () => ({
-  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => <>{children}</>,
+  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+  ),
 }));
-vi.mock("@/shared/components/AshokaCakraLoader", () => ({ AshokaCakraLoader: () => <div>loader</div> }));
-vi.mock("@/shared/components/BottomNav", () => ({ BottomNav: () => <div>nav</div> }));
-vi.mock("@/features/process/components/AIChatDrawer", () => ({ AIChatDrawer: () => null }));
-vi.mock("@/features/process/components/ElectionTypeToggle", () => ({ ElectionTypeToggle: () => <div>toggle</div> }));
-vi.mock("@/features/process/components/PhaseTabBar", () => ({ PhaseTabBar: () => <div>tabs</div> }));
+vi.mock("@/shared/components/AshokaCakraLoader", () => ({
+  AshokaCakraLoader: () => <div>loader</div>,
+}));
+vi.mock("@/shared/components/BottomNav", () => ({
+  BottomNav: () => <div>nav</div>,
+}));
+vi.mock("@/features/process/components/AIChatDrawer", () => ({
+  AIChatDrawer: () => null,
+}));
+vi.mock("@/features/process/components/ElectionTypeToggle", () => ({
+  ElectionTypeToggle: () => <div>toggle</div>,
+}));
+vi.mock("@/features/process/components/PhaseTabBar", () => ({
+  PhaseTabBar: () => <div>tabs</div>,
+}));
 vi.mock("@/features/process/components/ProcessStepCard", () => ({
   ProcessStepCard: ({
     step,
@@ -45,7 +62,11 @@ vi.mock("@/features/process/components/ProcessStepCard", () => ({
     step: { id: string };
     isExpanded: boolean;
     onToggle: () => void;
-  }) => <button onClick={onToggle}>{step.id}:{isExpanded ? "open" : "closed"}</button>,
+  }) => (
+    <button onClick={onToggle}>
+      {step.id}:{isExpanded ? "open" : "closed"}
+    </button>
+  ),
 }));
 
 describe("ProcessPage virtualized toggle", () => {

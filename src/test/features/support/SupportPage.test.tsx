@@ -20,7 +20,9 @@ vi.mock("@/shared/hooks/useOfflineStatus", () => ({
 }));
 
 vi.mock("@/shared/components/ScreenErrorBoundary", () => ({
-  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => <>{children}</>,
+  ScreenErrorBoundary: ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 vi.mock("@/features/support/components/ChatPanel", () => ({

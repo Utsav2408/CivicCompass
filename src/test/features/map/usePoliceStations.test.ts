@@ -28,8 +28,20 @@ describe("usePoliceStations", () => {
   });
 
   const mockStations = [
-    { id: "1", name: "Station A", city: "Delhi", latitude: 28.6, longitude: 77.2 },
-    { id: "2", name: "Station B", city: "Delhi", latitude: 28.7, longitude: 77.3 },
+    {
+      id: "1",
+      name: "Station A",
+      city: "Delhi",
+      latitude: 28.6,
+      longitude: 77.2,
+    },
+    {
+      id: "2",
+      name: "Station B",
+      city: "Delhi",
+      latitude: 28.7,
+      longitude: 77.3,
+    },
   ];
 
   type MockDoc = { id: string; data: () => unknown };
@@ -64,8 +76,10 @@ describe("usePoliceStations", () => {
     );
 
     const { result } = renderHook(() => usePoliceStations("Delhi"));
-    
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.stations).toHaveLength(2);
     expect(vi.mocked(getDocs)).toHaveBeenCalled();
     expect(result.current.stations[0]?.name).toBe("Station A");
@@ -82,15 +96,19 @@ describe("usePoliceStations", () => {
     );
 
     // Mock distance: Station B is closer than Station A
-    vi.mocked(getDistance).mockImplementation((_lat1: number, _lng1: number, lat2: number) => {
-      return lat2 === 28.7 ? 5 : 10; // 28.7 is Station B
-    });
+    vi.mocked(getDistance).mockImplementation(
+      (_lat1: number, _lng1: number, lat2: number) => {
+        return lat2 === 28.7 ? 5 : 10; // 28.7 is Station B
+      },
+    );
 
     const userCoords = { lat: 28.5, lng: 77.1 };
     const { result } = renderHook(() => usePoliceStations("Delhi", userCoords));
 
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
-    
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
     // Station B (closer) should be first
     expect(result.current.stations[0]?.name).toBe("Station B");
     expect(result.current.stations[1]?.name).toBe("Station A");
@@ -98,10 +116,34 @@ describe("usePoliceStations", () => {
 
   it("should prioritize Connaught Place/Karol Bagh/Paharganj stations and cap to 3", async () => {
     const stations = [
-      { id: "1", name: "Connaught Place Police Station", city: "New Delhi", latitude: 28.6, longitude: 77.2 },
-      { id: "2", name: "Karol Bagh Police Station", city: "New Delhi", latitude: 28.64, longitude: 77.19 },
-      { id: "3", name: "Paharganj Police Station", city: "New Delhi", latitude: 28.64, longitude: 77.22 },
-      { id: "4", name: "Parliament Street Police Station", city: "New Delhi", latitude: 28.62, longitude: 77.21 },
+      {
+        id: "1",
+        name: "Connaught Place Police Station",
+        city: "New Delhi",
+        latitude: 28.6,
+        longitude: 77.2,
+      },
+      {
+        id: "2",
+        name: "Karol Bagh Police Station",
+        city: "New Delhi",
+        latitude: 28.64,
+        longitude: 77.19,
+      },
+      {
+        id: "3",
+        name: "Paharganj Police Station",
+        city: "New Delhi",
+        latitude: 28.64,
+        longitude: 77.22,
+      },
+      {
+        id: "4",
+        name: "Parliament Street Police Station",
+        city: "New Delhi",
+        latitude: 28.62,
+        longitude: 77.21,
+      },
     ];
 
     vi.mocked(getDocs).mockResolvedValue(
@@ -117,7 +159,9 @@ describe("usePoliceStations", () => {
       usePoliceStations("New Delhi", { lat: 28.61, lng: 77.2 }),
     );
 
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
 
     expect(result.current.stations).toHaveLength(3);
     expect(result.current.stations.map((station) => station.name)).toEqual([
@@ -146,7 +190,9 @@ describe("usePoliceStations", () => {
       );
 
     const { result } = renderHook(() => usePoliceStations("New Delhi"));
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
 
     expect(vi.mocked(getDocs).mock.calls.length).toBeGreaterThanOrEqual(2);
     expect(result.current.stations).toHaveLength(1);
@@ -157,7 +203,9 @@ describe("usePoliceStations", () => {
 
     const { result } = renderHook(() => usePoliceStations("Delhi"));
 
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.error?.message).toBe("Firestore Error");
     expect(result.current.stations).toEqual([]);
   });

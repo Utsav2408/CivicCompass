@@ -6,7 +6,9 @@ import { ChatPanel } from "@/features/support/components/ChatPanel";
 const resetConversation = vi.fn();
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (k: string, fallback?: string) => fallback ?? k }),
+  useTranslation: () => ({
+    t: (k: string, fallback?: string) => fallback ?? k,
+  }),
 }));
 vi.mock("@/features/support/hooks/useGeminiSupport", () => ({
   useGeminiSupport: () => ({

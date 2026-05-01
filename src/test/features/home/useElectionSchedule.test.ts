@@ -29,7 +29,10 @@ describe("useElectionSchedule", () => {
   });
 
   it("resolves to schedule doc", async () => {
-    const mockData = { type: "General", phases: [] } as unknown as ElectionSchedule;
+    const mockData = {
+      type: "General",
+      phases: [],
+    } as unknown as ElectionSchedule;
     const mockSnapshot = {
       exists: () => true,
       data: () => mockData,
@@ -46,7 +49,9 @@ describe("useElectionSchedule", () => {
   });
 
   it("sets error on Firestore rejection", async () => {
-    vi.mocked(firestore.getDoc).mockRejectedValue(new Error("Permission denied"));
+    vi.mocked(firestore.getDoc).mockRejectedValue(
+      new Error("Permission denied"),
+    );
 
     const { result } = renderHook(() => useElectionSchedule("test-id"));
 

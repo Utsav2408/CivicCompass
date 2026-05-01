@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
 import { getToken } from "firebase/app-check";
+import { useState, useCallback } from "react";
 
 import { useAuth } from "@/features/login/useAuth";
 import { appCheck } from "@/lib/firebase";

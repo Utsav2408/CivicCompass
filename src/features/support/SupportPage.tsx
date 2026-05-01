@@ -14,54 +14,75 @@ export const SupportPage = memo(function SupportPage() {
 
   return (
     <ScreenErrorBoundary>
-      <div style={{ 
-      minHeight: "100dvh", 
-      display: "flex", 
-      flexDirection: "column",
-      background: "var(--pg)",
-      overflow: "hidden",
-      paddingBottom: "100px"
-    }}>
-      {/* Tab Header */}
-      <div style={{ 
-        display: "flex", 
-        background: "var(--paper)", 
-        borderBottom: "1px solid var(--border)",
-        padding: "0 var(--space-md)"
-      }}>
-        <TabButton 
-          active={activeTab === "chat"} 
-          onClick={() => { setActiveTab("chat"); }}
+      <div
+        style={{
+          minHeight: "100dvh",
+          display: "flex",
+          flexDirection: "column",
+          background: "var(--pg)",
+          overflow: "hidden",
+          paddingBottom: "100px",
+        }}
+      >
+        {/* Tab Header */}
+        <div
+          style={{
+            display: "flex",
+            background: "var(--paper)",
+            borderBottom: "1px solid var(--border)",
+            padding: "0 var(--space-md)",
+          }}
         >
-          {t("support.tabs.chat", "Help Chat")}
-        </TabButton>
-        <TabButton 
-          active={activeTab === "tickets"} 
-          onClick={() => { setActiveTab("tickets"); }}
-        >
-          {t("support.tabs.tickets", "My Tickets")}
-        </TabButton>
-      </div>
+          <TabButton
+            active={activeTab === "chat"}
+            onClick={() => {
+              setActiveTab("chat");
+            }}
+          >
+            {t("support.tabs.chat", "Help Chat")}
+          </TabButton>
+          <TabButton
+            active={activeTab === "tickets"}
+            onClick={() => {
+              setActiveTab("tickets");
+            }}
+          >
+            {t("support.tabs.tickets", "My Tickets")}
+          </TabButton>
+        </div>
 
-      {/* Tab Content */}
-      <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-        {isOffline && (
-           <div style={{ 
-             background: "var(--lo-l)", 
-             color: "var(--lo-text)", 
-             padding: "8px var(--space-md)", 
-             fontSize: "13px",
-             textAlign: "center",
-             borderBottom: "1px solid var(--lo)"
-           }}>
-             {t("support.chat.offline", "Internet required for AI assistant. Core info available below.")}
-           </div>
-        )}
-        <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-          {activeTab === "chat" ? <ChatPanel /> : <MyTicketsPanel />}
+        {/* Tab Content */}
+        <div
+          style={{
+            flex: 1,
+            position: "relative",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {isOffline && (
+            <div
+              style={{
+                background: "var(--lo-l)",
+                color: "var(--lo-text)",
+                padding: "8px var(--space-md)",
+                fontSize: "13px",
+                textAlign: "center",
+                borderBottom: "1px solid var(--lo)",
+              }}
+            >
+              {t(
+                "support.chat.offline",
+                "Internet required for AI assistant. Core info available below.",
+              )}
+            </div>
+          )}
+          <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+            {activeTab === "chat" ? <ChatPanel /> : <MyTicketsPanel />}
+          </div>
         </div>
-        </div>
-      <BottomNav />
+        <BottomNav />
       </div>
     </ScreenErrorBoundary>
   );
@@ -88,7 +109,7 @@ function TabButton({ active, onClick, children }: TabButtonProps) {
         cursor: "pointer",
         transition: "var(--transition-base)",
         flex: 1,
-        textAlign: "center"
+        textAlign: "center",
       }}
     >
       {children}

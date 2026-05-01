@@ -133,11 +133,7 @@ export function RangoliBorder({
           />
         </pattern>
       </defs>
-      <rect
-        width={height}
-        height="100%"
-        fill={`url(#${verticalPatternId})`}
-      />
+      <rect width={height} height="100%" fill={`url(#${verticalPatternId})`} />
     </svg>
   );
 }

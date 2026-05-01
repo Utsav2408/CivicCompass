@@ -18,11 +18,15 @@ describe("useProfile error branch", () => {
   });
 
   it("sets fetch error when firestore getDoc throws", async () => {
-    vi.mocked(authHook.useAuth).mockReturnValue({ user: { uid: "u1" } } as never);
+    vi.mocked(authHook.useAuth).mockReturnValue({
+      user: { uid: "u1" },
+    } as never);
     vi.mocked(getDoc).mockRejectedValue(new Error("fetch profile failed"));
 
     const { result } = renderHook(() => useProfile());
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.error).toBe("fetch profile failed");
   });
 });

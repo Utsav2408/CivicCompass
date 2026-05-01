@@ -20,18 +20,24 @@ describe("useProfile", () => {
   it("returns null profile when user is not authenticated", async () => {
     vi.mocked(authHook.useAuth).mockReturnValue({ user: null } as never);
     const { result } = renderHook(() => useProfile());
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.profile).toBeNull();
   });
 
   it("sets profile not found error when doc does not exist", async () => {
-    vi.mocked(authHook.useAuth).mockReturnValue({ user: { uid: "u1" } } as never);
+    vi.mocked(authHook.useAuth).mockReturnValue({
+      user: { uid: "u1" },
+    } as never);
     vi.mocked(getDoc).mockResolvedValue({
       exists: () => false,
       data: () => ({}),
     } as never);
     const { result } = renderHook(() => useProfile());
-    await waitFor(() => { expect(result.current.isLoading).toBe(false); });
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.error).toBe("Profile not found.");
   });
 });

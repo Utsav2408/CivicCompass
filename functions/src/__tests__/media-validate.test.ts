@@ -1,26 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { mockDb, mockDoc, mockCollection, mockStorage, mockBucket, mockFile } = vi.hoisted(() => ({
-  mockDoc: {
-    get: vi.fn(),
-    update: vi.fn(),
-  },
-  mockCollection: {
-    doc: vi.fn(),
-  },
-  mockDb: {
-    collection: vi.fn(),
-  },
-  mockFile: {
-    delete: vi.fn(),
-  },
-  mockBucket: {
-    file: vi.fn(),
-  },
-  mockStorage: {
-    bucket: vi.fn(),
-  },
-}));
+const { mockDb, mockDoc, mockCollection, mockStorage, mockBucket, mockFile } =
+  vi.hoisted(() => ({
+    mockDoc: {
+      get: vi.fn(),
+      update: vi.fn(),
+    },
+    mockCollection: {
+      doc: vi.fn(),
+    },
+    mockDb: {
+      collection: vi.fn(),
+    },
+    mockFile: {
+      delete: vi.fn(),
+    },
+    mockBucket: {
+      file: vi.fn(),
+    },
+    mockStorage: {
+      bucket: vi.fn(),
+    },
+  }));
 
 mockCollection.doc.mockReturnValue(mockDoc);
 mockDb.collection.mockReturnValue(mockCollection);
@@ -51,7 +52,7 @@ describe("mediaValidate Cloud Function", () => {
     vi.clearAllMocks();
     const { checkRateLimit } = await import("../_shared/rateLimiter.js");
     vi.mocked(checkRateLimit).mockResolvedValue({ allowed: true });
-    
+
     mockCollection.doc.mockReturnValue(mockDoc);
     mockDb.collection.mockReturnValue(mockCollection);
     mockBucket.file.mockReturnValue(mockFile);
@@ -61,7 +62,7 @@ describe("mediaValidate Cloud Function", () => {
   it("should delete file and update ticket if rate limit exceeded", async () => {
     const { checkRateLimit } = await import("../_shared/rateLimiter.js");
     vi.mocked(checkRateLimit).mockResolvedValue({ allowed: false });
-    
+
     vi.mocked(mockDoc.get).mockResolvedValue({
       exists: true,
       data: () => ({ userId: "test-user" }),
@@ -78,9 +79,11 @@ describe("mediaValidate Cloud Function", () => {
     await (mediaValidate as any)(event);
 
     expect(mockFile.delete).toHaveBeenCalled();
-    expect(mockDoc.update).toHaveBeenCalledWith(expect.objectContaining({
-      mediaError: expect.stringContaining("limit reached"),
-    }));
+    expect(mockDoc.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaError: expect.stringContaining("limit reached"),
+      }),
+    );
   });
 
   it("should accept valid JPEG under 10MB", async () => {
@@ -100,9 +103,11 @@ describe("mediaValidate Cloud Function", () => {
     await (mediaValidate as any)(event);
 
     expect(mockFile.delete).not.toHaveBeenCalled();
-    expect(mockDoc.update).toHaveBeenCalledWith(expect.objectContaining({
-      mediaUrl: expect.stringContaining("photo.jpg"),
-    }));
+    expect(mockDoc.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaUrl: expect.stringContaining("photo.jpg"),
+      }),
+    );
   });
 
   it("should reject and delete oversized file (>10MB)", async () => {
@@ -122,9 +127,11 @@ describe("mediaValidate Cloud Function", () => {
     await (mediaValidate as any)(event);
 
     expect(mockFile.delete).toHaveBeenCalled();
-    expect(mockDoc.update).toHaveBeenCalledWith(expect.objectContaining({
-      mediaError: expect.stringContaining("File too large"),
-    }));
+    expect(mockDoc.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaError: expect.stringContaining("File too large"),
+      }),
+    );
   });
 
   it("should reject and delete invalid file type (PDF)", async () => {
@@ -144,8 +151,10 @@ describe("mediaValidate Cloud Function", () => {
     await (mediaValidate as any)(event);
 
     expect(mockFile.delete).toHaveBeenCalled();
-    expect(mockDoc.update).toHaveBeenCalledWith(expect.objectContaining({
-      mediaError: expect.stringContaining("Invalid file type"),
-    }));
+    expect(mockDoc.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaError: expect.stringContaining("Invalid file type"),
+      }),
+    );
   });
 });

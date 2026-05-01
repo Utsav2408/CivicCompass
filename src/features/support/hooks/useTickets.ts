@@ -10,7 +10,11 @@ import {
 import { useState, useEffect, useCallback } from "react";
 
 import { db } from "@/lib/firebase";
-import type { Ticket, TicketStatus, TicketCategory } from "@/shared/types/support";
+import type {
+  Ticket,
+  TicketStatus,
+  TicketCategory,
+} from "@/shared/types/support";
 
 export function useTickets(uid: string | undefined) {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -30,16 +34,16 @@ export function useTickets(uid: string | undefined) {
   useEffect(() => {
     if (!uid) {
       setTimeout(() => {
-        setTickets(prev => prev.length > 0 ? [] : prev);
-        setIsLoading(prev => prev ? false : prev);
+        setTickets((prev) => (prev.length > 0 ? [] : prev));
+        setIsLoading((prev) => (prev ? false : prev));
       }, 0);
       return;
     }
-    
+
     const q = query(
       collection(db, "tickets"),
       where("userId", "==", uid),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
     );
 
     const unsubscribe = onSnapshot(
@@ -49,22 +53,25 @@ export function useTickets(uid: string | undefined) {
           id: doc.id,
           ...doc.data(),
         })) as Ticket[];
-        const normalized = filter === "all"
-          ? ticketData
-          : ticketData.filter(
-              (ticket) =>
-                ticket.status.toLowerCase() === filter.toLowerCase(),
-            );
+        const normalized =
+          filter === "all"
+            ? ticketData
+            : ticketData.filter(
+                (ticket) =>
+                  ticket.status.toLowerCase() === filter.toLowerCase(),
+              );
         setTickets(normalized);
         setIsLoading(false);
       },
       () => {
         setError("Failed to load tickets");
         setIsLoading(false);
-      }
+      },
     );
 
-    return () => { unsubscribe(); };
+    return () => {
+      unsubscribe();
+    };
   }, [uid, filter]);
 
   const createTicket = useCallback(
@@ -88,7 +95,7 @@ export function useTickets(uid: string | undefined) {
         throw new Error("Failed to create ticket");
       }
     },
-    [uid]
+    [uid],
   );
 
   return {

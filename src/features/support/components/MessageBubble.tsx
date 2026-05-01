@@ -7,42 +7,50 @@ interface MessageBubbleProps {
   message: Message;
 }
 
-export const MessageBubble = memo(function MessageBubble({ message }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({
+  message,
+}: MessageBubbleProps) {
   const { t } = useTranslation();
   const isAi = message.role === "model";
 
   return (
-    <div style={{ 
-      alignSelf: isAi ? "flex-start" : "flex-end",
-      maxWidth: "85%",
-      display: "flex",
-      flexDirection: "column",
-      gap: "4px"
-    }}>
+    <div
+      style={{
+        alignSelf: isAi ? "flex-start" : "flex-end",
+        maxWidth: "85%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "4px",
+      }}
+    >
       {isAi && (
-        <span style={{ 
-          fontSize: "11px", 
-          fontWeight: 700, 
-          color: "var(--in)", 
-          textTransform: "uppercase",
-          letterSpacing: "0.5px",
-          marginLeft: "4px"
-        }}>
+        <span
+          style={{
+            fontSize: "11px",
+            fontWeight: 700,
+            color: "var(--in)",
+            textTransform: "uppercase",
+            letterSpacing: "0.5px",
+            marginLeft: "4px",
+          }}
+        >
           {t("support.chat.ai_label", "CivicCompass AI")}
         </span>
       )}
-      
-      <div style={{
-        padding: "12px 16px",
-        borderRadius: isAi ? "0 16px 16px 16px" : "16px 16px 0 16px",
-        background: isAi ? "var(--paper)" : "var(--in)",
-        color: isAi ? "var(--text)" : "white",
-        boxShadow: "var(--shadow-sm)",
-        border: isAi ? "1px solid var(--border)" : "none",
-        fontSize: "14px",
-        lineHeight: "1.5",
-        position: "relative"
-      }}>
+
+      <div
+        style={{
+          padding: "12px 16px",
+          borderRadius: isAi ? "0 16px 16px 16px" : "16px 16px 0 16px",
+          background: isAi ? "var(--paper)" : "var(--in)",
+          color: isAi ? "var(--text)" : "white",
+          boxShadow: "var(--shadow-sm)",
+          border: isAi ? "1px solid var(--border)" : "none",
+          fontSize: "14px",
+          lineHeight: "1.5",
+          position: "relative",
+        }}
+      >
         {message.text}
       </div>
 

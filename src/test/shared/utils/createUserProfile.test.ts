@@ -18,7 +18,8 @@ describe("createUserProfile", () => {
   it("writes merged defaults and user fields to firestore", async () => {
     doc.mockReturnValueOnce("user-ref");
 
-    const { createUserProfile } = await import("@/shared/utils/createUserProfile");
+    const { createUserProfile } =
+      await import("@/shared/utils/createUserProfile");
 
     await createUserProfile("uid-1", {
       name: "Utsav",

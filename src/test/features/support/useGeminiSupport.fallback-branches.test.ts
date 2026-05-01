@@ -40,7 +40,9 @@ describe("useGeminiSupport fallback branches", () => {
     await act(async () => {
       await result.current.send("My name is missing from voter roll");
     });
-    await waitFor(() => { expect(result.current.pendingTicketDraft).not.toBeNull(); });
+    await waitFor(() => {
+      expect(result.current.pendingTicketDraft).not.toBeNull();
+    });
     await act(async () => {
       await result.current.raisePendingTicket();
     });
