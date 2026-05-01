@@ -29,6 +29,22 @@ RULES:
 8. If the provided chat summary clearly indicates the user wants to raise a ticket, call 'create_ticket_from_summary'.
 `;
 
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+function isTransientModelOverloadError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  const message = error.message.toUpperCase();
+  return (
+    message.includes("503") ||
+    message.includes("UNAVAILABLE") ||
+    message.includes("HIGH DEMAND") ||
+    message.includes("RATE LIMIT")
+  );
+}
+
 function inferCategoryFromText(
   text: string,
 ): "voter-roll" | "booth" | "id-card" | "other" {
@@ -213,12 +229,35 @@ export const supportAgentHandler = async (req: any, res: any) => {
       ? `Latest user message:\n${prompt}\n\nChat summary:\n${chatSummary}`
       : prompt;
 
-    const { text } = await ai.generate({
-      model: googleAI.model("gemini-2.5-flash"),
-      system: SUPPORT_SYSTEM_PROMPT,
-      prompt: promptWithContext,
-      tools: [createTicket, createTicketFromSummary, getTicketStatus],
-    });
+    let text: string | null = null;
+    let lastGenerationError: unknown = null;
+
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        const generation = await ai.generate({
+          model: googleAI.model("gemini-2.5-flash"),
+          system: SUPPORT_SYSTEM_PROMPT,
+          prompt: promptWithContext,
+          tools: [createTicket, createTicketFromSummary, getTicketStatus],
+        });
+        text = generation.text;
+        break;
+      } catch (generationError) {
+        lastGenerationError = generationError;
+        if (
+          attempt < 2 &&
+          isTransientModelOverloadError(generationError)
+        ) {
+          await sleep(400 * 2 ** attempt);
+          continue;
+        }
+        throw generationError;
+      }
+    }
+
+    if (!text) {
+      throw lastGenerationError ?? new Error("Generation failed");
+    }
 
     res.status(200).json({ response: text });
   } catch (error) {
@@ -226,6 +265,13 @@ export const supportAgentHandler = async (req: any, res: any) => {
       uid,
       errorMessage: error instanceof Error ? error.message : "Unknown error",
     });
+    if (isTransientModelOverloadError(error)) {
+      res.status(503).json({
+        error:
+          "Support assistant is currently handling high demand. Please try again in a few moments.",
+      });
+      return;
+    }
     res.status(500).json({ error: "Support agent unavailable" });
   }
 };
