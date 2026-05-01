@@ -1,73 +1,47 @@
-# React + TypeScript + Vite
+# 🗳️ CivicCompass
+*Your Personalized Election Companion*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## The Problem
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Most Indian voters — especially first-timers — have no idea how the election process actually works. When is the last day to check the voter roll? What happens between nomination and polling day? Where exactly is my booth? Who is standing from my constituency, and what have they declared?
 
-## React Compiler
+The information exists, but it's scattered across government portals that are hard to navigate, unavailable in Hindi, and completely inaccessible on a slow mobile connection.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+On election day itself — the one day it all matters — many voters arrive underprepared or not at all.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## The Solution
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+CivicCompass is a Progressive Web App that puts everything a voter needs in one place, in plain language, in English or Hindi, and works even when the internet doesn't.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Countdown + timeline** — see exactly where the election stands today and what comes next
+- **Step-by-step process guide** — the full election process explained simply, with an AI assistant for follow-up questions grounded in ECI sources
+- **Ward intelligence** — party performance charts and candidate affidavit summaries for your constituency
+- **Find your booth** — your polling booth pre-pinned on a map, with directions and nearby police stations
+- **Support + SOS** — raise election complaints as tickets, and a one-tap emergency button for election day
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+All AI-generated content cites its source. All core screens work offline. The app costs under $0.15 to run for the entire 8-day challenge window.
+
+---
+
+## Stack
+
+Vite · React · TypeScript · Firebase · Gemini 2.0 Flash · Google Maps · Tailwind
+
+---
+
+## Running Locally
+
+```bash
+npm install
+firebase emulators:start
+npm run seed       # loads test data
+npm run dev        # http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+*Google Prompt War Challenge · Every Indian deserves to understand their vote.*
