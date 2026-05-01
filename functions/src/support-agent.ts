@@ -244,10 +244,7 @@ export const supportAgentHandler = async (req: any, res: any) => {
         break;
       } catch (generationError) {
         lastGenerationError = generationError;
-        if (
-          attempt < 2 &&
-          isTransientModelOverloadError(generationError)
-        ) {
+        if (attempt < 2 && isTransientModelOverloadError(generationError)) {
           await sleep(400 * 2 ** attempt);
           continue;
         }

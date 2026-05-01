@@ -43,30 +43,6 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,woff2}"],
 
         runtimeCaching: [
-          // App shell — Cache First (always instant load)
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "gstatic-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-            },
-          },
-
           // Google Maps tiles — Stale While Revalidate
           {
             urlPattern: /^https:\/\/maps\.googleapis\.com\/.*/i,

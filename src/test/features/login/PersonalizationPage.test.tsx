@@ -13,6 +13,15 @@ import { usePhoneOtp } from "@features/login/usePhoneOtp";
 vi.mock("@features/login/useAuth");
 vi.mock("@features/login/usePersonalization");
 vi.mock("@features/login/usePhoneOtp");
+vi.mock("firebase/app-check", async () => {
+  const actual = await vi.importActual<typeof import("firebase/app-check")>(
+    "firebase/app-check",
+  );
+  return {
+    ...actual,
+    getToken: vi.fn().mockResolvedValue({ token: "test-app-check-token" }),
+  };
+});
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
