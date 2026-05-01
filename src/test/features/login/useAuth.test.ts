@@ -15,6 +15,8 @@ import {
   type User,
   type NextOrObserver,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -29,6 +31,8 @@ vi.mock("@/lib/firebase", () => ({ auth: {} }));
 vi.mock("firebase/auth", () => ({
   GoogleAuthProvider: vi.fn(),
   signInWithPopup: vi.fn(),
+  signInWithEmailAndPassword: vi.fn(),
+  createUserWithEmailAndPassword: vi.fn(),
   signOut: vi.fn(),
   onAuthStateChanged: vi.fn(),
 }));
@@ -36,6 +40,8 @@ vi.mock("firebase/auth", () => ({
 // Typed mock helpers
 const mockOnAuthStateChanged = vi.mocked(onAuthStateChanged);
 const mockSignInWithPopup = vi.mocked(signInWithPopup);
+const mockSignInWithEmailAndPassword = vi.mocked(signInWithEmailAndPassword);
+const mockCreateUserWithEmailAndPassword = vi.mocked(createUserWithEmailAndPassword);
 const mockSignOut = vi.mocked(signOut);
 
 // Minimal Firebase User stub
@@ -74,6 +80,12 @@ function setupAuthListener() {
 describe("useAuth", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSignInWithEmailAndPassword.mockResolvedValue(
+      {} as Awaited<ReturnType<typeof signInWithEmailAndPassword>>,
+    );
+    mockCreateUserWithEmailAndPassword.mockResolvedValue(
+      {} as Awaited<ReturnType<typeof createUserWithEmailAndPassword>>,
+    );
   });
 
   // ── 1. Loading state ────────────────────────────────────────────────────────

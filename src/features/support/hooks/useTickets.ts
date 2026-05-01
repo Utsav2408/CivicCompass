@@ -36,15 +36,11 @@ export function useTickets(uid: string | undefined) {
       return;
     }
     
-    let q = query(
+    const q = query(
       collection(db, "tickets"),
       where("userId", "==", uid),
       orderBy("createdAt", "desc")
     );
-
-    if (filter !== "all") {
-      q = query(q, where("status", "==", filter));
-    }
 
     const unsubscribe = onSnapshot(
       q,
@@ -53,7 +49,13 @@ export function useTickets(uid: string | undefined) {
           id: doc.id,
           ...doc.data(),
         })) as Ticket[];
-        setTickets(ticketData);
+        const normalized = filter === "all"
+          ? ticketData
+          : ticketData.filter(
+              (ticket) =>
+                ticket.status.toLowerCase() === filter.toLowerCase(),
+            );
+        setTickets(normalized);
         setIsLoading(false);
       },
       () => {
@@ -66,7 +68,11 @@ export function useTickets(uid: string | undefined) {
   }, [uid, filter]);
 
   const createTicket = useCallback(
-    async (description: string, category: TicketCategory, status: TicketStatus = "open") => {
+    async (
+      description: string,
+      category: TicketCategory,
+      status: TicketStatus = "Open",
+    ) => {
       if (!uid) throw new Error("User not authenticated");
 
       try {

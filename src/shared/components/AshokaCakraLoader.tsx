@@ -18,6 +18,7 @@ interface AshokaCakraLoaderProps {
   label?: string;
   /** When true, renders as aria-hidden decorative SVG — no screen reader announcement */
   decorative?: boolean;
+  animated?: boolean;
 }
 
 export function AshokaCakraLoader({
@@ -25,6 +26,7 @@ export function AshokaCakraLoader({
   color = "var(--sf)",
   label = "Loading…",
   decorative = false,
+  animated = true,
 }: AshokaCakraLoaderProps) {
   const cx = 50;
   const cy = 50;
@@ -57,7 +59,7 @@ export function AshokaCakraLoader({
       viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
       data-chakra="spinner"
-      style={{ animation: "chakra-spin 12s linear infinite" }}
+      style={animated ? { animation: "chakra-spin 12s linear infinite" } : undefined}
       {...ariaProps}
     >
       {/*

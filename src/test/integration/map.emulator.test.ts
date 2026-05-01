@@ -78,6 +78,7 @@ describe("Map Integration — Emulator", () => {
     const querySnapshot = await getDocs(q);
 
     expect(querySnapshot.size).toBe(1);
-    expect(querySnapshot.docs[0].data().name).toBe("Delhi Station");
+    expect(querySnapshot.docs[0]).toBeDefined();
+    expect(querySnapshot.docs[0]?.data().name).toBe("Delhi Station");
   });
 });

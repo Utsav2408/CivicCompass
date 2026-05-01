@@ -46,6 +46,12 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Election process steps — public read, no client writes
+    match /process-steps/{stepId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // Gemini cache — no client access at all
     match /geminiCache/{cacheId} {
       allow read, write: if false;

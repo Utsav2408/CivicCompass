@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router-dom";
+import { getToken } from "firebase/app-check";
 
 import { AshokaCakraLoader, PageLoader } from "@/shared/components/AshokaCakraLoader";
+import { appCheck } from "@/lib/firebase";
 import { JaaliHero } from "@/shared/components/MughalJaaliPattern";
 import { ScreenErrorBoundary } from "@/shared/components/ScreenErrorBoundary";
 import type { PollingBooth } from "@/shared/types/map";
@@ -18,6 +20,12 @@ interface EciLookupResponse {
   pollingBooth: PollingBooth;
   wardCode: string;
 }
+
+const projectId = import.meta.env["VITE_FIREBASE_PROJECT_ID"] as string;
+const isEmulator = import.meta.env["VITE_USE_EMULATORS"] === "true";
+const eciLookupUrl = isEmulator
+  ? `http://127.0.0.1:5001/${projectId}/us-east1/eciVoterLookup`
+  : `https://us-east1-${projectId}.cloudfunctions.net/eciVoterLookup`;
 
 /**
  * PersonalizationPage — Screen 1.1
@@ -51,8 +59,19 @@ export function PersonalizationPage() {
   } = usePhoneOtp();
 
   const [voterIdError, setVoterIdError] = useState<string | null>(null);
+  const [isVoterIdVerified, setIsVoterIdVerified] = useState(false);
   const [isValidatingVoterId, setIsValidatingVoterId] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [otpValue, setOtpValue] = useState("");
+
+  const isNameValid = Boolean(formData.name?.trim());
+  const isVoterIdValid = Boolean(formData.voterIdNumber?.trim()) && isVoterIdVerified;
+  const isPhoneValid = phoneNumber.trim().length > 0;
+  const canVerifyOtp = isPhoneValid && otpValue.length >= 6 && !isOtpLoading;
+  const canGoNextFromIdentity =
+    isNameValid && isVoterIdValid && isPhoneValid && isPhoneVerified;
+  const hasElectionInterest = (formData.electionInterest?.length ?? 0) > 0;
 
   if (isAuthLoading) {
     return <PageLoader />;
@@ -80,24 +99,36 @@ export function PersonalizationPage() {
   };
 
   const handleVoterIdBlur = async (voterId: string) => {
-    if (!voterId || voterId.length < 10) return;
+    if (!voterId || voterId.length < 10) {
+      setIsVoterIdVerified(false);
+      return;
+    }
 
     setIsValidatingVoterId(true);
     setVoterIdError(null);
+    setIsVoterIdVerified(false);
     try {
+      const appCheckToken = isEmulator
+        ? "emulator-token"
+        : appCheck
+          ? (await getToken(appCheck)).token
+          : "";
+
+      if (!appCheckToken) {
+        throw new Error("App Check token missing");
+      }
+
       // Call eciVoterLookup Cloud Function
       // For now, we simulate the fetch as per the mock in the function
-      const response = await fetch(
-        "https://us-east1-civic-compass.cloudfunctions.net/eciVoterLookup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-uid": user.uid,
-          },
-          body: JSON.stringify({ voterId }),
+      const response = await fetch(eciLookupUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-firebase-appcheck": appCheckToken,
+          "x-uid": user.uid,
         },
-      );
+        body: JSON.stringify({ voterId }),
+      });
 
       if (!response.ok) throw new Error("Lookup failed");
 
@@ -107,7 +138,9 @@ export function PersonalizationPage() {
         constituency: data.constituency,
         pollingBooth: data.pollingBooth,
       });
+      setIsVoterIdVerified(true);
     } catch {
+      setIsVoterIdVerified(false);
       setVoterIdError(t("personalization.identity.voter_id_error"));
     } finally {
       setIsValidatingVoterId(false);
@@ -185,6 +218,7 @@ export function PersonalizationPage() {
           {errors.submit && (
             <div
               role="alert"
+              aria-live="assertive"
               style={{
                 padding: "var(--space-md)",
                 background: "var(--lo-l)",
@@ -195,7 +229,24 @@ export function PersonalizationPage() {
                 textAlign: "center",
               }}
             >
-              {errors.submit}
+              <p style={{ margin: 0 }}>{errors.submit}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.reload();
+                }}
+                style={{
+                  marginTop: "var(--space-sm)",
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius-md)",
+                  border: "none",
+                  background: "var(--sf)",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                {t("common.retry", "Retry")}
+              </button>
             </div>
           )}
 
@@ -220,6 +271,7 @@ export function PersonalizationPage() {
               >
                 <label style={{ font: "var(--text-h2)" }}>
                   {t("personalization.identity.name_label")}
+                  <span style={requiredAsteriskStyle}> *</span>
                 </label>
                 <input
                   type="text"
@@ -241,6 +293,7 @@ export function PersonalizationPage() {
               >
                 <label style={{ font: "var(--text-h2)" }}>
                   {t("personalization.identity.voter_id_label")}
+                  <span style={requiredAsteriskStyle}> *</span>
                 </label>
                 <input
                   type="text"
@@ -263,6 +316,14 @@ export function PersonalizationPage() {
                     {voterIdError}
                   </p>
                 )}
+                {!voterIdError && isVoterIdVerified && (
+                  <p
+                    role="status"
+                    style={{ fontSize: "12px", color: "#1b7f3a" }}
+                  >
+                    Voter ID verified
+                  </p>
+                )}
               </div>
 
               <div
@@ -274,6 +335,7 @@ export function PersonalizationPage() {
               >
                 <label style={{ font: "var(--text-h2)" }}>
                   {t("personalization.identity.phone_label")}
+                  <span style={requiredAsteriskStyle}> *</span>
                 </label>
                 <div style={{ display: "flex", gap: "var(--space-sm)" }}>
                   <input
@@ -281,23 +343,21 @@ export function PersonalizationPage() {
                     placeholder={t(
                       "personalization.identity.phone_placeholder",
                     )}
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      setPhoneNumber(e.target.value);
+                      setIsPhoneVerified(false);
+                    }}
                     style={{ ...inputStyle, flex: 1 }}
                     id="phone-input"
                   />
                   <button
-                    id="recaptcha-container"
                     onClick={() => {
-                      void sendOtp(
-                        (
-                          document.getElementById(
-                            "phone-input",
-                          ) as HTMLInputElement
-                        ).value,
-                        "recaptcha-container",
-                      );
+                      setIsPhoneVerified(false);
+                      void sendOtp(phoneNumber, "recaptcha-container");
                     }}
                     style={buttonSecondaryStyle}
-                    disabled={isOtpLoading}
+                    disabled={isOtpLoading || !isPhoneValid}
                   >
                     {isOtpLoading ? (
                       <AshokaCakraLoader size={16} />
@@ -306,9 +366,29 @@ export function PersonalizationPage() {
                     )}
                   </button>
                 </div>
+                {/* Keep it renderable (not display:none) for Firebase phone auth */}
+                <div
+                  id="recaptcha-container"
+                  style={{
+                    position: "absolute",
+                    width: 1,
+                    height: 1,
+                    opacity: 0,
+                    overflow: "hidden",
+                    pointerEvents: "none",
+                  }}
+                />
+                {isPhoneVerified && (
+                  <p
+                    role="status"
+                    style={{ fontSize: "12px", color: "#1b7f3a" }}
+                  >
+                    Phone number verified
+                  </p>
+                )}
               </div>
 
-              {isOtpSent && (
+              {isOtpSent && !isPhoneVerified && (
                 <div
                   style={{
                     display: "flex",
@@ -318,27 +398,30 @@ export function PersonalizationPage() {
                 >
                   <label style={{ font: "var(--text-h2)" }}>
                     {t("personalization.identity.otp_label")}
+                    <span style={requiredAsteriskStyle}> *</span>
                   </label>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={otpValue}
-                    onChange={(e) => {
-                      setOtpValue(e.target.value);
-                    }}
-                    style={inputStyle}
-                  />
-                  <button
-                    onClick={() => {
-                      void verifyOtp(otpValue).then(() => {
-                        goNext();
-                      });
-                    }}
-                    style={buttonPrimaryStyle}
-                    disabled={isOtpLoading || otpValue.length < 6}
-                  >
-                    {t("personalization.identity.verify_otp")}
-                  </button>
+                  <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={otpValue}
+                      onChange={(e) => {
+                        setOtpValue(e.target.value);
+                      }}
+                      style={{ ...inputStyle, flex: 1, maxWidth: "220px" }}
+                    />
+                    <button
+                      onClick={() => {
+                        void verifyOtp(otpValue).then(() => {
+                          setIsPhoneVerified(true);
+                        });
+                      }}
+                      style={{ ...buttonPrimaryStyle, flex: "0 0 auto" }}
+                      disabled={!canVerifyOtp}
+                    >
+                      {t("personalization.identity.verify_otp")}
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -355,8 +438,22 @@ export function PersonalizationPage() {
                   fontSize: "13px",
                 }}
               >
-                {t("personalization.skip")}
+                {t("personalization.skip", "Skip for now")}
               </button>
+
+              <button
+                onClick={goNext}
+                style={buttonPrimaryStyle}
+                disabled={!canGoNextFromIdentity}
+              >
+                {t("common.next")}
+              </button>
+
+              {isEmulator && (
+                <button onClick={goNext} style={buttonPrimaryStyle}>
+                  Continue (Demo)
+                </button>
+              )}
             </div>
           )}
 
@@ -419,6 +516,7 @@ export function PersonalizationPage() {
               >
                 <label style={{ font: "var(--text-h2)" }}>
                   {t("personalization.preferences.election_type_label")}
+                  <span style={requiredAsteriskStyle}> *</span>
                 </label>
                 {["lok_sabha", "vidhan_sabha", "both"].map((type) => (
                   <label
@@ -458,7 +556,11 @@ export function PersonalizationPage() {
                 <button onClick={goBack} style={buttonSecondaryStyle}>
                   {t("common.back")}
                 </button>
-                <button onClick={goNext} style={buttonPrimaryStyle}>
+                <button
+                  onClick={goNext}
+                  style={buttonPrimaryStyle}
+                  disabled={!hasElectionInterest}
+                >
                   {t("common.next")}
                 </button>
               </div>
@@ -593,6 +695,11 @@ const inputStyle = {
   font: "var(--text-body)",
   outline: "none",
   background: "var(--pg)",
+};
+
+const requiredAsteriskStyle = {
+  color: "var(--lo)",
+  fontWeight: 700,
 };
 
 const buttonPrimaryStyle = {

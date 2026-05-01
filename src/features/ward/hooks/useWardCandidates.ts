@@ -1,8 +1,9 @@
 import { doc, getDoc } from "firebase/firestore";
+import { getToken } from "firebase/app-check";
 import { useState, useEffect } from "react";
 
 import { useAuth } from "@/features/login/useAuth";
-import { db } from "@/lib/firebase";
+import { appCheck, db } from "@/lib/firebase";
 import type { CandidateInfo, ElectionType } from "@/shared/types/ward";
 
 interface UseWardCandidatesResult {
@@ -63,7 +64,11 @@ export function useWardCandidates(
 
         let appCheckToken = "";
         try {
-          appCheckToken = isEmulator ? "emulator-token" : "";
+          appCheckToken = isEmulator
+            ? "emulator-token"
+            : appCheck
+              ? (await getToken(appCheck)).token
+              : "";
         } catch {
           // ignore app check error in development
         }

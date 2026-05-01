@@ -32,6 +32,19 @@ function makeMockSnapshot(steps: ProcessStep[]): QuerySnapshot {
 describe("useProcessSteps", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", {
+      getItem: vi.fn((key: string) => store.get(key) ?? null),
+      setItem: vi.fn((key: string, value: string) => {
+        store.set(key, value);
+      }),
+      removeItem: vi.fn((key: string) => {
+        store.delete(key);
+      }),
+      clear: vi.fn(() => {
+        store.clear();
+      }),
+    });
   });
 
   const mockSteps: ProcessStep[] = [
@@ -122,6 +135,37 @@ describe("useProcessSteps", () => {
     expect(result.current.isLoading).toBe(false);
   });
 
+  it("uses cached steps when Firestore fails", async () => {
+    const cacheKey = "process-steps:lok_sabha:pre-election";
+    localStorage.setItem(cacheKey, JSON.stringify(mockSteps));
+    vi.mocked(firestore.getDocs).mockRejectedValue(new Error("Network Error"));
+
+    const { result } = renderHook(() =>
+      useProcessSteps("lok_sabha", "pre-election"),
+    );
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.steps).toEqual(mockSteps);
+    expect(result.current.error).toBeNull();
+  });
+
+  it("falls back to error when cached JSON is invalid", async () => {
+    const cacheKey = "process-steps:lok_sabha:pre-election";
+    localStorage.setItem(cacheKey, "{invalid-json");
+    vi.mocked(firestore.getDocs).mockRejectedValue(new Error("Network Error"));
+
+    const { result } = renderHook(() =>
+      useProcessSteps("lok_sabha", "pre-election"),
+    );
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.error).toBe("Network Error");
+  });
+
   it("returns empty array and stops loading without memory leak on unmount", () => {
     vi.mocked(firestore.getDocs).mockReturnValue(
       new Promise(() => {
@@ -134,5 +178,32 @@ describe("useProcessSteps", () => {
     );
     unmount();
     // isMounted=false flag prevents state updates after unmount — no error thrown
+  });
+
+  it("uses fallback steps when Firestore returns no docs", async () => {
+    vi.mocked(firestore.getDocs).mockResolvedValue(makeMockSnapshot([]));
+
+    const { result } = renderHook(() =>
+      useProcessSteps("lok_sabha", "post-election"),
+    );
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.steps.length).toBeGreaterThan(0);
+    expect(result.current.steps[0]?.phase).toBe("post-election");
+  });
+
+  it("uses default error message for non-Error failures", async () => {
+    vi.mocked(firestore.getDocs).mockRejectedValue("boom");
+
+    const { result } = renderHook(() =>
+      useProcessSteps("lok_sabha", "pre-election"),
+    );
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+    expect(result.current.error).toBe("Failed to fetch process steps");
   });
 });

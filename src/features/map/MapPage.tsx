@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { PollingBoothMap } from "@/features/map/components/PollingBoothMap";
 import { PageLoader } from "@/shared/components/AshokaCakraLoader";
+import { BottomNav } from "@/shared/components/BottomNav";
 
 
 
@@ -25,14 +26,24 @@ export function MapPage() {
   return (
     <ErrorBoundary
       fallback={
-        <div style={{ padding: "20px", textAlign: "center", color: "var(--lo-text)" }}>
+        <div role="alert" aria-live="assertive" style={{ padding: "20px", textAlign: "center", color: "var(--lo-text)" }}>
           <h2>Something went wrong loading the map.</h2>
-          <button onClick={() => { window.location.reload(); }}>Retry</button>
+          <button type="button" onClick={() => { window.location.reload(); }}>Retry</button>
         </div>
       }
     >
       <Suspense fallback={<PageLoader />}>
-        <PollingBoothMap initialCoords={initialCoords} />
+        <main
+          style={{
+            minHeight: "100dvh",
+            display: "flex",
+            flexDirection: "column",
+            paddingBottom: "100px",
+          }}
+        >
+          <PollingBoothMap initialCoords={initialCoords} />
+          <BottomNav />
+        </main>
       </Suspense>
     </ErrorBoundary>
   );

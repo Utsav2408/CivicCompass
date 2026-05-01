@@ -73,7 +73,9 @@ export const ChatInput = memo(function ChatInput({ onSend, disabled }: ChatInput
 
       recognition.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = Array.from(event.results)
-          .map((result: SpeechRecognitionResult) => result[0].transcript)
+          .map(
+            (result: SpeechRecognitionResult) => result[0]?.transcript ?? "",
+          )
           .join("");
         setValue(transcript);
       };

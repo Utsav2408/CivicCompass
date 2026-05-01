@@ -4,13 +4,22 @@ import { useTranslation } from "react-i18next";
 import { ChatInput } from "@/features/support/components/ChatInput";
 import { MessageBubble } from "@/features/support/components/MessageBubble";
 import { AshokaCakraLoader } from "@/shared/components/AshokaCakraLoader";
+import { LotusEmptyState } from "@/shared/components/LotusMotif";
 
 import { useGeminiSupport } from "../hooks/useGeminiSupport";
 
 export const ChatPanel = memo(function ChatPanel() {
   const { t } = useTranslation();
-  const { messages, send, isLoading, error } = useGeminiSupport();
-  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 768);
+  const {
+    messages,
+    send,
+    isLoading,
+    error,
+    pendingTicketDraft,
+    isRaisingTicket,
+    raisePendingTicket,
+    resetConversation,
+  } = useGeminiSupport();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,63 +30,52 @@ export const ChatPanel = memo(function ChatPanel() {
 
   return (
     <div style={{ display: "flex", height: "100%", background: "var(--paper)" }}>
-      {/* Sidebar - Desktop Only for now or mobile with toggle */}
-      {showSidebar && (
-        <div style={{ 
-          width: window.innerWidth < 768 ? "100%" : "30%", 
-          borderRight: "1px solid var(--border)",
-          background: "var(--pg)",
+      <div
+        style={{
+          flex: 1,
           display: "flex",
           flexDirection: "column",
-          position: window.innerWidth < 768 ? "absolute" : "relative",
-          zIndex: 10,
-          height: "100%"
-        }}>
-          <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", background: "var(--paper)" }}>
-            <h3 style={{ margin: 0, fontSize: "16px" }}>{t("support.chat.conversations", "Conversations")}</h3>
-          </div>
-          <div style={{ flex: 1, overflowY: "auto" }}>
-             <ConversationItem 
-               active={true} 
-               onClick={() => {
-                 if (window.innerWidth < 768) {
-                   setShowSidebar(false);
-                 }
-               }}
-             />
-          </div>
-        </div>
-      )}
-
-      {/* Main Chat Area */}
-      <div style={{ 
-        flex: 1, 
-        display: "flex", 
-        flexDirection: "column",
-        background: "var(--pg)",
-        position: "relative"
-      }}>
+          background: "var(--pg)",
+          position: "relative",
+          minWidth: 0,
+        }}
+      >
         {/* Chat Header */}
-        <div style={{ 
-          padding: "var(--space-sm) var(--space-md)", 
-          background: "var(--paper)", 
-          borderBottom: "1px solid var(--border)",
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--space-sm)"
-        }}>
-          {window.innerWidth < 768 && (
-             <button 
-               onClick={() => { setShowSidebar(true); }}
-               style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer" }}
-             >
-               ☰
-             </button>
-          )}
+        <div
+          style={{
+            padding: "var(--space-sm) var(--space-md)",
+            background: "var(--paper)",
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "var(--space-sm)",
+          }}
+        >
           <div>
-            <h3 style={{ margin: 0, fontSize: "16px" }}>{t("support.chat.agent_name", "Support Agent")}</h3>
-            <span style={{ fontSize: "12px", color: "var(--in)", fontWeight: 600 }}>● Online</span>
+            <h3 style={{ margin: 0, fontSize: "16px" }}>
+              {t("support.chat.agent_name", "Support Agent")}
+            </h3>
+            <span style={{ fontSize: "12px", color: "var(--in)", fontWeight: 600 }}>
+              ● Online
+            </span>
           </div>
+          <button
+            type="button"
+            onClick={resetConversation}
+            style={{
+              border: "1px solid var(--border)",
+              background: "var(--paper)",
+              color: "var(--text)",
+              borderRadius: "var(--radius-md)",
+              padding: "6px 10px",
+              fontSize: "12px",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {t("support.chat.new_chat", "New Chat")}
+          </button>
         </div>
 
         {/* Message List */}
@@ -95,8 +93,14 @@ export const ChatPanel = memo(function ChatPanel() {
           }}
         >
           {messages.length === 0 && (
-            <div style={{ textAlign: "center", marginTop: "var(--space-2xl)", color: "var(--text-muted)" }}>
-               <p>{t("support.chat.welcome", "Hello! I am your CivicCompass Assistant. How can I help you today?")}</p>
+            <div style={{ marginTop: "var(--space-xl)" }}>
+              <LotusEmptyState
+                title={t("support.chat.welcome_title", "Support Assistant Ready")}
+                message={t(
+                  "support.chat.welcome",
+                  "Hello! I am your CivicCompass Assistant. How can I help you today?",
+                )}
+              />
             </div>
           )}
 
@@ -116,6 +120,40 @@ export const ChatPanel = memo(function ChatPanel() {
               {error}
             </div>
           )}
+
+          {pendingTicketDraft && (
+            <div
+              style={{
+                alignSelf: "flex-start",
+                background: "var(--paper)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-md)",
+                padding: "10px",
+                boxShadow: "var(--shadow-sm)",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  void raisePendingTicket();
+                }}
+                disabled={isRaisingTicket}
+                style={{
+                  border: "none",
+                  background: "var(--in)",
+                  color: "white",
+                  borderRadius: "var(--radius-md)",
+                  padding: "8px 14px",
+                  fontWeight: 600,
+                  cursor: isRaisingTicket ? "not-allowed" : "pointer",
+                }}
+              >
+                {isRaisingTicket
+                  ? t("support.create.submitting", "Raising...")
+                  : t("support.create.submit", "Raise Ticket")}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Input Area */}
@@ -124,38 +162,3 @@ export const ChatPanel = memo(function ChatPanel() {
     </div>
   );
 });
-
-function ConversationItem({ active, onClick }: { active: boolean; onClick: () => void }) {
-  return (
-    <div 
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-      style={{ 
-        padding: "var(--space-md)", 
-        background: active ? "rgba(42, 107, 184, 0.1)" : "transparent",
-        borderLeft: active ? "4px solid var(--in)" : "4px solid transparent",
-        cursor: "pointer",
-        transition: "var(--transition-base)"
-      }}
-    >
-      <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-        <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--in)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "20px" }}>
-          🤖
-        </div>
-        <div>
-          <div style={{ fontWeight: 600, fontSize: "14px" }}>Support Agent</div>
-          <div style={{ fontSize: "12px", color: "var(--text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "150px" }}>
-            Click to chat with AI
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

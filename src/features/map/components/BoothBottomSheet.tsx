@@ -4,14 +4,19 @@ import { getDistance } from "@/shared/utils/haversine";
 interface BoothBottomSheetProps {
   booth: PollingBooth;
   userCoords: { lat: number; lng: number } | null;
+  isLocationEnabled: boolean;
+  onGetDirections: () => void;
 }
 
-export function BoothBottomSheet({ booth, userCoords }: BoothBottomSheetProps) {
+export function BoothBottomSheet({
+  booth,
+  userCoords,
+  isLocationEnabled,
+  onGetDirections,
+}: BoothBottomSheetProps) {
   const distance = userCoords 
     ? getDistance(userCoords.lat, userCoords.lng, booth.coordinates.lat, booth.coordinates.lng)
     : null;
-
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${booth.coordinates.lat},${booth.coordinates.lng}`;
 
   return (
     <div
@@ -56,10 +61,9 @@ export function BoothBottomSheet({ booth, userCoords }: BoothBottomSheetProps) {
         <p style={{ font: "var(--text-small)", color: "var(--text-muted)", margin: "0 0 var(--space-sm) 0" }}>
           Source: ECI Voter Portal
         </p>
-        <a
-          href={directionsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={onGetDirections}
           style={{
             display: "flex",
             alignItems: "center",
@@ -67,14 +71,17 @@ export function BoothBottomSheet({ booth, userCoords }: BoothBottomSheetProps) {
             padding: "var(--space-md)",
             background: "var(--sf)",
             color: "white",
-            textDecoration: "none",
+            border: "none",
             borderRadius: "var(--radius-md)",
             font: "var(--text-h2)",
             boxShadow: "var(--shadow-sm)",
+            width: "100%",
+            opacity: 1,
+            cursor: "pointer",
           }}
         >
-          Get Directions
-        </a>
+          {userCoords || isLocationEnabled ? "Get Directions" : "Enable location to proceed"}
+        </button>
       </div>
     </div>
   );

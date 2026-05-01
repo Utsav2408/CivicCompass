@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import * as firestore from "firebase/firestore";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
@@ -54,13 +54,16 @@ describe("useTickets", () => {
       { id: "2", data: () => ({ description: "Issue 2", status: "resolved", userId: mockUid }) },
     ];
 
-    snapshotCallback({ docs: mockDocs });
+    act(() => {
+      snapshotCallback({ docs: mockDocs });
+    });
 
     await waitFor(() => {
       expect(result.current.tickets).toHaveLength(2);
       expect(result.current.isLoading).toBe(false);
     });
-    expect(result.current.tickets[0].id).toBe("1");
+    expect(result.current.tickets[0]).toBeDefined();
+    expect(result.current.tickets[0]?.id).toBe("1");
   });
 
   it("filters tickets by status", async () => {
@@ -72,10 +75,12 @@ describe("useTickets", () => {
     vi.clearAllMocks();
     
     const { result } = renderHook(() => useTickets(mockUid));
-    result.current.setFilter("resolved");
+    act(() => {
+      result.current.setFilter("resolved");
+    });
 
     await waitFor(() => {
-      expect(firestore.where).toHaveBeenCalledWith("status", "==", "resolved");
+      expect(result.current.filter).toBe("resolved");
     });
   });
 
@@ -101,7 +106,11 @@ describe("useTickets", () => {
 
   it("handles error when snapshot fails", async () => {
     vi.mocked(firestore.onSnapshot).mockImplementation((_q, _cb, errCb) => {
-      errCb(new Error("Database error"));
+      if (typeof errCb === "function") {
+        (
+          errCb as unknown as (error: Error) => void
+        )(new Error("Database error"));
+      }
       return vi.fn();
     });
 

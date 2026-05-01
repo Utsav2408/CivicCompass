@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/features/login/useAuth";
 import { AshokaCakraLoader } from "@/shared/components/AshokaCakraLoader";
+import { ScreenErrorState } from "@/shared/components/ScreenStates";
 import type { Ticket } from "@/shared/types/support";
 
 import { useTickets } from "../hooks/useTickets";
@@ -60,9 +61,7 @@ export const MyTicketsPanel = memo(function MyTicketsPanel() {
       </div>
 
       {error && (
-        <div style={{ padding: "var(--space-md)", background: "var(--lo-l)", color: "var(--lo-text)", borderRadius: "var(--radius-md)" }}>
-          {error}
-        </div>
+        <ScreenErrorState message={error} retryLabel={t("common.retry", "Retry")} />
       )}
 
       {/* Overlays */}

@@ -10,6 +10,11 @@ import { log } from "./_shared/logger.js";
 import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, x-uid, x-firebase-appcheck",
+};
 
 const TRUSTED_SOURCE_SYSTEM_PROMPT = `
 You are CivicCompass Bot, an impartial election information assistant for Indian voters.
@@ -31,8 +36,15 @@ RULES:
 `;
 
 export const geminiProxy = onRequest(
-  { cors: true, region: "us-east1" },
+  { cors: false, region: "us-east1", invoker: "public" },
   async (req, res) => {
+    res.set(CORS_HEADERS);
+
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
+    }
+
     if (req.method !== "POST") {
       res.status(405).json({ error: "Method not allowed" });
       return;

@@ -1,5 +1,7 @@
 import {
+  PhoneAuthProvider,
   RecaptchaVerifier,
+  linkWithCredential,
   signInWithPhoneNumber,
   type ConfirmationResult,
 } from "firebase/auth";
@@ -83,6 +85,20 @@ export function usePhoneOtp() {
     setError(null);
 
     try {
+      const currentUser = auth.currentUser;
+
+      // Keep the active signed-in session (Google/demo) stable by linking
+      // the verified phone number to it instead of switching auth users.
+      if (currentUser) {
+        const credential = PhoneAuthProvider.credential(
+          confirmationResult.verificationId,
+          otp,
+        );
+        await linkWithCredential(currentUser, credential);
+        return currentUser;
+      }
+
+      // Fallback when no active user exists.
       const userCredential = await confirmationResult.confirm(otp);
       return userCredential.user;
     } catch (err) {

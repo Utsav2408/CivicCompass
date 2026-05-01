@@ -6,6 +6,11 @@ import { log } from "./_shared/logger.js";
 import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, x-uid, x-firebase-appcheck",
+};
 
 /**
  * Looks up voter constituency and booth from ECI Voter Portal.
@@ -13,7 +18,13 @@ const db = getFirestore();
  * Result cached in Firestore permanently.
  */
 export const eciVoterLookupHandler = async (req: any, res: any) => {
-  // App Check verified by Firebase automatically
+  res.set(CORS_HEADERS);
+
+  // Browser preflight support
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
 
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
@@ -109,6 +120,6 @@ export const eciVoterLookupHandler = async (req: any, res: any) => {
 };
 
 export const eciVoterLookup = onRequest(
-  { cors: true, region: "us-east1" },
+  { cors: false, region: "us-east1", invoker: "public" },
   eciVoterLookupHandler as any,
 );

@@ -14,7 +14,8 @@ export function OfflineBanner() {
 
   return (
     <div
-      role="status"
+      role="alert"
+      aria-live="assertive"
       style={{
         background: "var(--lo-l)",
         color: "var(--lo)",
@@ -35,6 +36,24 @@ export function OfflineBanner() {
     >
       <span style={{ fontSize: "14px" }}>⚠️</span>
       <span>{t("common.offline_notice")}</span>
+      <button
+        type="button"
+        onClick={() => {
+          window.location.reload();
+        }}
+        style={{
+          border: "none",
+          borderRadius: "var(--radius-md)",
+          background: "var(--sf)",
+          color: "#fff",
+          padding: "4px 10px",
+          fontSize: "12px",
+          fontWeight: 600,
+          cursor: "pointer",
+        }}
+      >
+        {t("common.retry", "Retry")}
+      </button>
 
       <style>
         {`

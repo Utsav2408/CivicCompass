@@ -1,4 +1,12 @@
-export type TicketStatus = "draft" | "open" | "resolved" | "closed";
+export type TicketStatus =
+  | "draft"
+  | "open"
+  | "resolved"
+  | "closed"
+  | "Draft"
+  | "Open"
+  | "Resolved"
+  | "Closed";
 
 export type TicketCategory = "voter-roll" | "booth" | "id-card" | "voter-card" | "infrastructure" | "safety" | "general" | "other";
 

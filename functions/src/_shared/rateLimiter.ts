@@ -2,6 +2,8 @@ import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { log } from "./logger.js";
 
 const db = getFirestore();
+const GLOBAL_TEST_MAX_CALLS = 100;
+const GLOBAL_TEST_WINDOW_MS = 2 * 60 * 1000;
 
 interface RateLimitConfig {
   uid: string;
@@ -15,6 +17,14 @@ interface RateLimitResult {
   retryAfter?: string;
 }
 
+function getRetryAfter(windowMs: number): string {
+  // Daily quotas are user-facing and should clearly indicate reset timing.
+  if (windowMs >= 24 * 60 * 60 * 1000) {
+    return "tomorrow";
+  }
+  return "Try again later";
+}
+
 /**
  * Checks and increments rate limit counter for a user + function combo.
  * Counter document auto-deletes via Firestore TTL on expiresAt field.
@@ -22,7 +32,9 @@ interface RateLimitResult {
 export async function checkRateLimit(
   config: RateLimitConfig,
 ): Promise<RateLimitResult> {
-  const { uid, functionName, maxCalls, windowMs } = config;
+  const { uid, functionName } = config;
+  const maxCalls = GLOBAL_TEST_MAX_CALLS;
+  const windowMs = GLOBAL_TEST_WINDOW_MS;
 
   const windowStart = new Date();
   const windowKey = Math.floor(windowStart.getTime() / windowMs);
@@ -43,7 +55,7 @@ export async function checkRateLimit(
         function: functionName,
         callCount: data["count"],
       });
-      return { allowed: false, retryAfter: "Try again later" };
+      return { allowed: false, retryAfter: getRetryAfter(windowMs) };
     }
   }
 

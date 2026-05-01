@@ -1,4 +1,4 @@
-import { collection, getDocs, limit, query, where } from "firebase/firestore";
+import { collection, getDocs, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import { db } from "@/lib/firebase";
@@ -7,6 +7,30 @@ import type { PollingBooth } from "@shared/types/map";
 export function useWardSearch(searchQuery: string) {
   const [results, setResults] = useState<PollingBooth[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [allBooths, setAllBooths] = useState<PollingBooth[] | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    void (async () => {
+      try {
+        const snapshot = await getDocs(query(collection(db, "pollingBooths")));
+        if (!isMounted) return;
+        const docs: PollingBooth[] = [];
+        snapshot.forEach((doc) => {
+          docs.push({ id: doc.id, ...doc.data() } as PollingBooth);
+        });
+        setAllBooths(docs);
+      } catch {
+        if (isMounted) {
+          setAllBooths([]);
+        }
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -23,38 +47,38 @@ export function useWardSearch(searchQuery: string) {
     setIsSearching(true);
 
     const timeoutId = setTimeout(() => {
-      void (async () => {
-        try {
-          const q = query(
-            collection(db, "pollingBooths"),
-            where("wardName", ">=", searchQuery),
-            where("wardName", "<=", searchQuery + "\uf8ff"),
-            limit(10),
-          );
-
-          const querySnapshot = await getDocs(q);
-          if (isMounted) {
-            const docs: PollingBooth[] = [];
-            querySnapshot.forEach((doc) => {
-              docs.push({ id: doc.id, ...doc.data() } as PollingBooth);
-            });
-            setResults(docs);
-          }
-        } catch {
-          // Ignore errors
-        } finally {
-          if (isMounted) {
-            setIsSearching(false);
-          }
+      try {
+        const normalizedQuery = searchQuery.trim().toLowerCase();
+        const source = allBooths ?? [];
+        const filtered = source
+          .filter((booth) => {
+            const fields = [
+              booth.wardName,
+              booth.name,
+              booth.address,
+              booth.constituency,
+              booth.city,
+            ]
+              .filter(Boolean)
+              .map((value) => value.toLowerCase());
+            return fields.some((field) => field.includes(normalizedQuery));
+          })
+          .slice(0, 12);
+        if (isMounted) {
+          setResults(filtered);
         }
-      })();
-    }, 300);
+      } finally {
+        if (isMounted) {
+          setIsSearching(false);
+        }
+      }
+    }, 250);
 
     return () => {
       isMounted = false;
       clearTimeout(timeoutId);
     };
-  }, [searchQuery]);
+  }, [searchQuery, allBooths]);
 
   return { results, isSearching };
 }

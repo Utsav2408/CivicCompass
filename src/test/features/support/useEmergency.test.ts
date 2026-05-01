@@ -18,14 +18,26 @@ describe("useEmergency", () => {
     vi.mocked(useProfile).mockReturnValue({ 
       profile: { 
         uid: "user-123",
-        fullName: "Test User",
-        email: "test@example.com",
-        pollingBooth: { id: "booth-1", name: "Booth 1", city: "New Delhi", address: "Address 1", coordinates: { latitude: 0, longitude: 0 } },
-        isProfileComplete: true
+        name: "Test User",
+        pollingBooth: {
+          id: "booth-1",
+          name: "Booth 1",
+          city: "New Delhi",
+          address: "Address 1",
+          coordinates: { lat: 0, lng: 0 },
+          wardName: "Ward 1",
+          wardCode: "W01",
+          constituency: "New Delhi",
+          boothNumber: "101",
+        },
+        language: "en",
+        electionInterest: ["lok_sabha"],
+        isComplete: true,
+        createdAt: 0,
+        updatedAt: 0,
       },
       isLoading: false,
       error: null,
-      refreshProfile: async () => {}
     });
     vi.mocked(useUserLocation).mockReturnValue({ 
       coords: { lat: 28.6139, lng: 77.209 },
@@ -34,7 +46,16 @@ describe("useEmergency", () => {
     });
     vi.mocked(usePoliceStations).mockReturnValue({ 
       stations: [
-        { name: "Connaught Place Police Station", latitude: 28.632, longitude: 77.218, id: "station-1", address: "CP", city: "New Delhi", type: "police" }
+        {
+          name: "Connaught Place Police Station",
+          latitude: 28.632,
+          longitude: 77.218,
+          id: "station-1",
+          address: "CP",
+          city: "New Delhi",
+          phone: "100",
+          state: "Delhi",
+        }
       ],
       isLoading: false,
       error: null

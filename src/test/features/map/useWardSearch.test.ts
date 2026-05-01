@@ -22,14 +22,20 @@ describe("useWardSearch", () => {
     vi.clearAllMocks();
   });
 
-  it("should not perform search on empty query", () => {
+  it("prefetches booths and keeps empty results for empty query", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    vi.mocked(getDocs).mockResolvedValue({ forEach: vi.fn() } as any);
     const { result } = renderHook(() => useWardSearch(""));
+    await waitFor(() => {
+      expect(getDocs).toHaveBeenCalledTimes(1);
+    });
+    await waitFor(() => {
+      expect(result.current.isSearching).toBe(false);
+    });
     expect(result.current.results).toEqual([]);
-    expect(result.current.isSearching).toBe(false);
-    expect(getDocs).not.toHaveBeenCalled();
   });
 
-  it("should debounce search (real timers)", async () => {
+  it("debounces search and clears searching state", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     vi.mocked(getDocs).mockResolvedValue({ forEach: vi.fn() } as any);
 
@@ -37,8 +43,9 @@ describe("useWardSearch", () => {
 
     expect(result.current.isSearching).toBe(true);
 
-    // Should call getDocs after 300ms
-    await waitFor(() => { expect(getDocs).toHaveBeenCalled(); }, { timeout: 2000 });
+    await waitFor(() => {
+      expect(result.current.isSearching).toBe(false);
+    }, { timeout: 2000 });
   });
 
   it("should handle Firestore results correctly", async () => {

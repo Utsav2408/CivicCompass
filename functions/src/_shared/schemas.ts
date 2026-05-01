@@ -15,6 +15,7 @@ export const TicketSchema = z.object({
 export const GeminiRequestSchema = z.object({
   prompt: z.string().min(1).max(2000),
   sessionId: z.string().optional(),
+  chatSummary: z.string().max(4000).optional(),
 });
 
 export const CandidateFetchSchema = z.object({

@@ -8,6 +8,7 @@ import { AshokaCakraLoader } from "@/shared/components/AshokaCakraLoader";
 import { BottomNav } from "@/shared/components/BottomNav";
 import { LotusEmptyState } from "@/shared/components/LotusMotif";
 import { ScreenErrorBoundary } from "@/shared/components/ScreenErrorBoundary";
+import { ScreenErrorState } from "@/shared/components/ScreenStates";
 import type { ElectionPhase, ElectionType } from "@/shared/types/election";
 
 import { AIChatDrawer } from "./components/AIChatDrawer";
@@ -156,35 +157,10 @@ export function ProcessPage() {
               <AshokaCakraLoader size={64} color="var(--in)" />
             </div>
           ) : error ? (
-            <div style={{ textAlign: "center", padding: "var(--space-xl)" }}>
-              <h2 style={{ font: "var(--text-h2)", color: "var(--lo-text)" }}>
-                {t("process.error.title")}
-              </h2>
-              <p
-                style={{
-                  font: "var(--text-body)",
-                  color: "var(--text-muted)",
-                  marginBottom: "var(--space-md)",
-                }}
-              >
-                {error}
-              </p>
-              <button
-                onClick={() => {
-                  window.location.reload();
-                }}
-                style={{
-                  padding: "var(--space-sm) var(--space-md)",
-                  background: "var(--sf)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "var(--radius-md)",
-                  cursor: "pointer",
-                }}
-              >
-                {t("process.error.retry")}
-              </button>
-            </div>
+            <ScreenErrorState
+              message={error}
+              retryLabel={t("process.error.retry")}
+            />
           ) : steps.length === 0 ? (
             <LotusEmptyState
               title={t("process.empty.title")}

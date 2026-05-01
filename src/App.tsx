@@ -14,18 +14,22 @@
  */
 
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
-import { ProtectedRoute } from "@/features/login/ProtectedRoute";
 import { AuthProvider } from "@/features/login/useAuth";
+import { LoginPage } from "@features/login/LoginPage";
 import { PageLoader } from "@shared/components/AshokaCakraLoader";
 import { OfflineBanner } from "@shared/components/OfflineBanner";
+import { RouteTransitionLoader } from "@shared/components/RouteTransitionLoader";
 
-// Lazy-loaded route chunks — each screen is a separate JS bundle.
-// Only the LoginPage loads eagerly since it's the entry point.
-const LoginPage = lazy(() =>
-  import("@features/login/LoginPage").then((m) => ({ default: m.LoginPage })),
-);
+// Lazy-loaded route chunks — each authenticated screen is a separate JS bundle.
+// LoginPage is imported eagerly because it is the first paint target.
 
 const HomePage = lazy(() =>
   import("@features/home/HomePage").then((m) => ({ default: m.HomePage })),
@@ -61,38 +65,65 @@ const SupportPage = lazy(() =>
   })),
 );
 
-export function App() {
+const ProtectedRoute = lazy(() =>
+  import("@features/login/ProtectedRoute").then((m) => ({
+    default: m.ProtectedRoute,
+  })),
+);
+
+function AuthWrappedLoginPage() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <OfflineBanner />
-          <Routes>
-            {/* Root — redirect to login */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
-
-            {/* Public route */}
-            <Route path="/login" element={<LoginPage />} />
-
-            {/* Protected routes — auth checked once in ProtectedRoute */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/home" element={<HomePage />} />
-              <Route
-                path="/personalization"
-                element={<PersonalizationPage />}
-              />
-              <Route path="/process" element={<ProcessPage />} />
-              <Route path="/ward" element={<WardPage />} />
-              <Route path="/map" element={<MapPage />} />
-              <Route path="/support" element={<SupportPage />} />
-              {/* Screen 6 added here as each sprint completes */}
-            </Route>
-
-            {/* Catch-all — redirect unknown paths to login */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <LoginPage />
     </AuthProvider>
+  );
+}
+
+function AuthWrappedProtectedRoute() {
+  return (
+    <AuthProvider>
+      <ProtectedRoute />
+    </AuthProvider>
+  );
+}
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+}
+
+function AppRoutes() {
+  const location = useLocation();
+  const isLoginRoute = location.pathname === "/login";
+
+  return (
+    <Suspense fallback={<PageLoader />}>
+      {!isLoginRoute && <OfflineBanner />}
+      {!isLoginRoute && <RouteTransitionLoader />}
+      <Routes>
+        {/* Root — redirect to login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Public route */}
+        <Route path="/login" element={<AuthWrappedLoginPage />} />
+
+        {/* Protected routes — auth checked once in ProtectedRoute */}
+        <Route element={<AuthWrappedProtectedRoute />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/personalization" element={<PersonalizationPage />} />
+          <Route path="/process" element={<ProcessPage />} />
+          <Route path="/ward" element={<WardPage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/support" element={<SupportPage />} />
+          {/* Screen 6 added here as each sprint completes */}
+        </Route>
+
+        {/* Catch-all — redirect unknown paths to login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Suspense>
   );
 }

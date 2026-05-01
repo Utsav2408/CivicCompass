@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 
 import { usePoliceStations } from "@/features/map/hooks/usePoliceStations";
 import { useUserLocation } from "@/features/map/hooks/useUserLocation";
@@ -9,8 +9,18 @@ import { getDistance } from "@/shared/utils/haversine";
  * useEmergency — manages the SOS emergency state and finds the nearest police station.
  * Estimates ETA based on a default speed of 40 km/h.
  */
+let emergencyActive = false;
+const emergencyListeners = new Set<(value: boolean) => void>();
+
+function setEmergencyActive(nextValue: boolean) {
+  emergencyActive = nextValue;
+  emergencyListeners.forEach((listener) => {
+    listener(nextValue);
+  });
+}
+
 export function useEmergency() {
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(emergencyActive);
   const { profile } = useProfile();
   const { coords } = useUserLocation();
   
@@ -20,12 +30,22 @@ export function useEmergency() {
   
   const { stations } = usePoliceStations(city, coords ?? undefined);
 
+  useEffect(() => {
+    const listener = (nextValue: boolean) => {
+      setIsActive(nextValue);
+    };
+    emergencyListeners.add(listener);
+    return () => {
+      emergencyListeners.delete(listener);
+    };
+  }, []);
+
   const activate = useCallback(() => {
-    setIsActive(true);
+    setEmergencyActive(true);
   }, []);
 
   const cancel = useCallback(() => {
-    setIsActive(false);
+    setEmergencyActive(false);
   }, []);
 
   const nearestStation = useMemo(() => {

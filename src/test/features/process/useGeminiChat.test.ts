@@ -1,20 +1,8 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import * as authMock from "@/features/login/useAuth";
+import { useAuth } from "@/features/login/useAuth";
 import { useGeminiChat } from "@/features/process/hooks/useGeminiChat";
-import { server } from "@/mocks/server";
-
-// Proxy URL used in the hook
-const PROXY_URL =
-  "https://us-east1-civic-compass.cloudfunctions.net/geminiProxy";
 
 // Mock Firebase App Check — its type resolution causes unsafe-call lint errors but is logically correct
 vi.mock("firebase/app-check", () => ({
@@ -28,23 +16,21 @@ vi.mock("@/features/login/useAuth", () => ({
   useAuth: vi.fn(() => ({ user: { uid: "test-uid" } })),
 }));
 
-
-
 describe("useGeminiChat", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("send() appends a user message then an assistant message to messages array", async () => {
-    server.use(
-      http.post(PROXY_URL, () =>
-        HttpResponse.json({
-          response: "Nomination starts after ECI schedule.",
-          source: "eci.gov.in",
-          fromCache: false,
-        }),
-      ),
-    );
+    vi.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        response: "Nomination starts after ECI schedule.",
+        source: "eci.gov.in",
+        fromCache: false,
+      }),
+    } as Response);
 
     const { result } = renderHook(() => useGeminiChat());
 
@@ -69,16 +55,19 @@ describe("useGeminiChat", () => {
       resolveResponse = resolve;
     });
 
-    server.use(
-      http.post(PROXY_URL, () =>
-        pendingPromise.then(() =>
-          HttpResponse.json({
-            response: "Response text.",
-            source: "eci.gov.in",
-            fromCache: false,
-          }),
+    vi.spyOn(global, "fetch").mockImplementation(
+      () =>
+        pendingPromise.then(
+          () =>
+            ({
+              ok: true,
+              json: () => Promise.resolve({
+                response: "Response text.",
+                source: "eci.gov.in",
+                fromCache: false,
+              }),
+            }) as Response,
         ),
-      ),
     );
 
     const { result } = renderHook(() => useGeminiChat());
@@ -99,15 +88,14 @@ describe("useGeminiChat", () => {
   });
 
   it("response includes a source field extracted from the fixture", async () => {
-    server.use(
-      http.post(PROXY_URL, () =>
-        HttpResponse.json({
-          response: "ECI data response.",
-          source: "eci.gov.in",
-          fromCache: false,
-        }),
-      ),
-    );
+    vi.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        response: "ECI data response.",
+        source: "eci.gov.in",
+        fromCache: false,
+      }),
+    } as Response);
 
     const { result } = renderHook(() => useGeminiChat());
 
@@ -120,7 +108,7 @@ describe("useGeminiChat", () => {
   });
 
   it("network error sets error and clears isLoading", async () => {
-    server.use(http.post(PROXY_URL, () => HttpResponse.error()));
+    vi.spyOn(global, "fetch").mockRejectedValue(new Error("Network Error"));
 
     const { result } = renderHook(() => useGeminiChat());
 
@@ -135,20 +123,16 @@ describe("useGeminiChat", () => {
   });
 
   it("returns early without fetch when user is not authenticated", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-    vi.mocked(authMock.useAuth).mockReturnValue({ user: null } as any);
+    vi.mocked(useAuth).mockReturnValue({ user: null } as never);
 
     const fetchSpy = vi.spyOn(global, "fetch");
 
-    // Note: The hook is cached so we just verify fetch is not called for null user
     const { result } = renderHook(() => useGeminiChat());
 
     await act(async () => {
       await result.current.send("a question");
     });
 
-    // With user = null (from cache), no messages should be added and no fetch should occur
-    // (This is a best-effort test since module caching complicates user=null scenario)
     expect(fetchSpy).not.toHaveBeenCalled();
 
     fetchSpy.mockRestore();

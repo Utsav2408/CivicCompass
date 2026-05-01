@@ -8,7 +8,7 @@ interface TicketCardProps {
 
 export const TicketCard = memo(function TicketCard({ ticket }: TicketCardProps) {
   const getStatusStyles = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "open":
         return { bg: "var(--in-l)", color: "var(--in)", label: "Open" };
       case "resolved":

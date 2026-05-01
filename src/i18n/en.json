@@ -4,6 +4,7 @@
     "tagline": "Your Personalized Election Companion",
     "tagline_hi_script": "आपका व्यक्तिगत चुनाव साथी",
     "cta": "Sign in with Google",
+    "demo_cta": "Continue as Demo User",
     "cta_loading": "Signing in…",
     "error_generic": "Sign-in failed. Please try again.",
     "footer_tagline": "Your vote. Your voice.",
@@ -51,7 +52,11 @@
     "back": "Back",
     "next": "Next",
     "offline_notice": "You are offline. Some features limited.",
-    "offline": "Offline"
+    "offline": "Offline",
+    "close": "Close",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "steps": "Steps"
   },
   "nav": {
     "home": "Home",
@@ -135,7 +140,7 @@
       "empty_title": "Ask me anything about the election process!",
       "empty_message": "Grounding responses in official ECI data.",
       "disclaimer": "AI responses are for guidance only. Refer to official ECI sources for final confirmation.",
-      "offline": "Internet required for AI responses. Process steps are available below.",
+      "offline": "Internet required for AI assistant. Process steps are available below.",
       "thinking": "Thinking..."
     }
   },
@@ -177,7 +182,12 @@
     "empty": "No data available for this constituency",
     "error": {
       "retry": "Retry"
-    }
+    },
+    "complete_profile": "Update Profile",
+    "empty_title": "No ward data yet",
+    "profile_required": "Update profile to access Ward data.",
+    "profile_required_desc": "We need your constituency from personalization to show local ward insights.",
+    "profile_required_title": "Complete profile to continue"
   },
   "support": {
     "tabs": {
@@ -189,7 +199,7 @@
       "alerting": "Alerting Authorities...",
       "alerted": "Police Alerted",
       "connecting": "Connecting to the nearest control room...",
-      "eta_msg": "Assistance arriving in ~{{eta}} minutes.",
+      "eta_msg": "Arriving in approx. {{eta}} minutes",
       "disclaimer": "IMPORTANT: For life-threatening emergencies, please call 100 directly.",
       "aria": {
         "cancel": "Cancel emergency alert",
@@ -205,7 +215,10 @@
       "voice_input": "Voice Input",
       "placeholder": "Type your issue here...",
       "offline": "Internet required for AI assistant. Core info available below.",
-      "thinking": "Agent is typing..."
+      "thinking": "Agent is typing...",
+      "new_chat": "New Chat",
+      "source": "Source",
+      "welcome_title": "Support Assistant Ready"
     },
     "tickets": {
       "title": "Track Issues",
@@ -216,7 +229,9 @@
         "open": "Open",
         "resolved": "Resolved",
         "closed": "Closed"
-      }
+      },
+      "empty_title": "No Tickets Found",
+      "empty_message": "Create a ticket to track updates on your issue."
     },
     "create": {
       "title": "Report an Issue",
@@ -230,7 +245,15 @@
         "invalid_type": "Only images and videos are allowed",
         "upload_failed": "Failed to upload media",
         "click_to_upload": "Click to upload image or video"
-      }
+      },
+      "category_label": "Category",
+      "submitting": "Raising..."
+    },
+    "media": {
+      "too_large": "File size must be less than 10MB",
+      "invalid_type": "Only images and videos are allowed",
+      "upload_failed": "Failed to upload media",
+      "click_to_upload": "Click to upload image or video"
     }
   }
 }

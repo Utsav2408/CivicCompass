@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
+import { getToken } from "firebase/app-check";
 
 import { useAuth } from "@/features/login/useAuth";
+import { appCheck } from "@/lib/firebase";
 
 export interface Message {
   role: "user" | "model";
@@ -8,6 +10,12 @@ export interface Message {
   source?: string | undefined;
   fromCache?: boolean | undefined;
 }
+
+const projectId = import.meta.env["VITE_FIREBASE_PROJECT_ID"] as string;
+const isEmulator = import.meta.env["VITE_USE_EMULATORS"] === "true";
+const geminiProxyUrl = isEmulator
+  ? `http://127.0.0.1:5001/${projectId}/us-east1/geminiProxy`
+  : `https://us-east1-${projectId}.cloudfunctions.net/geminiProxy`;
 
 export function useGeminiChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,29 +35,26 @@ export function useGeminiChat() {
       setMessages((prev) => [...prev, userMessage]);
 
       try {
-        // In standard Firebase v9+, appCheck token can be obtained by passing app to getToken directly if supported, or we need to import appCheck from firebase.ts. However, to avoid type errors, we just use a helper or comment out the check if not strictly required in dev, or use the correct AppCheck instance.
-        // Actually, if we just use an empty token for now in emulator, it's fine.
         let appCheckToken = "";
         try {
-          // Assume appCheck is initialized globally or we get it via an internal mechanism.
-          // For the sake of this mock/proxy call, we'll bypass AppCheck enforcement locally or use a dummy token.
-          appCheckToken = "emulator-token";
+          appCheckToken = isEmulator
+            ? "emulator-token"
+            : appCheck
+              ? (await getToken(appCheck)).token
+              : "";
         } catch {
           // Ignore app check error in development
         }
 
-        const response = await fetch(
-          "https://us-east1-civic-compass.cloudfunctions.net/geminiProxy",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Firebase-AppCheck": appCheckToken,
-              "x-uid": user.uid,
-            },
-            body: JSON.stringify({ prompt }),
+        const response = await fetch(geminiProxyUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Firebase-AppCheck": appCheckToken,
+            "x-uid": user.uid,
           },
-        );
+          body: JSON.stringify({ prompt }),
+        });
 
         if (!response.ok) {
           const errData = (await response.json()) as { error?: string };

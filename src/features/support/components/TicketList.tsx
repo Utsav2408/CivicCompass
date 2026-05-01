@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
 
 import { LotusEmptyState } from "@/shared/components/LotusMotif";
 import type { Ticket, TicketStatus } from "@/shared/types/support";
@@ -19,33 +19,14 @@ export const TicketList = memo(function TicketList({
   activeFilter, 
   onFilterChange 
 }: TicketListProps) {
+  const { t } = useTranslation();
   const filteredTickets = useMemo(() => {
     if (activeFilter === "all") return tickets;
-    return tickets.filter(t => t.status === activeFilter);
-  }, [tickets, activeFilter]);
-
-  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-    const ticket = filteredTickets[index];
-    const handleClick = () => { onTicketClick(ticket); };
-    
-    return (
-      <div style={{ ...style, paddingBottom: "12px" }}>
-        <div 
-          role="button"
-          tabIndex={0}
-          onClick={handleClick}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleClick();
-            }
-          }}
-        >
-          <TicketCard ticket={ticket} />
-        </div>
-      </div>
+    return tickets.filter(
+      (ticket) =>
+        ticket.status.toLowerCase() === activeFilter.toLowerCase(),
     );
-  };
+  }, [tickets, activeFilter]);
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
@@ -61,7 +42,7 @@ export const TicketList = memo(function TicketList({
         ))}
       </div>
 
-      {/* Grid or Virtualized List */}
+      {/* Ticket list */}
       <div style={{ flex: 1, minHeight: 0 }}>
         {filteredTickets.length === 0 ? (
           <LotusEmptyState
@@ -71,15 +52,6 @@ export const TicketList = memo(function TicketList({
               "Try changing the filter or create a new ticket if you have an issue.",
             )}
           />
-        ) : filteredTickets.length > 20 ? (
-          <List
-            height={600} // This should ideally be dynamic
-            itemCount={filteredTickets.length}
-            itemSize={160} // Height of TicketCard + gap
-            width="100%"
-          >
-            {Row}
-          </List>
         ) : (
           <div
             style={{

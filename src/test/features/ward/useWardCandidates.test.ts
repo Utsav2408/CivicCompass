@@ -28,7 +28,9 @@ describe("useWardCandidates", () => {
       isLoading: false,
       error: null,
       signIn: vi.fn(),
+      signInDemo: vi.fn(),
       signOut: vi.fn(),
+      canUseDemoLogin: false,
     });
 
     vi.mocked(firestore.getDoc).mockResolvedValue({

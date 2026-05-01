@@ -9,6 +9,11 @@ import { log } from "./_shared/logger.js";
 import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, x-uid, x-firebase-appcheck",
+};
 
 const SUPPORT_SYSTEM_PROMPT = `
 You are the CivicCompass Support Agent, helping Indian voters with their election-related issues.
@@ -21,9 +26,43 @@ RULES:
 5. If a user asks about an existing issue, use 'get_ticket_status'.
 6. If asked about election rules or processes, refer to eci.gov.in but stay focused on support.
 7. Never express political opinions or partisan statements.
+8. If the provided chat summary clearly indicates the user wants to raise a ticket, call 'create_ticket_from_summary'.
 `;
 
+function inferCategoryFromText(text: string): "voter-roll" | "booth" | "id-card" | "other" {
+  const lowerText = text.toLowerCase();
+  if (
+    lowerText.includes("voter roll") ||
+    lowerText.includes("name missing") ||
+    lowerText.includes("name is missing")
+  ) {
+    return "voter-roll";
+  }
+  if (
+    lowerText.includes("polling booth") ||
+    lowerText.includes("booth") ||
+    lowerText.includes("polling station")
+  ) {
+    return "booth";
+  }
+  if (
+    lowerText.includes("id card") ||
+    lowerText.includes("voter id") ||
+    lowerText.includes("epic")
+  ) {
+    return "id-card";
+  }
+  return "other";
+}
+
 export const supportAgentHandler = async (req: any, res: any) => {
+    res.set(CORS_HEADERS);
+
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
+    }
+
     if (req.method !== "POST") {
       res.status(405).json({ error: "Method not allowed" });
       return;
@@ -59,7 +98,7 @@ export const supportAgentHandler = async (req: any, res: any) => {
       return;
     }
 
-    const { prompt } = parsed.data;
+    const { prompt, chatSummary } = parsed.data;
 
     try {
       const apiKey = await getSecret("gemini-api-key");
@@ -96,6 +135,40 @@ export const supportAgentHandler = async (req: any, res: any) => {
         },
       );
 
+      const createTicketFromSummary = ai.defineTool(
+        {
+          name: "create_ticket_from_summary",
+          description:
+            "Creates a support ticket from chat summary when user intent to raise ticket is clear.",
+          inputSchema: z.object({
+            chatSummary: z.string().describe("Brief summary of the support conversation"),
+            category: z
+              .enum(["voter-roll", "booth", "id-card", "other"])
+              .optional()
+              .describe("Optional category when known from context"),
+          }),
+          outputSchema: z.object({
+            ticketId: z.string(),
+            status: z.string(),
+            category: z.enum(["voter-roll", "booth", "id-card", "other"]),
+          }),
+        },
+        async (input) => {
+          const description = input.chatSummary.trim();
+          const category = input.category ?? inferCategoryFromText(description);
+          const ticketData = {
+            description,
+            category,
+            userId: uid,
+            status: "open",
+            createdAt: Timestamp.now(),
+          };
+          const docRef = await db.collection("tickets").add(ticketData);
+          log.info("ticket_created_from_summary", { ticketId: docRef.id, uid, category });
+          return { ticketId: docRef.id, status: "open", category };
+        },
+      );
+
       const getTicketStatus = ai.defineTool(
         {
           name: "get_ticket_status",
@@ -128,11 +201,15 @@ export const supportAgentHandler = async (req: any, res: any) => {
         },
       );
 
+      const promptWithContext = chatSummary
+        ? `Latest user message:\n${prompt}\n\nChat summary:\n${chatSummary}`
+        : prompt;
+
       const { text } = await ai.generate({
         model: googleAI.model("gemini-2.5-flash"),
         system: SUPPORT_SYSTEM_PROMPT,
-        prompt,
-        tools: [createTicket, getTicketStatus],
+        prompt: promptWithContext,
+        tools: [createTicket, createTicketFromSummary, getTicketStatus],
       });
 
       res.status(200).json({ response: text });
@@ -146,6 +223,6 @@ export const supportAgentHandler = async (req: any, res: any) => {
 };
 
 export const supportAgent = onRequest(
-  { cors: true, region: "us-east1" },
+  { cors: false, region: "us-east1", invoker: "public" },
   supportAgentHandler
 );

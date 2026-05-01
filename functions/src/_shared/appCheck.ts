@@ -10,6 +10,12 @@ export async function verifyAppCheckToken(
   req: Request,
   res: Response,
 ): Promise<boolean> {
+  // Local emulator requests do not include App Check tokens by default.
+  // Keep strict validation in deployed environments.
+  if (process.env["FUNCTIONS_EMULATOR"] === "true") {
+    return true;
+  }
+
   const appCheckToken = req.headers["x-firebase-appcheck"] as string;
 
   if (!appCheckToken) {

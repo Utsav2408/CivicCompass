@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { AshokaCakraLoader } from "@/shared/components/AshokaCakraLoader";
 import { BottomNav } from "@/shared/components/BottomNav";
 import { LotusMotif } from "@/shared/components/LotusMotif";
 import { ScreenErrorBoundary } from "@/shared/components/ScreenErrorBoundary";
+import {
+  ScreenEmptyState,
+  ScreenErrorState,
+  ScreenLoadingState,
+} from "@/shared/components/ScreenStates";
 import { useProfile } from "@/shared/hooks/useProfile";
 import type { ElectionType } from "@/shared/types/ward";
 
@@ -18,6 +24,7 @@ import { useWardCandidates } from "./hooks/useWardCandidates";
 
 export function WardPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { profile } = useProfile();
 
   // Using constituency from profile, fallback to null
@@ -42,6 +49,20 @@ export function WardPage() {
     isLoading: isLoadingWinners,
     error: winnersError,
   } = useHistoricalWinners(constituencyId);
+
+  const hasAnyError = [partyError, winnersError, candidatesError].some(
+    (errorMessage) => errorMessage != null,
+  );
+  const firstError =
+    partyError ?? winnersError ?? candidatesError ?? "Failed to load ward data.";
+  const isAnyLoading = isLoadingParties || isLoadingCandidates || isLoadingWinners;
+  const isAllEmpty =
+    Boolean(constituencyId) &&
+    !isAnyLoading &&
+    !hasAnyError &&
+    parties.length === 0 &&
+    winners.length === 0 &&
+    candidates.length === 0;
 
   return (
     <ScreenErrorBoundary>
@@ -91,6 +112,76 @@ export function WardPage() {
             gap: "var(--space-xl)",
           }}
         >
+          {isAnyLoading && (
+            <ScreenLoadingState label={t("common.loading", "Loading...")} />
+          )}
+
+          {hasAnyError && (
+            <ScreenErrorState
+              message={firstError}
+              retryLabel={t("ward.error.retry", "Retry")}
+            />
+          )}
+
+          {isAllEmpty && (
+            <ScreenEmptyState
+              title={t("ward.empty_title", "No ward data yet")}
+              message={t("ward.empty", "No data available for this constituency")}
+            />
+          )}
+
+          {/* Party Performance Section */}
+          {!constituencyId && (
+            <section
+              style={{
+                background: "var(--paper)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-lg)",
+                padding: "var(--space-lg)",
+                textAlign: "center",
+              }}
+            >
+              <h2
+                style={{
+                  font: "var(--text-h2)",
+                  color: "var(--text-warm)",
+                  marginBottom: "var(--space-sm)",
+                }}
+              >
+                {t("ward.profile_required_title", "Complete profile to continue")}
+              </h2>
+              <p
+                style={{
+                  font: "var(--text-body)",
+                  color: "var(--text-muted)",
+                  marginBottom: "var(--space-md)",
+                }}
+              >
+                {t(
+                  "ward.profile_required_desc",
+                  "Please update your constituency in Personalization to view Ward insights.",
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  void navigate("/personalization");
+                }}
+                style={{
+                  background: "var(--sf)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "var(--radius-md)",
+                  padding: "10px 14px",
+                  cursor: "pointer",
+                  font: "var(--text-h2)",
+                }}
+              >
+                {t("ward.complete_profile", "Update Profile")}
+              </button>
+            </section>
+          )}
+
           {/* Party Performance Section */}
           <section>
             <h2
@@ -102,7 +193,11 @@ export function WardPage() {
             >
               {t("ward.section.performance", "Party Performance")}
             </h2>
-            {isLoadingParties ? (
+            {!constituencyId ? (
+              <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
+                {t("ward.profile_required", "Update profile to access Ward data.")}
+              </p>
+            ) : isLoadingParties ? (
               <div
                 style={{
                   display: "flex",
@@ -113,33 +208,10 @@ export function WardPage() {
                 <AshokaCakraLoader size={48} color="var(--sf)" />
               </div>
             ) : partyError ? (
-              <div
-                style={{
-                  background: "var(--lo-l)",
-                  color: "var(--lo-text)",
-                  padding: "var(--space-md)",
-                  borderRadius: "var(--radius-md)",
-                  border: "1px solid var(--lo-tint)",
-                }}
-              >
-                <p>{partyError}</p>
-                <button
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                  style={{
-                    marginTop: "8px",
-                    background: "var(--lo)",
-                    color: "#fff",
-                    border: "none",
-                    padding: "4px 12px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
-                  {t("ward.error.retry", "Retry")}
-                </button>
-              </div>
+              <ScreenErrorState
+                message={partyError}
+                retryLabel={t("ward.error.retry", "Retry")}
+              />
             ) : parties.length === 0 ? (
               <div
                 style={{
@@ -169,7 +241,11 @@ export function WardPage() {
             >
               {t("ward.section.history", "Historical Winners")}
             </h2>
-            {isLoadingWinners ? (
+            {!constituencyId ? (
+              <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
+                {t("ward.profile_required", "Update profile to access Ward data.")}
+              </p>
+            ) : isLoadingWinners ? (
               <div
                 style={{
                   display: "flex",
@@ -180,21 +256,15 @@ export function WardPage() {
                 <AshokaCakraLoader size={48} color="var(--sf)" />
               </div>
             ) : winnersError ? (
-              <div
-                style={{
-                  background: "var(--lo-l)",
-                  color: "var(--lo-text)",
-                  padding: "var(--space-md)",
-                  borderRadius: "var(--radius-md)",
-                  border: "1px solid var(--lo-tint)",
-                }}
-              >
-                <p>{winnersError}</p>
-              </div>
+              <ScreenErrorState
+                message={winnersError}
+                retryLabel={t("ward.error.retry", "Retry")}
+              />
             ) : winners.length === 0 ? (
-              <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
-                {t("ward.empty", "No data available for this constituency")}
-              </p>
+              <ScreenEmptyState
+                title={t("ward.empty_title", "No ward data yet")}
+                message={t("ward.empty", "No data available for this constituency")}
+              />
             ) : (
               <HistoricalWinnerTable winners={winners} />
             )}
@@ -211,7 +281,11 @@ export function WardPage() {
             >
               {t("ward.section.candidates", "Candidates")}
             </h2>
-            {isLoadingCandidates ? (
+            {!constituencyId ? (
+              <p style={{ color: "var(--text-muted)", textAlign: "center" }}>
+                {t("ward.profile_required", "Update profile to access Ward data.")}
+              </p>
+            ) : isLoadingCandidates ? (
               <div
                 style={{
                   display: "flex",
@@ -222,33 +296,10 @@ export function WardPage() {
                 <AshokaCakraLoader size={48} color="var(--in)" />
               </div>
             ) : candidatesError ? (
-              <div
-                style={{
-                  background: "var(--lo-l)",
-                  color: "var(--lo-text)",
-                  padding: "var(--space-md)",
-                  borderRadius: "var(--radius-md)",
-                  border: "1px solid var(--lo-tint)",
-                }}
-              >
-                <p>{candidatesError}</p>
-                <button
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                  style={{
-                    marginTop: "8px",
-                    background: "var(--lo)",
-                    color: "#fff",
-                    border: "none",
-                    padding: "4px 12px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
-                  {t("ward.error.retry", "Retry")}
-                </button>
-              </div>
+              <ScreenErrorState
+                message={candidatesError}
+                retryLabel={t("ward.error.retry", "Retry")}
+              />
             ) : (
               <CandidateList
                 candidates={candidates}

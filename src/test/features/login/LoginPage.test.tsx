@@ -18,6 +18,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 // without calling vi.mock() again (which would be hoisted and affect all tests).
 
 const mockSignIn = vi.fn();
+const mockSignInDemo = vi.fn();
 const mockNavigate = vi.fn();
 const mockChangeLanguage = vi.fn();
 let mockLanguage = "en"; // controlled per-test — avoids nested vi.mock hoisting
@@ -65,7 +66,9 @@ function defaultAuthState() {
     isLoading: false,
     error: null,
     signIn: mockSignIn,
+    signInDemo: mockSignInDemo,
     signOut: vi.fn(),
+    canUseDemoLogin: false,
   });
 }
 
@@ -146,7 +149,9 @@ describe("LoginPage", () => {
       isLoading: false,
       error: "auth/popup-closed-by-user",
       signIn: mockSignIn,
+      signInDemo: mockSignInDemo,
       signOut: vi.fn(),
+      canUseDemoLogin: false,
     });
     render(<LoginPage />);
     expect(screen.getByRole("alert")).toBeInTheDocument();
@@ -168,7 +173,9 @@ describe("LoginPage", () => {
       isLoading: true,
       error: null,
       signIn: mockSignIn,
+      signInDemo: mockSignInDemo,
       signOut: vi.fn(),
+      canUseDemoLogin: false,
     });
     render(<LoginPage />);
     const button = screen.getByRole("button", { name: /login\.cta_loading/i });
@@ -182,7 +189,9 @@ describe("LoginPage", () => {
       isLoading: true,
       error: null,
       signIn: mockSignIn,
+      signInDemo: mockSignInDemo,
       signOut: vi.fn(),
+      canUseDemoLogin: false,
     });
     render(<LoginPage />);
     expect(
@@ -198,9 +207,42 @@ describe("LoginPage", () => {
       isLoading: false,
       error: null,
       signIn: mockSignIn,
+      signInDemo: mockSignInDemo,
       signOut: vi.fn(),
+      canUseDemoLogin: false,
     });
     render(<LoginPage />);
     expect(mockNavigate).toHaveBeenCalledWith("/home", { replace: true });
+  });
+
+  it("handles skip-link focus/blur, CTA hover, and demo login click", async () => {
+    vi.mocked(useAuth).mockReturnValue({
+      user: null,
+      isLoading: false,
+      error: null,
+      signIn: mockSignIn,
+      signInDemo: mockSignInDemo,
+      signOut: vi.fn(),
+      canUseDemoLogin: true,
+    });
+
+    render(<LoginPage />);
+
+    const skipLink = screen.getByRole("link", { name: /skip to sign-in/i });
+    fireEvent.focus(skipLink);
+    fireEvent.blur(skipLink);
+
+    const cta = screen.getByRole("button", { name: /login\.cta/i });
+    fireEvent.mouseEnter(cta);
+    fireEvent.mouseLeave(cta);
+
+    const demoButton = screen.getByRole("button", {
+      name: /login\.demo_cta/i,
+    });
+    fireEvent.click(demoButton);
+
+    await waitFor(() => {
+      expect(mockSignInDemo).toHaveBeenCalledOnce();
+    });
   });
 });

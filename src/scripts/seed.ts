@@ -2,9 +2,23 @@ import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
-// Connect to emulators
-process.env["FIRESTORE_EMULATOR_HOST"] = "127.0.0.1:8080";
-process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "127.0.0.1:9099";
+const args = process.argv.slice(2);
+const useProd = args.includes("--prod");
+const shouldClear = args.includes("--clear");
+const hasProdConfirmation = args.includes("--yes-i-know");
+
+if (useProd && !hasProdConfirmation) {
+  console.error(
+    "Refusing to seed production without confirmation. Re-run with --yes-i-know",
+  );
+  process.exit(1);
+}
+
+if (!useProd) {
+  // Default mode: connect to emulators.
+  process.env["FIRESTORE_EMULATOR_HOST"] = "127.0.0.1:8080";
+  process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "127.0.0.1:9099";
+}
 
 // Initialize Admin SDK for emulator — no real credentials needed
 initializeApp({ projectId: "civiccompass-494517" });
@@ -22,7 +36,7 @@ const TEST_USERS = [
     profile: {
       name: "Priya Sharma",
       voterIdNumber: "ABC1234567",
-      phoneHash: "hashed-phone-priya",
+      phoneHash: "f3e6609b6a9a7f6b655f3e6e1ecf8f3f86210be147ff6ec0f5f9f06e39f5cb69",
       constituency: "New Delhi PC-01",
       pollingBooth: {
         name: "Govt. Model School, Connaught Place",
@@ -42,7 +56,7 @@ const TEST_USERS = [
     profile: {
       name: "Rajan Iyer",
       voterIdNumber: "MH4567890",
-      phoneHash: "hashed-phone-rajan",
+      phoneHash: "a628fddfb09f3c35c9f6c9f6c18f13434996c7fdd4f4f6feafad1f4132ed6f67",
       constituency: "Mumbai North PC-06",
       pollingBooth: {
         name: "Municipal School, Borivali West",
@@ -77,6 +91,23 @@ const ELECTION_DOC = {
     { id: "p5", label: "Phase 5", date: "2024-05-20", status: "upcoming" },
     { id: "p6", label: "Phase 6", date: "2024-05-25", status: "upcoming" },
     { id: "p7", label: "Phase 7", date: "2024-06-01", status: "upcoming" },
+  ],
+  lastUpdated: Timestamp.now(),
+};
+
+const VIDHANSABHA_ELECTION_DOC = {
+  electionId: "vidhansabha_2024",
+  type: "Vidhan Sabha General Election",
+  pollingDate: "2024-11-20",
+  announcementDate: "2024-10-10",
+  nominationDeadline: "2024-10-18",
+  scrutinyDate: "2024-10-19",
+  withdrawalDeadline: "2024-10-21",
+  resultsDate: "2024-11-23",
+  sourceUrl: "https://eci.gov.in/",
+  phases: [
+    { id: "vs1", label: "Phase 1", date: "2024-11-13", status: "upcoming" },
+    { id: "vs2", label: "Phase 2", date: "2024-11-20", status: "upcoming" },
   ],
   lastUpdated: Timestamp.now(),
 };
@@ -127,6 +158,54 @@ const PARTY_RESULTS = [
     voteShare2024: 6.3,
     seats2019: 177,
     seats2024: 201,
+    color: "#9E9E9E",
+  },
+];
+
+const VIDHANSABHA_PARTY_RESULTS = [
+  {
+    party: "BJP",
+    fullName: "Bharatiya Janata Party",
+    voteShare2019: 38.5,
+    voteShare2024: 40.2,
+    seats2019: 52,
+    seats2024: 61,
+    color: "#FF9933",
+  },
+  {
+    party: "INC",
+    fullName: "Indian National Congress",
+    voteShare2019: 27.8,
+    voteShare2024: 25.1,
+    seats2019: 31,
+    seats2024: 24,
+    color: "#19AAED",
+  },
+  {
+    party: "AAP",
+    fullName: "Aam Aadmi Party",
+    voteShare2019: 8.9,
+    voteShare2024: 10.5,
+    seats2019: 0,
+    seats2024: 6,
+    color: "#0066CC",
+  },
+  {
+    party: "BSP",
+    fullName: "Bahujan Samaj Party",
+    voteShare2019: 6.2,
+    voteShare2024: 5.4,
+    seats2019: 2,
+    seats2024: 1,
+    color: "#1565C0",
+  },
+  {
+    party: "Others",
+    fullName: "Other Parties",
+    voteShare2019: 18.6,
+    voteShare2024: 18.8,
+    seats2019: 15,
+    seats2024: 8,
     color: "#9E9E9E",
   },
 ];
@@ -484,7 +563,11 @@ async function seedElection() {
     .collection("elections")
     .doc("loksabha_2024")
     .set(ELECTION_DOC, { merge: true });
-  console.log("  ✓ loksabha_2024");
+  await db
+    .collection("elections")
+    .doc("vidhansabha_2024")
+    .set(VIDHANSABHA_ELECTION_DOC, { merge: true });
+  console.log("  ✓ loksabha_2024, vidhansabha_2024");
 }
 
 async function seedPartyResults() {
@@ -498,8 +581,18 @@ async function seedPartyResults() {
       .doc(result.party.toLowerCase());
     batch.set(ref, result);
   }
+  for (const result of VIDHANSABHA_PARTY_RESULTS) {
+    const ref = db
+      .collection("elections")
+      .doc("vidhansabha_2024")
+      .collection("results")
+      .doc(result.party.toLowerCase());
+    batch.set(ref, result);
+  }
   await batch.commit();
-  console.log(`  ✓ ${PARTY_RESULTS.length} party results`);
+  console.log(
+    `  ✓ ${PARTY_RESULTS.length + VIDHANSABHA_PARTY_RESULTS.length} party results`,
+  );
 }
 
 async function seedWinners() {
@@ -581,6 +674,7 @@ async function clearAll() {
 
   // Delete election
   await db.collection("elections").doc("loksabha_2024").delete();
+  await db.collection("elections").doc("vidhansabha_2024").delete();
 
   // Delete police stations
   for (const station of POLICE_STATIONS) {
@@ -604,7 +698,11 @@ async function clearAll() {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const shouldClear = process.argv.includes("--clear");
+  console.log(
+    useProd
+      ? "⚠️ Seeding PRODUCTION Firebase project..."
+      : "Seeding local Firebase emulators...",
+  );
 
   if (shouldClear) {
     await clearAll();

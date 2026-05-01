@@ -24,7 +24,6 @@ vi.mock("genkit", () => ({
   z: mockZ,
 }));
 
-const mockModel = vi.fn();
 vi.mock("@genkit-ai/google-genai", () => {
   const modelFn = vi.fn();
   const mockPlugin = vi.fn().mockReturnValue({});
@@ -73,6 +72,8 @@ describe("supportAgent Cloud Function", () => {
     vi.mocked(checkRateLimit).mockResolvedValue({ allowed: true });
 
     mockRes = {
+      set: vi.fn().mockReturnThis(),
+      send: vi.fn().mockReturnThis(),
       status: vi.fn().mockReturnThis(),
       json: vi.fn().mockReturnThis(),
     };
@@ -92,6 +93,22 @@ describe("supportAgent Cloud Function", () => {
     expect(mockRes.json).toHaveBeenCalledWith({ response: "How can I help you?" });
   });
 
+  it("registers summary-based ticket tool and includes chat summary in prompt", async () => {
+    mockReq.body = { prompt: "yes, please raise it", chatSummary: "User asked to raise a support ticket" };
+    mockGenerate.mockResolvedValue({ text: "Ticket raised" });
+
+    await supportAgentHandler(mockReq, mockRes);
+
+    const toolNames = mockDefineTool.mock.calls.map((call) => call[0]?.name);
+    expect(toolNames).toContain("create_ticket_from_summary");
+
+    expect(mockGenerate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining("Chat summary:\nUser asked to raise a support ticket"),
+      }),
+    );
+  });
+
   it("should return 401 if uid is missing", async () => {
     mockReq.headers = {};
     await supportAgentHandler(mockReq, mockRes);
@@ -100,7 +117,7 @@ describe("supportAgent Cloud Function", () => {
 
   it("should return 429 if rate limited", async () => {
     const { checkRateLimit } = await import("../_shared/rateLimiter.js");
-    vi.mocked(checkRateLimit).mockResolvedValue({ allowed: false, retryAfter: 60 });
+    vi.mocked(checkRateLimit).mockResolvedValue({ allowed: false, retryAfter: "60" });
 
     await supportAgentHandler(mockReq, mockRes);
     expect(mockRes.status).toHaveBeenCalledWith(429);

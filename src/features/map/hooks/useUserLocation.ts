@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useUserLocation() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
@@ -8,6 +8,36 @@ export function useUserLocation() {
     PermissionState | "prompt"
   >("prompt");
   const [error, setError] = useState<string | null>(null);
+
+  const requestCurrentLocation = useCallback(async () => {
+    if (!("geolocation" in navigator)) {
+      setError("Geolocation is not supported by your browser");
+      return null;
+    }
+
+    return await new Promise<{ lat: number; lng: number } | null>((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const nextCoords = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setCoords(nextCoords);
+          setError(null);
+          setPermissionState("granted");
+          resolve(nextCoords);
+        },
+        (err) => {
+          setError(err.message);
+          if (err.code === err.PERMISSION_DENIED) {
+            setPermissionState("denied");
+          }
+          resolve(null);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+      );
+    });
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -32,29 +62,14 @@ export function useUserLocation() {
         // Some browsers don't support permissions API properly, ignore
       }
 
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            if (isMounted) {
-              setCoords({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              });
-              setError(null);
-            }
-          },
-          (err) => {
-            if (isMounted) {
-              setError(err.message);
-            }
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
-        );
-      } else {
+      if (!("geolocation" in navigator)) {
         if (isMounted) {
           setError("Geolocation is not supported by your browser");
         }
+        return;
       }
+
+      await requestCurrentLocation();
     };
 
     void checkPermissionAndLocation();
@@ -62,7 +77,7 @@ export function useUserLocation() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [requestCurrentLocation]);
 
-  return { coords, permissionState, error };
+  return { coords, permissionState, error, requestCurrentLocation };
 }

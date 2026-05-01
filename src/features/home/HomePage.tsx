@@ -9,6 +9,7 @@ import { useElectionSchedule } from "@features/home/useElectionSchedule";
 import { BottomNav } from "@shared/components/BottomNav";
 import { MughalJaaliPattern } from "@shared/components/MughalJaaliPattern";
 import { ScreenErrorBoundary } from "@shared/components/ScreenErrorBoundary";
+import { ScreenEmptyState, ScreenErrorState } from "@shared/components/ScreenStates";
 
 import { QuickActionGrid } from "./QuickActionGrid";
 import { TopBar } from "./TopBar";
@@ -59,38 +60,12 @@ export function HomePage() {
           }}
         >
           {error ? (
-            <div
-              style={{
-                padding: "var(--space-lg)",
-                background: "var(--lo-l)",
-                borderRadius: "var(--radius-lg)",
-                border: "1px solid var(--lo-tint)",
-                textAlign: "center",
-              }}
-            >
-              <p
-                style={{
-                  color: "var(--lo-text)",
-                  marginBottom: "var(--space-md)",
-                }}
-              >
-                {error}
-              </p>
-              <button
-                onClick={() => {
-                  window.location.reload();
-                }}
-                style={{
-                  padding: "8px 16px",
-                  background: "var(--sf)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "var(--radius-md)",
-                }}
-              >
-                Retry
-              </button>
-            </div>
+            <ScreenErrorState message={error} retryLabel="Retry" />
+          ) : !isLoading && !schedule ? (
+            <ScreenEmptyState
+              title="No election schedule yet"
+              message="We could not find election timeline data for this screen."
+            />
           ) : (
             <>
               <ElectionStatusCard schedule={schedule} isLoading={isLoading} />

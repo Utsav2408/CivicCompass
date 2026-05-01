@@ -8,6 +8,8 @@
  * Built with SVG polyline — repeating diamond chain pattern.
  */
 
+import { useId } from "react";
+
 interface RangoliBorderProps {
   /** Width of the border in pixels */
   width?: number | string;
@@ -32,6 +34,9 @@ export function RangoliBorder({
 }: RangoliBorderProps) {
   const height = diamondSize * 1.2;
   const half = diamondSize / 2;
+  const id = useId().replace(/:/g, "");
+  const horizontalPatternId = `rangoli-h-${diamondSize}-${strokeWidth}-${id}`;
+  const verticalPatternId = `rangoli-v-${diamondSize}-${strokeWidth}-${id}`;
 
   if (orientation === "horizontal") {
     return (
@@ -46,7 +51,7 @@ export function RangoliBorder({
       >
         <defs>
           <pattern
-            id={`rangoli-h-${diamondSize}`}
+            id={horizontalPatternId}
             x="0"
             y="0"
             width={diamondSize}
@@ -54,12 +59,13 @@ export function RangoliBorder({
             patternUnits="userSpaceOnUse"
           >
             {/* Single diamond tile */}
-            <polygon
+            <polyline
               points={`
                 0,${height / 2}
                 ${half},${height / 2 - half}
                 ${diamondSize},${height / 2}
                 ${half},${height / 2 + half}
+                0,${height / 2}
               `}
               fill="none"
               stroke={color}
@@ -79,7 +85,7 @@ export function RangoliBorder({
         <rect
           width="100%"
           height={height}
-          fill={`url(#rangoli-h-${diamondSize})`}
+          fill={`url(#${horizontalPatternId})`}
         />
       </svg>
     );
@@ -98,19 +104,20 @@ export function RangoliBorder({
     >
       <defs>
         <pattern
-          id={`rangoli-v-${diamondSize}`}
+          id={verticalPatternId}
           x="0"
           y="0"
           width={height}
           height={diamondSize}
           patternUnits="userSpaceOnUse"
         >
-          <polygon
+          <polyline
             points={`
               ${height / 2},0
               ${height / 2 + half},${half}
               ${height / 2},${diamondSize}
               ${height / 2 - half},${half}
+              ${height / 2},0
             `}
             fill="none"
             stroke={color}
@@ -129,7 +136,7 @@ export function RangoliBorder({
       <rect
         width={height}
         height="100%"
-        fill={`url(#rangoli-v-${diamondSize})`}
+        fill={`url(#${verticalPatternId})`}
       />
     </svg>
   );

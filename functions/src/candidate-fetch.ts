@@ -7,6 +7,11 @@ import { verifyAppCheckToken } from "./_shared/appCheck.js";
 
 const db = getFirestore();
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, x-uid, x-firebase-appcheck",
+};
 
 /**
  * Fetches candidate data from ECI Affidavit Archive.
@@ -14,8 +19,15 @@ const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
  * Rate limited to 30 calls per user per hour.
  */
 export const candidateFetch = onRequest(
-  { cors: true, region: "us-east1" },
+  { cors: false, region: "us-east1", invoker: "public" },
   async (req, res) => {
+    res.set(CORS_HEADERS);
+
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
+    }
+
     if (req.method !== "GET") {
       res.status(405).json({ error: "Method not allowed" });
       return;

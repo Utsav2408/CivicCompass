@@ -151,9 +151,9 @@ export function MughalJaaliPattern({
 export function JaaliHero() {
   return (
     <MughalJaaliPattern
-      opacity={0.14}
+      opacity={0.1}
       color="#FFFFFF"
-      tileSize={32}
+      tileSize={48}
       width="100%"
       height="100%"
     />

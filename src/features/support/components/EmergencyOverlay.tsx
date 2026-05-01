@@ -12,7 +12,7 @@ declare const google: any;
 
 export const EmergencyOverlay = memo(function EmergencyOverlay() {
   const { t } = useTranslation();
-  const { isActive, cancel, eta } = useEmergency();
+  const { isActive, cancel, eta, nearestStation } = useEmergency();
   const [step, setStep] = useState<"alerting" | "alerted">("alerting");
 
   useEffect(() => {
@@ -84,8 +84,14 @@ export const EmergencyOverlay = memo(function EmergencyOverlay() {
         <p style={{ fontSize: "18px", opacity: 0.9, marginBottom: "var(--space-lg)" }}>
           {step === "alerting" 
             ? t("support.sos.connecting", "Connecting to the nearest control room...") 
-            : t("support.sos.eta_msg", "Assistance arriving in ~{{eta}} minutes.", { eta: eta ?? 3 })}
+            : t("support.sos.eta_msg", "Arriving in approx. {{eta}} minutes", { eta: eta ?? 3 })}
         </p>
+
+        {nearestStation && (
+          <p style={{ fontSize: "16px", fontWeight: 700, marginBottom: "var(--space-md)" }}>
+            {nearestStation.name} — {nearestStation.phone || "N/A"}
+          </p>
+        )}
 
         {step === "alerted" && (
           <div 
@@ -146,17 +152,17 @@ function EmergencyMap() {
 }
 
 function DirectionsLayer() {
-  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+   
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
-  /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+   
   const { nearestStation } = useEmergency();
   const { coords: userCoords } = useEmergencyLocation();
 
   useEffect(() => {
     if (!map || !routesLibrary || !nearestStation || !userCoords) return;
 
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const directionsService = new routesLibrary.DirectionsService();
     const directionsRenderer = new routesLibrary.DirectionsRenderer({
       map,
@@ -173,7 +179,7 @@ function DirectionsLayer() {
         destination: userCoords,
         travelMode: google.maps.TravelMode.DRIVING,
       },
-      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+       
       (result, status) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
           directionsRenderer.setDirections(result);
@@ -184,7 +190,7 @@ function DirectionsLayer() {
     return () => {
       directionsRenderer.setMap(null);
     };
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
   }, [map, routesLibrary, nearestStation, userCoords]);
 
   return null;

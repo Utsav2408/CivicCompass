@@ -51,7 +51,9 @@ describe("PersonalizationPage component", () => {
       user: mockUser,
       isLoading: false,
       signIn: vi.fn(),
+      signInDemo: vi.fn(),
       signOut: vi.fn(),
+      canUseDemoLogin: false,
       error: null,
     });
     vi.mocked(usePersonalization).mockReturnValue({
@@ -228,9 +230,15 @@ describe("PersonalizationPage component", () => {
         voterIdNumber: "ABC1234567",
         constituency: "Mumbai North",
         pollingBooth: {
+          id: "booth-1",
           name: "School Hall",
           address: "Main St",
           coordinates: { lat: 0, lng: 0 },
+          wardName: "Ward 1",
+          wardCode: "W01",
+          constituency: "Mumbai North",
+          city: "Mumbai",
+          boothNumber: "12",
         },
       },
       updateFormData: mockUpdateFormData,
@@ -300,7 +308,9 @@ describe("PersonalizationPage component", () => {
       user: null,
       isLoading: true,
       signIn: vi.fn(),
+      signInDemo: vi.fn(),
       signOut: vi.fn(),
+      canUseDemoLogin: false,
       error: null,
     });
 
@@ -320,7 +330,9 @@ describe("PersonalizationPage component", () => {
       user: null,
       isLoading: false,
       signIn: vi.fn(),
+      signInDemo: vi.fn(),
       signOut: vi.fn(),
+      canUseDemoLogin: false,
       error: null,
     });
 

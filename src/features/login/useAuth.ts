@@ -2,6 +2,8 @@ import {
   type User,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -25,10 +27,15 @@ interface AuthState {
 
 interface UseAuthReturn extends AuthState {
   signIn: () => Promise<void>;
+  signInDemo: () => Promise<void>;
   signOut: () => Promise<void>;
+  canUseDemoLogin: boolean;
 }
 
 const provider = new GoogleAuthProvider();
+const isEmulator = import.meta.env["VITE_USE_EMULATORS"] === "true";
+const DEMO_EMAIL = "demo.user@civiccompass.local";
+const DEMO_PASSWORD = "DemoUser@12345";
 
 const AuthContext = createContext<UseAuthReturn | null>(null);
 
@@ -80,7 +87,32 @@ function useAuthController(): UseAuthReturn {
     }
   }, []);
 
-  return { ...state, signIn, signOut };
+  const signInDemo = useCallback(async () => {
+    if (!isEmulator) return;
+
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    try {
+      await signInWithEmailAndPassword(auth, DEMO_EMAIL, DEMO_PASSWORD);
+    } catch (error) {
+      const authCode =
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        typeof error.code === "string"
+          ? error.code
+          : "";
+
+      if (authCode === "auth/user-not-found") {
+        await createUserWithEmailAndPassword(auth, DEMO_EMAIL, DEMO_PASSWORD);
+      } else {
+        const message =
+          error instanceof Error ? error.message : "Demo sign-in failed";
+        setState((prev) => ({ ...prev, isLoading: false, error: message }));
+      }
+    }
+  }, []);
+
+  return { ...state, signIn, signInDemo, signOut, canUseDemoLogin: isEmulator };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {

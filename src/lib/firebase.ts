@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import {
+  type AppCheck,
+  initializeAppCheck,
+  ReCaptchaV3Provider,
+} from "firebase/app-check";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import {
   initializeFirestore,
@@ -35,28 +39,34 @@ const debugToken = import.meta.env["VITE_APPCHECK_DEBUG_TOKEN"] as
 
 interface FirebaseGlobal extends Window {
   FIREBASE_APPCHECK_DEBUG_TOKEN?: string;
+  FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER?: string;
 }
 
 if (debugToken) {
   if (typeof self !== "undefined") {
     (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN =
       debugToken;
+    (self as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER =
+      debugToken;
   } else if (typeof global !== "undefined") {
     (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN =
+      debugToken;
+    (global as unknown as FirebaseGlobal).FIREBASE_APPCHECK_DEBUG_TOKEN_FOR_DEV_PROVIDER =
       debugToken;
   }
 }
 
 // Single App Check initialisation path for both dev and prod.
-// Debug token injection above handles the localhost case transparently.
-if (typeof document !== "undefined" && !isEmulator) {
-  initializeAppCheck(app, {
+// Debug token injection above handles localhost transparently.
+export const appCheck: AppCheck | null =
+  typeof document !== "undefined"
+    ? initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(
       import.meta.env["VITE_APPCHECK_SITE_KEY"] as string,
     ),
     isTokenAutoRefreshEnabled: true,
-  });
-}
+      })
+    : null;
 
 // Initialize Firebase services in the required order
 export const auth = getAuth(app);

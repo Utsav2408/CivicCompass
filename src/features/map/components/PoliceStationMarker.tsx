@@ -9,7 +9,7 @@ interface PoliceStationMarkerProps {
 
 export function PoliceStationMarker({ station }: PoliceStationMarkerProps) {
   const [open, setOpen] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+   
   const [markerRef, marker] = useAdvancedMarkerRef();
 
   return (
@@ -40,7 +40,7 @@ export function PoliceStationMarker({ station }: PoliceStationMarkerProps) {
       </AdvancedMarker>
 
       {open && (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+         
         <InfoWindow anchor={marker} onCloseClick={() => { setOpen(false); }}>
           <div style={{ padding: "4px", color: "var(--text)" }}>
             <h3 style={{ margin: "0 0 4px 0", fontSize: "14px", fontWeight: "600" }}>{station.name}</h3>

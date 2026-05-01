@@ -88,6 +88,16 @@ describe("PartyPerformanceChart", () => {
     expect(screen.getByTestId("bar-seats2024")).toBeInTheDocument();
   });
 
+  it("switches back to vote share when toggle is clicked again", () => {
+    render(<PartyPerformanceChart parties={mockParties} />);
+
+    fireEvent.click(screen.getByRole("radio", { name: /Seats Won/i }));
+    fireEvent.click(screen.getByRole("radio", { name: /Vote Share/i }));
+
+    expect(screen.getByTestId("bar-voteShare2019")).toBeInTheDocument();
+    expect(screen.getByTestId("bar-voteShare2024")).toBeInTheDocument();
+  });
+
   it("renders source badge correctly", () => {
     render(<PartyPerformanceChart parties={mockParties} />);
 

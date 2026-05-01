@@ -34,7 +34,8 @@ export function useElectionSchedule(id: string) {
               phases: data.phases ?? [],
             } as ElectionSchedule);
           } else {
-            setError(`Election with ID "${id}" not found.`);
+            setSchedule(null);
+            setError(null);
           }
         }
       } catch (err) {

@@ -71,6 +71,8 @@ describe("eciVoterLookup Cloud Function", () => {
     vi.mocked(checkRateLimit).mockResolvedValue({ allowed: true });
 
     mockRes = {
+      set: vi.fn().mockReturnThis(),
+      send: vi.fn().mockReturnThis(),
       status: vi.fn().mockReturnThis(),
       json: vi.fn().mockReturnThis(),
     };
@@ -85,6 +87,13 @@ describe("eciVoterLookup Cloud Function", () => {
     mockReq.method = "GET";
     await eciVoterLookupHandler(mockReq as any, mockRes as any);
     expect(mockRes.status).toHaveBeenCalledWith(405);
+  });
+
+  it("should handle CORS preflight OPTIONS", async () => {
+    mockReq.method = "OPTIONS";
+    await eciVoterLookupHandler(mockReq as any, mockRes as any);
+    expect(mockRes.status).toHaveBeenCalledWith(204);
+    expect(mockRes.send).toHaveBeenCalledWith("");
   });
 
   it("should return 401 if x-uid is missing", async () => {

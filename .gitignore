@@ -26,3 +26,8 @@ dist-ssr
 playwright-report/
 test-results/
 e2e/fixtures/auth.json
+coverage/
+artifacts/
+service-account.json
+.firebase/
+.lighthouseci/

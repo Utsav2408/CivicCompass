@@ -14,7 +14,6 @@ import { Navigate } from "react-router-dom";
 
 import { useAuth } from "@features/login/useAuth";
 import { AshokaCakraLoader } from "@shared/components/AshokaCakraLoader";
-import { JaaliHero } from "@shared/components/MughalJaaliPattern";
 
 function GoogleIcon() {
   return (
@@ -113,7 +112,8 @@ function LanguageToggle() {
 
 export function LoginPage() {
   const { t } = useTranslation();
-  const { signIn, isLoading, error, user } = useAuth();
+  const { signIn, signInDemo, canUseDemoLogin, isLoading, error, user } =
+    useAuth();
 
   // Declarative redirect — Navigate renders a redirect component rather than
   // calling navigate() imperatively during render, which can fire multiple times.
@@ -138,8 +138,6 @@ export function LoginPage() {
       }}
       aria-label="CivicCompass login"
     >
-      <JaaliHero />
-
       {/* Skip link — allows keyboard users to jump past header to main content */}
       <a
         href="#signin-card"
@@ -195,7 +193,6 @@ export function LoginPage() {
         <div
           style={{
             background: "rgba(255, 252, 247, 0.97)",
-            backdropFilter: "blur(12px)",
             borderRadius: "var(--radius-xl)",
             padding: "var(--space-2xl) var(--space-xl)",
             width: "100%",
@@ -208,7 +205,12 @@ export function LoginPage() {
           }}
         >
           {/* Decorative chakra — aria-hidden, screen readers skip it */}
-          <AshokaCakraLoader size={64} color="var(--in)" decorative={true} />
+          <AshokaCakraLoader
+            size={64}
+            color="var(--in)"
+            decorative={true}
+            animated={false}
+          />
 
           <h1
             style={{
@@ -311,6 +313,31 @@ export function LoginPage() {
             )}
             <span>{isLoading ? t("login.cta_loading") : t("login.cta")}</span>
           </button>
+
+          {canUseDemoLogin && (
+            <button
+              onClick={() => void signInDemo()}
+              disabled={isLoading}
+              type="button"
+              aria-label={t("login.demo_cta", "Continue as Demo User")}
+              style={{
+                width: "100%",
+                minHeight: "var(--touch-target)",
+                padding: "10px var(--space-lg)",
+                background: "transparent",
+                color: "var(--in)",
+                border: "1px solid var(--in)",
+                borderRadius: "var(--radius-md)",
+                fontFamily: "var(--font-body)",
+                fontSize: "14px",
+                fontWeight: 600,
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.7 : 1,
+              }}
+            >
+              {t("login.demo_cta", "Continue as Demo User")}
+            </button>
+          )}
 
           {/* Error alert — role="alert" + aria-live="assertive" announces immediately */}
           {error && (

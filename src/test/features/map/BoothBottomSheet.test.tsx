@@ -22,7 +22,14 @@ describe("BoothBottomSheet", () => {
   };
 
   it("renders booth information correctly", () => {
-    render(<BoothBottomSheet booth={mockBooth} userCoords={{ lat: 28.5, lng: 77.1 }} />);
+    render(
+      <BoothBottomSheet
+        booth={mockBooth}
+        userCoords={{ lat: 28.5, lng: 77.1 }}
+        isLocationEnabled={true}
+        onGetDirections={vi.fn()}
+      />,
+    );
     
     expect(screen.getByText("Model School")).toBeInTheDocument();
     expect(screen.getByText("Central Delhi")).toBeInTheDocument();
@@ -30,14 +37,21 @@ describe("BoothBottomSheet", () => {
     expect(screen.getByText(/Source: ECI Voter Portal/)).toBeInTheDocument();
   });
 
-  it("generates correct Google Maps directions link", () => {
-    render(<BoothBottomSheet booth={mockBooth} userCoords={null} />);
-    
-    const directionsLink = screen.getByRole("link", { name: /Get Directions/i });
-    expect(directionsLink).toHaveAttribute(
-      "href",
-      "https://www.google.com/maps/dir/?api=1&destination=28.6,77.2"
+  it("shows location prompt and calls direction handler", () => {
+    const onGetDirections = vi.fn();
+    render(
+      <BoothBottomSheet
+        booth={mockBooth}
+        userCoords={null}
+        isLocationEnabled={false}
+        onGetDirections={onGetDirections}
+      />,
     );
-    expect(directionsLink).toHaveAttribute("target", "_blank");
+
+    const directionsButton = screen.getByRole("button", {
+      name: /Enable location to proceed/i,
+    });
+    directionsButton.click();
+    expect(onGetDirections).toHaveBeenCalledTimes(1);
   });
 });
